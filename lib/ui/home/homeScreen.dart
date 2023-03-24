@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_and_crm/common/ui.dart';
-import 'package:hr_and_crm/ui/home/home.dart';
-import 'package:hr_and_crm/ui/profile/profilePage.dart';
+import 'package:hr_and_crm/ui/home/tabs/holidaysPage.dart';
+import 'package:hr_and_crm/ui/home/tabs/home.dart';
+import 'package:hr_and_crm/ui/home/tabs/leavePage.dart';
+import 'package:hr_and_crm/ui/home/tabs/profilePage.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -17,8 +19,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   List screens = [
     const Home(),
-    const ProfilePage(),
-    const Home(),
+    const LeavePage(),
+    const HolidaysPage(),
     const ProfilePage(),
   ];
 
