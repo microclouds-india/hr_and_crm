@@ -61,7 +61,9 @@ class _HomeState extends State<Home> {
                   ),
                   side: BorderSide(width: 1, color: Colors.pink.shade900),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/templatePage");
+                },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
                   child: Text(
@@ -95,7 +97,9 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              onTap: () async {},
+              onTap: () async {
+                Navigator.of(context).pushNamed("/attendancePage");
+              },
             ),
           ),
         ],
