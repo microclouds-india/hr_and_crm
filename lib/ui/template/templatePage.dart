@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hr_and_crm/common/widgets/bookingFormTextFields.dart';
 
-class TemplatePage extends StatelessWidget {
+class TemplatePage extends StatefulWidget {
   const TemplatePage({Key? key}) : super(key: key);
+
+  @override
+  State<TemplatePage> createState() => _TemplatePageState();
+}
+
+class _TemplatePageState extends State<TemplatePage> {
+  bool? check1 = false;
 
   @override
   Widget build(BuildContext context) {
@@ -50,78 +58,116 @@ class TemplatePage extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.1,
                 width: double.infinity,
                 child: Row(
-                  children: [
-                    const Expanded(
+                  children: const [
+                    Expanded(
                         child: Text(
                       "Basic",
                       style: TextStyle(fontSize: 18),
                     )),
                     Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.all(10.0),
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7.0),
-                            ),
-                            side: BorderSide(
-                                width: 1, color: Colors.pink.shade900),
-                          ),
-                          onPressed: () {},
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(top: 15.0, bottom: 15.0),
-                            child: Text(
-                              'Ask staff to refer',
-                              style: GoogleFonts.openSans(
-                                  fontSize: 13,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
+                      child: Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: BookingFormTextFields(
+                          hint: "0",
+                          maxLines: 1,
+                          suffixIcon: Icon(Icons.percent_outlined),
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(7.0),
-                      color: Colors.pink.shade200,
-                    ),
-                    margin: const EdgeInsets.all(10.0),
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7.0),
-                        ),
-                        side: BorderSide(width: 1, color: Colors.pink.shade200),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7.0),
+                        color: Colors.pink.shade200,
                       ),
-                      onPressed: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-                        child: Text(
-                          'Add Allowances',
-                          style: GoogleFonts.openSans(
-                              fontSize: 13,
-                              color: Colors.pink.shade900,
-                              fontWeight: FontWeight.w600),
+                      margin: const EdgeInsets.all(10.0),
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7.0),
+                          ),
+                          side:
+                              BorderSide(width: 1, color: Colors.pink.shade200),
+                        ),
+                        onPressed: () {},
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                          child: Text(
+                            'Add Allowances',
+                            style: GoogleFonts.openSans(
+                                fontSize: 13,
+                                color: Colors.pink.shade900,
+                                fontWeight: FontWeight.w600),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-              const Text(
+              Text(
                 "Employer Contribution",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: GoogleFonts.openSans(
+                    fontSize: 19,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600),
               ),
-              SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               EmployerChild("Employer PF"),
+              EmployerChild("Employer ESI"),
+              Row(
+                children: [
+                  Text(
+                    "PF EDLI & Admin Charges",
+                    style: GoogleFonts.openSans(
+                        fontSize: 15,
+                        color: Colors.black,
+                    ),
+                  ),
+                  const Spacer(),
+                  //true for checked checkbox, false for unchecked one
+                  Row(
+                    children: [
+                      Checkbox(
+                          //only check box
+                          value: check1, //unchecked
+                          onChanged: (bool? value) {
+                            //value returned when checkbox is clicked
+                            setState(() {
+                              check1 = value;
+                            });
+                          }),
+                      Text(
+                        "Not Applied",
+                        style: GoogleFonts.openSans(
+                            fontSize: 12,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              EmployerChild("Labour Welfare Fund"),
+              Text(
+                "Deductions",
+                style: GoogleFonts.openSans(
+                    fontSize: 19,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600),
+              ),
+              EmployerChild("Employer PF"),
+              EmployerChild("Employer ESI"),
+              EmployerChild("PT"),
             ],
           ),
         ),
@@ -131,14 +177,27 @@ class TemplatePage extends StatelessWidget {
 }
 
 Widget EmployerChild(String text) {
-  return Container(
-    child: Row(
-      children: [
-        Expanded(
-          child: Text(text),
+  return Row(
+    children: [
+      Expanded(
+        child: Text(
+          text,
+          style: GoogleFonts.openSans(
+            fontSize: 15,
+            color: Colors.black,
+          ),
         ),
-        SizedBox(),
-      ],
-    ),
+      ),
+      OutlinedButton(
+        onPressed: () {},
+        child: Center(
+          child: Text(
+            "Not Selected",
+            style: GoogleFonts.openSans(
+                fontSize: 12, color: Colors.blue, fontWeight: FontWeight.w600),
+          ),
+        ),
+      ),
+    ],
   );
 }

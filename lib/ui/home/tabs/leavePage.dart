@@ -21,7 +21,9 @@ class LeavePage extends StatelessWidget {
         backgroundColor: Colors.pink.shade900,
         elevation: 5.0,
         child: const Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed("/jobPost");
+        },
       ),
       body: Column(
         children: [
