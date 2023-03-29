@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../leave request/leaveRequest.dart';
+import '../qr code scan/qrcodeScreen.dart';
+
 class AttendancePage extends StatelessWidget {
   const AttendancePage({Key? key}) : super(key: key);
 
@@ -28,7 +31,8 @@ class AttendancePage extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "Attendance Modes",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                   ),
                   const SizedBox(
@@ -44,8 +48,16 @@ class AttendancePage extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  AttendanceChild(Icons.qr_code_2_outlined, "QR Attendance",
-                      Icons.arrow_forward_ios),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return QrCodeScreen();
+                      }));
+                    },
+                    child: AttendanceChild(Icons.qr_code_2_outlined,
+                        "QR Attendance", Icons.arrow_forward_ios),
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -76,8 +88,16 @@ class AttendancePage extends StatelessWidget {
                     "Leaves & Holidays",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
-                  AttendanceChild(Icons.request_page_outlined, "Leave Requests",
-                      Icons.arrow_forward_ios),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return LeaveRequestScreen();
+                      }));
+                    },
+                    child: AttendanceChild(Icons.request_page_outlined,
+                        "Leave Requests", Icons.arrow_forward_ios),
+                  ),
                   const SizedBox(
                     height: 10,
                   ),

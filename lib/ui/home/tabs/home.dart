@@ -14,7 +14,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-
     final employeeData = Provider.of<EmployeeNotifier>(context, listen: false);
 
     return Scaffold(
@@ -63,6 +62,19 @@ class _HomeState extends State<Home> {
                 leading:
                     Icon(Icons.calendar_month, color: Colors.pink.shade900),
                 title: const Text('Holidays'),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.pink.shade900,
+                  size: 15,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => Navigator.of(context).pushNamed('/attendancePage'),
+              child: ListTile(
+                leading: Icon(Icons.verified_user_outlined,
+                    color: Colors.pink.shade900),
+                title: const Text('Attendance'),
                 trailing: Icon(
                   Icons.arrow_forward_ios,
                   color: Colors.pink.shade900,
@@ -136,87 +148,98 @@ class _HomeState extends State<Home> {
         child: Column(
           children: [
             FutureBuilder(
-                future: employeeData.getEmployees(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return SizedBox(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      child: GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                          ),
-                          itemCount: employeeData.employeesModel.data.length,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                employeeData.employeeId = employeeData.employeesModel.data[index].id;
-                                Navigator.of(context).pushNamed("/employeeDetailsPage");
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.only(left: 10, right: 10),
-                                      height: 150,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: CachedNetworkImage(
-                                          imageUrl: employeeData.employeesModel.data[index].photo,
-                                          fit: BoxFit.cover,
-                                          errorWidget: ((context, url, error) {
-                                            return Image.asset(
-                                              "assets/icons/logo.png",
-                                              fit: BoxFit.cover,
-                                            );
-                                          }),
-                                          placeholder: (context, url) {
-                                            return Image.asset(
-                                              "assets/icons/logo.png",
-                                              fit: BoxFit.cover,
-                                            );
-                                          },
-                                        ),
+              future: employeeData.getEmployees(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
+                        itemCount: employeeData.employeesModel.data.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              employeeData.employeeId =
+                                  employeeData.employeesModel.data[index].id;
+                              Navigator.of(context)
+                                  .pushNamed("/employeeDetailsPage");
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10),
+                                    height: 150,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: CachedNetworkImage(
+                                        imageUrl: employeeData
+                                            .employeesModel.data[index].photo,
+                                        fit: BoxFit.cover,
+                                        errorWidget: ((context, url, error) {
+                                          return Image.asset(
+                                            "assets/icons/logo.png",
+                                            fit: BoxFit.cover,
+                                          );
+                                        }),
+                                        placeholder: (context, url) {
+                                          return Image.asset(
+                                            "assets/icons/logo.png",
+                                            fit: BoxFit.cover,
+                                          );
+                                        },
                                       ),
                                     ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    Text(employeeData.employeesModel.data[index].name,
-                                      style: GoogleFonts.montserrat(
-                                          fontSize: 16, color: Colors.grey.shade700),
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    Text(employeeData.employeesModel.data[index].address,
-                                      style: GoogleFonts.openSans(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.pink.shade900),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text(
+                                    employeeData
+                                        .employeesModel.data[index].name,
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 16,
+                                        color: Colors.grey.shade700),
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  Text(
+                                    employeeData
+                                        .employeesModel.data[index].address,
+                                    style: GoogleFonts.openSans(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.pink.shade900),
+                                  ),
+                                ],
                               ),
-                            );
-                          }),
-                    );
-                  }return SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.pink.shade900,
-                      ),
-                    ),
+                            ),
+                          );
+                        }),
                   );
-                },
+                }
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.pink.shade900,
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -224,4 +247,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
