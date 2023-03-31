@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_and_crm/common/ui.dart';
+import 'package:hr_and_crm/ui/Settings/settingsScreen.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -10,11 +11,21 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () => Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return SettingsScreen();
+                  })),
+              icon: Icon(
+                Icons.settings,
+                color: Colors.white,
+              ))
+        ],
         backgroundColor: Colors.pink.shade900,
         elevation: 0,
         title: Text(
@@ -55,9 +66,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     icon: Icons.description,
                   ),
                   const UserInfo(
-                      title: "Address",
-                      text: "address" ?? "",
-                      icon: Icons.location_on,
+                    title: "Address",
+                    text: "address" ?? "",
+                    icon: Icons.location_on,
                   ),
                   const UserInfo(
                     title: "Phone",
@@ -107,9 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                               TextButton(
-                                onPressed: () async {
-
-                                },
+                                onPressed: () async {},
                                 child: Text(
                                   'Yes',
                                   style: TextStyle(color: Colors.pink.shade900),

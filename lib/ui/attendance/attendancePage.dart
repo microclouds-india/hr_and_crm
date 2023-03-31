@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../biometric scanning/biomatricScreen.dart';
 import '../leave request/leaveRequest.dart';
 import '../qr code scan/qrcodeScreen.dart';
 
@@ -61,8 +62,14 @@ class AttendancePage extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  AttendanceChild(Icons.fingerprint, "Biometric Devices",
-                      Icons.arrow_forward_ios),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return BiometricScreen();
+                    })),
+                    child: AttendanceChild(Icons.fingerprint,
+                        "Biometric Devices", Icons.arrow_forward_ios),
+                  ),
                   const SizedBox(
                     height: 10,
                   ),

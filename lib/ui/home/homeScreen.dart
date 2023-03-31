@@ -8,6 +8,8 @@ import 'package:hr_and_crm/ui/home/tabs/home.dart';
 import 'package:hr_and_crm/ui/home/tabs/leavePage.dart';
 import 'package:hr_and_crm/ui/home/tabs/profilePage.dart';
 
+import '../attendance/viewAttendanceScreen.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -19,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   List screens = [
     const Home(),
-    const LeavePage(),
+    const ViewAttendance(),
     const HolidaysPage(),
     const ProfilePage(),
   ];

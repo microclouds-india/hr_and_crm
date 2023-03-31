@@ -2,7 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_and_crm/repository/employees/notifier/employee.notifier.dart';
+import 'package:hr_and_crm/ui/Employees/Documents/documents.dart';
 import 'package:provider/provider.dart';
+
+import '../../Employees/employees.dart';
+import '../../Notes/reportScreen.dart';
+import '../../Settings/settingsScreen.dart';
+import 'holidaysPage.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -57,7 +63,10 @@ class _HomeState extends State<Home> {
               ),
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) {
+                return HolidaysPage();
+              })),
               child: ListTile(
                 leading:
                     Icon(Icons.calendar_month, color: Colors.pink.shade900),
@@ -75,6 +84,68 @@ class _HomeState extends State<Home> {
                 leading: Icon(Icons.verified_user_outlined,
                     color: Colors.pink.shade900),
                 title: const Text('Attendance'),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.pink.shade900,
+                  size: 15,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) {
+                return EmployeesScreen();
+              })),
+              child: ListTile(
+                leading: Icon(Icons.personal_injury_rounded,
+                    color: Colors.pink.shade900),
+                title: const Text('Employees'),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.pink.shade900,
+                  size: 15,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) {
+                return SettingsScreen();
+              })),
+              child: ListTile(
+                leading: Icon(Icons.settings, color: Colors.pink.shade900),
+                title: const Text('Settings'),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.pink.shade900,
+                  size: 15,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) {
+                return DailyReportScreen();
+              })),
+              child: ListTile(
+                leading: Icon(Icons.note_add, color: Colors.pink.shade900),
+                title: const Text('Daily Report'),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.pink.shade900,
+                  size: 15,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) {
+                return EmployeeDocuments();
+              })),
+              child: ListTile(
+                leading:
+                    Icon(Icons.document_scanner, color: Colors.pink.shade900),
+                title: const Text('Documents'),
                 trailing: Icon(
                   Icons.arrow_forward_ios,
                   color: Colors.pink.shade900,
