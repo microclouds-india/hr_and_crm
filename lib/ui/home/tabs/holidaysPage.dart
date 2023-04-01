@@ -1,11 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
-class HolidaysPage extends StatelessWidget {
+class HolidaysPage extends StatefulWidget {
   const HolidaysPage({Key? key}) : super(key: key);
 
   @override
+  State<HolidaysPage> createState() => _HolidaysPageState();
+}
+
+class _HolidaysPageState extends State<HolidaysPage> {
+  DateTime _selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: _selectedDate == null ? DateTime.now() : _selectedDate,
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2100));
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    String viewDate = DateFormat('yyyy').format(_selectedDate);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink.shade900,
@@ -19,7 +41,7 @@ class HolidaysPage extends StatelessWidget {
         actions: [
           GestureDetector(
             onTap: () {
-
+              _selectDate(context);
             },
             child: Container(
               margin: const EdgeInsets.all(10.0),
@@ -32,9 +54,12 @@ class HolidaysPage extends StatelessWidget {
                   children: [
                     const Icon(Icons.calendar_month, color: Colors.black),
                     const SizedBox(width: 5),
-                    Text("2022",
+                    Text(
+                      viewDate,
                       style: GoogleFonts.openSans(
-                          fontSize: 15, color: Colors.black, fontWeight: FontWeight.w600),
+                          fontSize: 15,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(width: 5),
                     const Icon(Icons.arrow_drop_down, color: Colors.black),
@@ -49,21 +74,22 @@ class HolidaysPage extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            color: Colors.pink.shade900),
+              borderRadius: BorderRadius.circular(10.0),
+              color: Colors.pink.shade900),
           height: kBottomNavigationBarHeight - 5,
           width: 150,
           child: Center(
-            child: Text("Add new holidays",
+            child: Text(
+              "Add new holidays",
               style: GoogleFonts.openSans(
-                  color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600),
               overflow: TextOverflow.ellipsis,
             ),
           ),
         ),
-        onTap: () async {
-
-        },
+        onTap: () async {},
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -81,19 +107,24 @@ class HolidaysPage extends StatelessWidget {
                       children: [
                         Flexible(
                           child: Container(
-                            margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+                            margin:
+                                const EdgeInsets.only(left: 10.0, right: 10.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   "Date",
                                   style: GoogleFonts.openSans(
-                                      fontSize: 15, color: Colors.black, fontWeight: FontWeight.w600),
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600),
                                 ),
                                 Text(
                                   "Holiday",
                                   style: GoogleFonts.openSans(
-                                      fontSize: 16, color: Colors.black, fontWeight: FontWeight.w600),
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ],
                             ),
@@ -106,12 +137,16 @@ class HolidaysPage extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(7.0),
                               ),
-                              side: BorderSide(width: 1, color: Colors.pink.shade900),
+                              side: BorderSide(
+                                  width: 1, color: Colors.pink.shade900),
                             ),
                             onPressed: () {},
-                            child: Text('Add',
+                            child: Text(
+                              'Add',
                               style: GoogleFonts.openSans(
-                                  fontSize: 12, color: Colors.black, fontWeight: FontWeight.w600),
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600),
                             ),
                           ),
                         ),
@@ -140,9 +175,12 @@ class HolidaysPage extends StatelessWidget {
                 onPressed: () {},
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
-                  child: Text('Add all public holidays',
+                  child: Text(
+                    'Add all public holidays',
                     style: GoogleFonts.openSans(
-                        fontSize: 13, color: Colors.black, fontWeight: FontWeight.w600),
+                        fontSize: 13,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
               ),

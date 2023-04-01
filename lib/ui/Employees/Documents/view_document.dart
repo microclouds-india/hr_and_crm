@@ -2,11 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 
 class ViewDocuments extends StatelessWidget {
-  const ViewDocuments({super.key});
+  String documentName;
+  ViewDocuments({required this.documentName});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.pink.shade900,
+        onPressed: () {},
+        child: const Center(
+          child: Icon(
+            Icons.upload,
+            color: Colors.white,
+          ),
+        ),
+      ),
       appBar: AppBar(
         backgroundColor: Colors.pink.shade900,
         actions: [
@@ -17,11 +28,11 @@ class ViewDocuments extends StatelessWidget {
                 color: Colors.white,
               ))
         ],
-        title: apBarText('Driving Licence', Colors.white),
+        title: apBarText(documentName, Colors.white),
         centerTitle: true,
       ),
       body: Column(
-        children:const [
+        children: const [
           // Image.network('')
         ],
       ),

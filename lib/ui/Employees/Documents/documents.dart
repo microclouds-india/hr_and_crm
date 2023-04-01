@@ -5,47 +5,66 @@ import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 import 'package:hr_and_crm/ui/Employees/Documents/view_document.dart';
 
 class EmployeeDocuments extends StatelessWidget {
-  const EmployeeDocuments({super.key});
+  EmployeeDocuments({super.key});
+  List<String> docuname = [
+    'Adhar',
+    'Address Proof',
+    'Background Verification',
+    'Bank Account Details',
+    'Degree',
+    'Driving Licece',
+    'Employment Contract',
+    'PAN Card',
+    'Police Verification',
+    'Salary Slip',
+    'Previous Empolyment Documents',
+    'Professional Documents',
+    'Other'
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.pink.shade900,
-        onPressed: () {
-          _showMyDialog(context);
-        },
-        child: const Center(
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
+        // floatingActionButton: FloatingActionButton(
+        //   backgroundColor: Colors.pink.shade900,
+        //   onPressed: () {
+        //     _showMyDialog(context);
+        //   },
+        //   child: const Center(
+        //     child: Icon(
+        //       Icons.add,
+        //       color: Colors.white,
+        //     ),
+        //   ),
+        // ),
+        appBar: AppBar(
+          backgroundColor: Colors.pink.shade900,
+          centerTitle: true,
+          title: apBarText('''Mirshad's Documents''', Colors.white),
         ),
-      ),
-      appBar: AppBar(
-        backgroundColor: Colors.pink.shade900,
-        centerTitle: true,
-        title: apBarText('Uesrname Documents', Colors.white),
-      ),
-      body: ListView.builder(
-        itemCount: 4,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return const ViewDocuments();
-              }));
-            },
-            child: const ListTile(
-              leading: Image(
-                  height: 20,
-                  width: 20,
-                  fit: BoxFit.cover,
-                  image: AssetImage('assets/icons/folders.png')),
-              title: Text('Driving Licence'),
-            ),
-          );
-        },
+        body: ListView.builder(
+          itemCount: docuname.length,
+          itemBuilder: (context, index) {
+            return folders(docuname[index], context);
+          },
+        ));
+  }
+
+  GestureDetector folders(String txt, BuildContext context) {
+    return GestureDetector(
+      onTap: () =>
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        return ViewDocuments(
+          documentName: txt,
+        );
+      })),
+      child: ListTile(
+        leading: Image(
+            height: 20,
+            width: 20,
+            fit: BoxFit.cover,
+            image: AssetImage('assets/icons/folders.png')),
+        title: Text(txt),
       ),
     );
   }

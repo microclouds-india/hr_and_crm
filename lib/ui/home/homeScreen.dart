@@ -88,8 +88,8 @@ class _HomeScreenState extends State<HomeScreen> {
               textAlign: TextAlign.center,
             ),
             BottomNavyBarItem(
-              icon: const Icon(Icons.home),
-              title: const Text('Leaves'),
+              icon: const Icon(Icons.task_outlined),
+              title: const Text('Attendance'),
               activeColor: Colors.pink.shade900,
               textAlign: TextAlign.center,
             ),

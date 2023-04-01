@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
+import 'package:intl/intl.dart';
 
 class ViewAttendance extends StatefulWidget {
   const ViewAttendance({super.key});
@@ -9,6 +10,21 @@ class ViewAttendance extends StatefulWidget {
 }
 
 class _ViewAttendanceState extends State<ViewAttendance> {
+  DateTime _selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: _selectedDate == null ? DateTime.now() : _selectedDate,
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2100));
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
   List<Color> backgroundColor = [
     const Color(0xffCCFFCC),
     const Color(0xffFFFFCC),
@@ -26,6 +42,7 @@ class _ViewAttendanceState extends State<ViewAttendance> {
   ];
   @override
   Widget build(BuildContext context) {
+    String viewDate = DateFormat('MMMM dd').format(_selectedDate);
     return Scaffold(
       appBar: AppBar(
         leading:
@@ -57,6 +74,7 @@ class _ViewAttendanceState extends State<ViewAttendance> {
           width: MediaQuery.of(context).size.width,
           child: Center(
             child: GestureDetector(
+              onTap: () => _selectDate(context),
               child: Container(
                 height: 30,
                 width: 150,
@@ -66,13 +84,13 @@ class _ViewAttendanceState extends State<ViewAttendance> {
                 child: Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: const [
+                    children: [
                       Icon(
                         Icons.calendar_month,
                         color: Colors.black,
                       ),
                       Text(
-                        'March 2023',
+                        viewDate,
                         style: TextStyle(
                             color: Colors.black, fontWeight: FontWeight.bold),
                       ),
@@ -112,7 +130,7 @@ class _ViewAttendanceState extends State<ViewAttendance> {
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
               ),
-              subtitle:const Text('Casual'),
+              subtitle: const Text('Casual'),
               trailing: trailingContainer(
                   backgroundColor[index], leave[index], textClr[index]),
             );
@@ -128,7 +146,7 @@ class _ViewAttendanceState extends State<ViewAttendance> {
       height: 25,
       width: 80,
       decoration: BoxDecoration(
-        borderRadius:const BorderRadius.all(Radius.circular(5)),
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
         color: backgroundColor,
       ),
       child: Center(
