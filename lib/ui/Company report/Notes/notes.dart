@@ -19,6 +19,25 @@ class _CompanyNotesScreenState extends State<CompanyNotesScreen> {
         title: apBarText('Notes', Colors.white),
         centerTitle: true,
       ),
+      body: ListView.builder(
+        itemCount: 2,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(
+              'Tittle',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(
+              'abcedfghijklmnopqrstuvwxyz',
+              style: TextStyle(overflow: TextOverflow.ellipsis),
+            ),
+            trailing: Text(
+              '${DateTime.now().hour}:${DateTime.now().minute}',
+              style: TextStyle(overflow: TextOverflow.ellipsis),
+            ),
+          );
+        },
+      ),
     );
   }
 }

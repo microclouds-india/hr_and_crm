@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
+import 'package:hr_and_crm/ui/Notes/viewreport.dart';
 import 'package:hr_and_crm/ui/Notes/writeNoteScreen.dart.dart';
+
+import 'editReport.dart';
 
 class DailyReportScreen extends StatefulWidget {
   @override
@@ -62,19 +65,29 @@ class _DailyReportScreenState extends State<DailyReportScreen>
       ),
       body: ListView.builder(
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(
-              'Text Evening Report',
-              style: TextStyle(
-                  overflow: TextOverflow.ellipsis, fontWeight: FontWeight.bold),
+          return GestureDetector(
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) {
+              return ViewDailyReport();
+            })),
+            child: ListTile(
+              title: Text(
+                'Text Evening Report',
+                style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                    fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text('date${DateTime.now()}'),
+              trailing: IconButton(
+                  onPressed: () => Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return EditReportScreen();
+                      })),
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.grey,
+                  )),
             ),
-            subtitle: Text('date${DateTime.now()}'),
-            trailing: IconButton(
-                onPressed: (){},
-                icon: Icon(
-                  Icons.edit,
-                  color: Colors.grey,
-                )),
           );
         },
       ),
@@ -84,7 +97,8 @@ class _DailyReportScreenState extends State<DailyReportScreen>
   Scaffold morningRepostScreen() {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        onPressed: () =>
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
           return WriteNoteScreen(
             morning: true,
           );
@@ -96,19 +110,29 @@ class _DailyReportScreenState extends State<DailyReportScreen>
       ),
       body: ListView.builder(
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(
-              'Text Morning Report',
-              style: TextStyle(
-                  overflow: TextOverflow.ellipsis, fontWeight: FontWeight.bold),
+          return GestureDetector(
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) {
+              return ViewDailyReport();
+            })),
+            child: ListTile(
+              title: Text(
+                'Text Morning Report',
+                style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                    fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text('date${DateTime.now()}'),
+              trailing: IconButton(
+                  onPressed: () => Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return EditReportScreen();
+                      })),
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.grey,
+                  )),
             ),
-            subtitle: Text('date${DateTime.now()}'),
-            trailing: IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.edit,
-                  color: Colors.grey,
-                )),
           );
         },
       ),

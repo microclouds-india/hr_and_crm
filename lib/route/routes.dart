@@ -10,11 +10,13 @@ import 'package:hr_and_crm/ui/signup/signupPage.dart';
 import 'package:hr_and_crm/ui/splashscreen/splashScreen.dart';
 import 'package:hr_and_crm/ui/template/templatePage.dart';
 
+import '../ui/login Screens/numberScreen.dart';
 import '../ui/leave request/leaveRequest.dart';
+import '../ui/login/loginScreen.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
   '/splashScreen': (context) => const SplashScreen(),
-  '/loginPage': (context) => const LoginPage(),
+  '/loginPage': (context) => const LoginScreen(),
   '/signupPage': (context) => const SignupPage(),
   '/homePage': (context) => const HomeScreen(),
   '/leavePage': (context) => const LeavePage(),
@@ -24,5 +26,5 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/templatePage': (context) => const TemplatePage(),
   '/employeeDetailsPage': (context) => const EmployeeDetailsPage(),
   '/attendancePage': (context) => const AttendancePage(),
-  '/leaveRequestPage': (context) =>  LeaveRequestScreen(),
+  '/leaveRequestPage': (context) => LeaveRequestScreen(),
 };

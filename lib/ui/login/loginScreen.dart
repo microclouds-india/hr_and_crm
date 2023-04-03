@@ -5,9 +5,7 @@
 // import 'package:hr_and_crm/common/strings.dart';
 // import 'package:hr_and_crm/common/ui.dart';
 // import 'package:hr_and_crm/common/widgets/bookingFormTextFields.dart';
-// import 'package:hr_and_crm/ui/login%20Screens/forgotPassword.dart';
-
-// import '../login Screens/Otp/OTPscreen.dart';
+// import 'package:hr_and_crm/ui/forgot%20pssword/forgotPassword.dart';
 
 // class LoginPage extends StatefulWidget {
 //   const LoginPage({Key? key}) : super(key: key);
@@ -17,17 +15,6 @@
 // }
 
 // class _LoginPageState extends State<LoginPage> {
-//   final TextEditingController emailController = TextEditingController();
-//   final TextEditingController passwordController = TextEditingController();
-
-//   @override
-//   void dispose() {
-//     // TODO: implement dispose
-//     emailController.clear();
-//     passwordController.clear();
-//     super.dispose();
-//   }
-
 //   @override
 //   Widget build(BuildContext context) {
 //     return WillPopScope(
@@ -71,33 +58,22 @@
 //                   ),
 //                 ),
 //                 Padding(
-//                   padding: const EdgeInsets.all(20.0),
-//                   child: BookingFormTextFields(
-//                     hint: Strings().email,
-//                     controller: emailController,
-//                     maxLines: 1,
-//                   ),
-//                 ),
-//                 Padding(
 //                   padding: const EdgeInsets.only(
 //                     left: 20,
 //                     right: 20,
 //                   ),
 //                   child: BookingFormTextFields(
-//                     hint: Strings().password,
+//                     hint: 'Enter your Mobile number',
 //                     maxLines: 1,
-//                     controller: passwordController,
 //                   ),
 //                 ),
 //                 Align(
 //                   alignment: Alignment.centerRight,
 //                   child: TextButton(
-//                     onPressed: () {
-//                       Navigator.of(context)
-//                           .push(MaterialPageRoute(builder: (context) {
-//                         return OTPscreen(number: ,);
-//                       }));
-//                     },
+//                     onPressed: () => Navigator.of(context)
+//                         .push(MaterialPageRoute(builder: (context) {
+//                       return ForgotPassword();
+//                     })),
 //                     child: Text(
 //                       Strings().forgotPassword,
 //                       style: GoogleFonts.openSans(
@@ -109,23 +85,23 @@
 //                 ),
 //                 ElevatedButton(
 //                   onPressed: () {
-//                     if (emailController.text.isEmpty &&
-//                         passwordController.text.isEmpty) {
-//                       Ui.getSnackBar(
-//                           title: Strings().pleaseFillAllFields,
-//                           context: context);
-//                     } else {
-//                       String emailData = emailController.text;
-//                       String passwordData = passwordController.text;
+//                     // if (emailController.text.isEmpty &&
+//                     //     passwordController.text.isEmpty) {
+//                     //   Ui.getSnackBar(
+//                     //       title: Strings().pleaseFillAllFields,
+//                     //       context: context);
+//                     // } else {
+//                     //   String emailData = emailController.text;
+//                     //   String passwordData = passwordController.text;
 
-//                       if (emailData != "" && passwordData != "") {
-//                         Navigator.of(context).pushNamed("/homePage");
-//                       } else {
-//                         Ui.getSnackBar(
-//                             title: Strings().incorrectEmailOrPassword,
-//                             context: context);
-//                       }
-//                     }
+//                     //   if (emailData != "" && passwordData != "") {
+//                     //     Navigator.of(context).pushNamed("/homePage");
+//                     //   } else {
+//                     //     Ui.getSnackBar(
+//                     //         title: Strings().incorrectEmailOrPassword,
+//                     //         context: context);
+//                     //   }
+//                     // }
 //                   },
 //                   style: ElevatedButton.styleFrom(
 //                     backgroundColor: Colors.pink.shade700,

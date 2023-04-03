@@ -12,13 +12,13 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -52,7 +52,8 @@ class _SignupPageState extends State<SignupPage> {
               const SizedBox(
                 height: 20,
               ),
-              Text(Strings().letsGetStarted,
+              Text(
+                Strings().letsGetStarted,
                 style: GoogleFonts.openSans(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -60,31 +61,68 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                padding:
+                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                 child: BookingFormTextFields(
                   hint: Strings().name,
                   controller: nameController,
                   maxLines: 1,
                 ),
               ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20.0, right: 20.0, top: 10.0),
+                      child: BookingFormTextFields(
+                        hint: Strings().phone,
+                        controller: phoneController,
+                        keyboardType: TextInputType.number,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10, right: 20, top: 10),
+                    child: Container(
+                      height: 40,
+                      width: 50,
+                      decoration: BoxDecoration(
+                          color: Colors.pink.shade900,
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: const Center(
+                        child: Text(
+                          'Get OTP',
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ))
+                ],
+              ),
               Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                padding:
+                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                 child: BookingFormTextFields(
-                  hint: Strings().phone,
-                  controller: phoneController,
-                  keyboardType: TextInputType.number,
-                  maxLines: 1,
+                  hint: 'Enter OTP',
+                  controller: addressController,
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                padding:
+                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                 child: BookingFormTextFields(
                   hint: Strings().address,
                   controller: addressController,
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                padding:
+                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                 child: BookingFormTextFields(
                   hint: Strings().email,
                   controller: emailController,
@@ -92,7 +130,8 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                padding:
+                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                 child: BookingFormTextFields(
                   hint: Strings().password,
                   controller: passwordController,
@@ -100,7 +139,8 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 20.0),
+                padding: const EdgeInsets.only(
+                    left: 20.0, right: 20.0, top: 10.0, bottom: 20.0),
                 child: BookingFormTextFields(
                   hint: Strings().confirmPassword,
                   controller: confirmPasswordController,
@@ -109,22 +149,23 @@ class _SignupPageState extends State<SignupPage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  if(nameController.text.isEmpty &&
+                  if (nameController.text.isEmpty &&
                       emailController.text.isEmpty &&
                       phoneController.text.isEmpty &&
                       addressController.text.isEmpty &&
                       passwordController.text.isEmpty &&
-                      confirmPasswordController.text.isEmpty
-                  ){
-                    Ui.getSnackBar(title: Strings().pleaseFillAllFields, context: context);
-                  }else {
+                      confirmPasswordController.text.isEmpty) {
+                    Ui.getSnackBar(
+                        title: Strings().pleaseFillAllFields, context: context);
+                  } else {
                     Navigator.of(context).pushNamed("/loginPage");
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.pink.shade700,
+                  backgroundColor: Colors.pink.shade900,
                 ),
-                child: Text(Strings().createAccount,
+                child: Text(
+                  Strings().createAccount,
                   style: GoogleFonts.openSans(
                     color: Colors.white,
                     fontSize: 13,
@@ -136,7 +177,8 @@ class _SignupPageState extends State<SignupPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(Strings().alreadyHaveAnAccount,
+                    Text(
+                      Strings().alreadyHaveAnAccount,
                       style: GoogleFonts.openSans(
                         color: Colors.black,
                         fontSize: 15,
@@ -146,7 +188,8 @@ class _SignupPageState extends State<SignupPage> {
                       onPressed: () {
                         Navigator.of(context).pushNamed("/loginPage");
                       },
-                      child: Text(Strings().loginSignUp,
+                      child: Text(
+                        Strings().loginSignUp,
                         style: GoogleFonts.openSans(
                           color: Colors.pink.shade900,
                           fontSize: 15,

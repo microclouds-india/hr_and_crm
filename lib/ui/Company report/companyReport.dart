@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
+import 'package:hr_and_crm/ui/Company%20report/Late%20Arrival/lateArrivalScreen.dart';
+import 'package:hr_and_crm/ui/Company%20report/Leave%20Report/leaveReport.dart';
 import 'package:hr_and_crm/ui/Company%20report/Notes/notes.dart';
+import 'package:hr_and_crm/ui/Company%20report/Over%20time%20report/overtimeReport.dart';
 
+import 'Attendance Details Report/attendanceDetailsReportScreen.dart';
 import 'Attendance Report/attendanceSummaryReport.dart';
 
 class CompanyReportScreen extends StatefulWidget {
@@ -35,7 +39,7 @@ class _CompanyReportScreenState extends State<CompanyReportScreen>
         bottom: TabBar(
           indicatorColor: Colors.white,
           controller: _tabController,
-          tabs: [
+          tabs: const [
             Tab(text: 'REPORTS'),
             Tab(text: 'DOWNLOADS'),
           ],
@@ -48,7 +52,7 @@ class _CompanyReportScreenState extends State<CompanyReportScreen>
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [Text('No Downloads')],
+              children: const [Text('No Downloads')],
             ),
           )
         ],
@@ -59,25 +63,83 @@ class _CompanyReportScreenState extends State<CompanyReportScreen>
   Padding reports() {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
-      child: Column(
-        children: [
-          GestureDetector(
-              onTap: () => Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) {
-                    return AttendanceSummaryReport();
-                  })),
-              child: repostList('Attendance', Icon(Icons.task_outlined))),
-          repostList('Salary', Icon(Icons.money)),
-          GestureDetector(
-              onTap: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return CompanyNotesScreen();
-                }));
-              },
-              child: repostList('Notes', Icon(Icons.notes))),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            ExpansionTile(
+              leading: const Icon(Icons.task_outlined),
+              title: const Text('vehiclestitle'),
+              children: <Widget>[
+                GestureDetector(
+                    onTap: () => Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return const AttendanceSummaryReport();
+                        })),
+                    child: subList('Attendancce Summary Report')),
+                GestureDetector(
+                    onTap: () => Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return const AttendanceDetailedReport();
+                        })),
+                    child: subList('Attendance Detailed Report')),
+                GestureDetector(
+                    onTap: () => Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return const LateArrivalReport();
+                        })),
+                    child: subList('Late Arrival Report')),
+                GestureDetector(
+                    onTap: () => Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return const LeaveReport();
+                        })),
+                    child: subList('Leave Report')),
+                GestureDetector(
+                    onTap: () => Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return const OverTimeReport();
+                        })),
+                    child: subList('Over Time Report'))
+              ],
+            ),
+            ExpansionTile(
+              title: const Text('Salary'),
+              leading: const Icon(Icons.money),
+              children: <Widget>[
+                subList('Salary Summary Report'),
+                subList('Salary Detailed Report'),
+                subList('PF Challan Report'),
+                subList('Loan Report')
+              ],
+            ),
+            GestureDetector(
+                onTap: () => Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return const CompanyNotesScreen();
+                    })),
+                child: repostList('Notes', const Icon(Icons.notes))),
+          ],
+        ),
       ),
+    );
+  }
+
+  Column subList(String txt) {
+    return Column(
+      children: [
+        Container(
+          height: 20,
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text(txt),
+          ),
+        ),
+        const Divider(
+          thickness: 0.5,
+          color: Colors.grey,
+        )
+      ],
     );
   }
 
@@ -85,8 +147,10 @@ class _CompanyReportScreenState extends State<CompanyReportScreen>
     return ListTile(
       leading: icon,
       title: Text(txt),
-      trailing: Icon(
+      trailing: const Icon(
         Icons.arrow_forward_ios,
+        size: 15,
+        weight: 20,
         color: Colors.grey,
       ),
     );

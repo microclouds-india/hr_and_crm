@@ -5,12 +5,12 @@ import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 import 'package:hr_and_crm/common/widgets/submitContainer.dart';
 import 'package:intl/intl.dart';
 
-class AttendanceSummaryReport extends StatefulWidget {
-  const AttendanceSummaryReport({super.key});
+class AttendanceDetailedReport extends StatefulWidget {
+  const AttendanceDetailedReport({super.key});
 
   @override
-  State<AttendanceSummaryReport> createState() =>
-      _AttendanceSummaryReportState();
+  State<AttendanceDetailedReport> createState() =>
+      _AttendanceDetailedReportState();
 }
 
 final List<String> _dropdownValues = [
@@ -22,7 +22,7 @@ final List<String> _dropdownValues = [
 ];
 int groupValue = 1;
 
-class _AttendanceSummaryReportState extends State<AttendanceSummaryReport> {
+class _AttendanceDetailedReportState extends State<AttendanceDetailedReport> {
   DateTime _selectedDate = DateTime.now();
   final List<String> downloadmode = ["PDF", "CSV"];
   Future<void> _selectDate(BuildContext context) async {
@@ -44,7 +44,7 @@ class _AttendanceSummaryReportState extends State<AttendanceSummaryReport> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink.shade900,
-        title: apBarText('Attendance Summary Report', Colors.white),
+        title: apBarText('Attendance Details Report', Colors.white),
         centerTitle: true,
       ),
       body: Padding(
@@ -89,7 +89,8 @@ class _AttendanceSummaryReportState extends State<AttendanceSummaryReport> {
                     width: 150,
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey),
-                        borderRadius: const BorderRadius.all(Radius.circular(10))),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
                     child: Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -124,7 +125,8 @@ class _AttendanceSummaryReportState extends State<AttendanceSummaryReport> {
                     width: 150,
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey),
-                        borderRadius: const BorderRadius.all(Radius.circular(10))),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
                     child: Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
