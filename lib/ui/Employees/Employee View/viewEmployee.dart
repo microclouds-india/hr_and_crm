@@ -1,18 +1,44 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:hr_and_crm/repository/Employee%20View/employeeViewMode.dart';
+import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../common/widgets/appbarTXT.dart';
 
 class ViewEmployee extends StatefulWidget {
-  const ViewEmployee({super.key});
+  String id;
+  ViewEmployee({required this.id});
 
   @override
   State<ViewEmployee> createState() => _ViewEmployeeState();
 }
 
 class _ViewEmployeeState extends State<ViewEmployee> {
+  String notImg =
+      'https://us.123rf.com/450wm/pavelstasevich/pavelstasevich1811/pavelstasevich181101028/112815904-no-image-available-icon-flat-vector-illustration.jpg?ver=6';
+  EmployeesViewModel employeesViewModel = EmployeesViewModel();
+  bool _loading = false;
+  getEmployeeDetails() async {
+    var url = Uri.parse('https://cashbes.com/attendance/apis/employee_view');
+    var response = await http.post(url, body: {'id': widget.id});
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body);
+      employeesViewModel = EmployeesViewModel.fromJson(json);
+      setState(() {
+        _loading = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getEmployeeDetails();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,54 +47,80 @@ class _ViewEmployeeState extends State<ViewEmployee> {
         title: apBarText('Username', Colors.white),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-        child: SingleChildScrollView(
-          child: Column(children: [
-            imageRow(),
-            Divider(
-              thickness: 0.2,
-              color: Colors.grey,
-            ),
-            userDeatails('Employee ID', '112'),
-            userDeatails('Phone', '0987654321'),
-            userDeatails('Email', 'abc@gmail.com'),
-            userDeatails('Birthday', '1995-12-19'),
-            userDeatails('Gender', 'Male'),
-            ListTile(
-              title: Text(
-                'Address',
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Text(
-                  '''Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'''),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                      onTap: () async {
-                        await launchUrl(Uri.parse(
-                            'https://wa.me/916238116239?text=Hello"'));
-                      },
-                      child: shareIMG('assets/icons/whatsapp.png')),
-                  shareIMG('assets/icons/gmail (1).png'),
-                  shareIMG('assets/icons/phone-call.png')
-                ],
+      body: _loading
+          ? Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+              child: SingleChildScrollView(
+                child: Column(children: [
+                  imageRow(employeesViewModel.data![0].photo ?? notImg),
+                  const Divider(
+                    thickness: 0.2,
+                    color: Colors.grey,
+                  ),
+                  userDeatails('Employee ID', widget.id),
+                  userDeatails(
+                      'Phone', employeesViewModel.data![0].phone ?? ''),
+                  userDeatails(
+                      'Email', employeesViewModel.data![0].email ?? ''),
+                  userDeatails('Birthday', '1995-12-19'),
+                  userDeatails(
+                      'Gender', employeesViewModel.data![0].gender ?? ''),
+                  const ListTile(
+                    title: Text(
+                      'Address',
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: Text(employeesViewModel.data![0].address ?? ''),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                            onTap: () async {
+                              await launchUrl(Uri.parse(
+                                  'https://wa.me/${employeesViewModel.data![0].phone}?text=Hello"'));
+                            },
+                            child: shareIMG('assets/icons/whatsapp.png')),
+                        GestureDetector(
+                            onTap: () {
+                              final Uri _emailLaunchUri = Uri(
+                                  scheme: 'mailto',
+                                  path: employeesViewModel.data![0].email,
+                                  queryParameters: {
+                                    'subject':
+                                        'Example Subject & Symbols are allowed!'
+                                  });
+                            },
+                            child: shareIMG('assets/icons/gmail (1).png')),
+                        GestureDetector(
+                            onTap: () async {
+                              const number =
+                                  '08592119XXXX'; //set the number here
+                              bool? res =
+                                  await FlutterPhoneDirectCaller.callNumber(
+                                      number);
+                            },
+                            child: shareIMG('assets/icons/phone-call.png'))
+                      ],
+                    ),
+                  )
+                ]),
               ),
             )
-          ]),
-        ),
-      ),
+          : Center(
+              child: CircularProgressIndicator(
+                color: Colors.pink.shade900,
+              ),
+            ),
     );
   }
 
@@ -87,14 +139,14 @@ class _ViewEmployeeState extends State<ViewEmployee> {
         ListTile(
           title: Text(
             tittle,
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
           trailing: Text(
             trailling,
-            style: TextStyle(color: Colors.grey),
+            style: const TextStyle(color: Colors.grey),
           ),
         ),
-        Divider(
+        const Divider(
           thickness: 0.1,
           color: Colors.grey,
         ),
@@ -102,7 +154,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
     );
   }
 
-  Column imageRow() {
+  Column imageRow(String img) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -113,8 +165,8 @@ class _ViewEmployeeState extends State<ViewEmployee> {
               padding: const EdgeInsets.all(8.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
-                child: Image.asset(
-                  'assets/icons/logo.png',
+                child: Image.network(
+                  img,
                   height: 150.0,
                   width: 150.0,
                   fit: BoxFit.cover,
@@ -123,11 +175,12 @@ class _ViewEmployeeState extends State<ViewEmployee> {
             ),
           ],
         ),
-        apBarText('Username', Colors.black),
-        SizedBox(
+        apBarText(employeesViewModel.data![0].name ?? 'Name Not Available',
+            Colors.black),
+        const SizedBox(
           height: 20,
         ),
-        Text('Web Developer')
+        const Text('Web Developer')
       ],
     );
   }

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hr_and_crm/storage/storage.dart';
+import 'package:hr_and_crm/ui/home/homeScreen.dart';
+import 'package:hr_and_crm/ui/home/tabs/home.dart';
+import 'package:hr_and_crm/ui/login/loginPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -13,14 +17,19 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () async {
-      LocalStorage localStorage = LocalStorage();
-      await localStorage.getToken().then((value) {
-        if (value != null) {
-          Navigator.pushReplacementNamed(context, '/mainHomeView');
-        } else {
-          Navigator.pushReplacementNamed(context, '/loginPage');
-        }
-      });
+      final prif = await SharedPreferences.getInstance();
+      if (prif.getString('token') == null || prif.getString('token')!.isEmpty) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return LoginPage();
+        }));
+      } else {
+        print('tokeeeeeeeeeeeeeeeeeeeen${prif.getString('token')}');
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return HomeScreen();
+        }));
+      }
     });
   }
 

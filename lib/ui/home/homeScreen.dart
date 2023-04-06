@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_and_crm/common/ui.dart';
+import 'package:hr_and_crm/ui/Chat%20Screen/chatScreen.dart';
 import 'package:hr_and_crm/ui/home/tabs/holidaysPage.dart';
 import 'package:hr_and_crm/ui/home/tabs/home.dart';
 import 'package:hr_and_crm/ui/home/tabs/leavePage.dart';
 import 'package:hr_and_crm/ui/home/tabs/profilePage.dart';
+import 'package:hr_and_crm/ui/jobPost/jobPost.dart';
 
 import '../attendance/viewAttendanceScreen.dart';
 
@@ -21,8 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   List screens = [
     const Home(),
-    const ViewAttendance(),
-    const HolidaysPage(),
+    const ChatScreen(),
+    const JobPost(),
     const ProfilePage(),
   ];
 
@@ -88,14 +90,14 @@ class _HomeScreenState extends State<HomeScreen> {
               textAlign: TextAlign.center,
             ),
             BottomNavyBarItem(
-              icon: const Icon(Icons.task_outlined),
-              title: const Text('Attendance'),
+              icon: const Icon(Icons.chat),
+              title: const Text('Chat'),
               activeColor: Colors.pink.shade900,
               textAlign: TextAlign.center,
             ),
             BottomNavyBarItem(
-              icon: const Icon(Icons.calendar_month),
-              title: const Text('Holidays'),
+              icon: const Icon(Icons.chair_alt),
+              title: const Text('Hire Staff'),
               activeColor: Colors.pink.shade900,
               textAlign: TextAlign.center,
             ),

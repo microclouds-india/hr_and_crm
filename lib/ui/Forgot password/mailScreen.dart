@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:hr_and_crm/ui/login%20Screens/Otp/OTPscreen.dart';
-import 'package:hr_and_crm/ui/signup/signupPage.dart';
-import '../../common/ui.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:hr_and_crm/ui/Forgot%20password/otpScreen.dart';
+import 'package:hr_and_crm/ui/login/loginPage.dart';
+
+import '../../common/widgets/appbarTXT.dart';
 import '../../common/widgets/bookingFormTextFields.dart';
 import '../../common/widgets/submitContainer.dart';
 
-class NumberLogin extends StatefulWidget {
-  const NumberLogin({super.key});
+class ForgotPasswordMail extends StatelessWidget {
+  const ForgotPasswordMail({super.key});
 
-  @override
-  State<NumberLogin> createState() => _NumberLoginState();
-}
-
-final TextEditingController mobileNumberController = TextEditingController();
-
-class _NumberLoginState extends State<NumberLogin> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Colors.pink.shade900,
+          title: apBarText(
+            'Forgot Password',
+            Colors.white,
+          ),
+          centerTitle: true,
+        ),
         body: Padding(
-          padding: const EdgeInsets.only(top: 40, left: 20, right: 20),
+          padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
           child: Column(
             children: [
               Center(
@@ -32,17 +36,17 @@ class _NumberLoginState extends State<NumberLogin> {
                   fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 20,
               ),
-              const Center(
+              Center(
                 child: Text(
-                  'Please Enter Your mobile number To',
+                  'Please Enter Your Email Address To',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                 ),
               ),
-              const Center(
-                child: Text('Recive a OTP Verification Code',
+              Center(
+                child: Text('Recive a Verification Code',
                     style:
                         TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
               ),
@@ -85,15 +89,13 @@ class _NumberLoginState extends State<NumberLogin> {
               //     ],
               //   ),
               // ),
-              const SizedBox(
+              SizedBox(
                 height: 20,
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: BookingFormTextFields(
-                  keyboardType: TextInputType.phone,
-                  controller: mobileNumberController,
-                  hint: 'Emter your mobile number!',
+                  hint: 'Emter your email',
                   maxLines: 1,
                 ),
               ),
@@ -101,32 +103,23 @@ class _NumberLoginState extends State<NumberLogin> {
                 padding: const EdgeInsets.only(left: 30, right: 30),
                 child: GestureDetector(
                     onTap: () {
-                      if (mobileNumberController.text.isEmpty) {
-                        Ui.getSnackBar(
-                            title: 'Please Enter Mobile Number',
-                            context: context);
-                      } else {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return OTPscreen(
-                            number: mobileNumberController.text,
-                          );
-                        }));
-                      }
-                    },
-                    child: submitContainer(context, 'Get OTP')),
-              ),
-              const Spacer(),
-              TextButton(
-                  onPressed: () => Navigator.of(context)
+                      Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
-                        return const SignupPage();
-                      })),
+                        return MailOTPscreen(
+                          mail: 'qqqqqqqqqqqqqqqq@gmail.com',
+                        );
+                      }));
+                    },
+                    child: submitContainer(context, 'Verify')),
+              ),
+              Spacer(),
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
                   child: Text(
-                    'Create new account!',
+                    'Back to Login!',
                     style: TextStyle(color: Colors.pink.shade900),
                   )),
-              const Spacer(),
+              Spacer(),
             ],
           ),
         ),

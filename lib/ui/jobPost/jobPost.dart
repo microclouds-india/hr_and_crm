@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 
 class JobPost extends StatefulWidget {
   const JobPost({Key? key}) : super(key: key);
@@ -28,7 +29,7 @@ class _JobPostState extends State<JobPost> {
               margin: const EdgeInsets.all(10.0),
               padding: const EdgeInsets.only(left: 10.0, right: 10.0),
               decoration:
-              BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
+                  BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
               child: Center(
                 child: Row(
                   children: [
@@ -79,21 +80,26 @@ class _JobPostState extends State<JobPost> {
           ),
           Expanded(
             child: GestureDetector(
-              child: Container(
-                margin: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: Colors.pink.shade900),
-                height: kBottomNavigationBarHeight - 5,
-                width: 150,
-                child: Center(
-                  child: Text(
-                    "Share job poster",
-                    style: GoogleFonts.openSans(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600),
-                    overflow: TextOverflow.ellipsis,
+              child: GestureDetector(
+                onTap: () async {
+                  Share.share('check out my website https://example.com');
+                },
+                child: Container(
+                  margin: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: Colors.pink.shade900),
+                  height: kBottomNavigationBarHeight - 5,
+                  width: 150,
+                  child: Center(
+                    child: Text(
+                      "Share job poster",
+                      style: GoogleFonts.openSans(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
               ),
@@ -112,7 +118,8 @@ class _JobPostState extends State<JobPost> {
           children: [
             const SizedBox(height: 20),
             Center(
-              child: Text("Review job details",
+              child: Text(
+                "Review job details",
                 style: GoogleFonts.openSans(
                   color: Colors.black,
                   fontSize: 15,
@@ -137,7 +144,8 @@ class _JobPostState extends State<JobPost> {
             ),
             Container(
               margin: const EdgeInsets.only(left: 20.0, right: 20.0),
-              child: Text("Select template",
+              child: Text(
+                "Select template",
                 style: GoogleFonts.openSans(
                   color: Colors.grey,
                   fontSize: 15,

@@ -1,17 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 import 'package:hr_and_crm/repository/employees/notifier/employee.notifier.dart';
 import 'package:hr_and_crm/ui/Company%20report/companyReport.dart';
+import 'package:hr_and_crm/ui/Employees/Add%20Employees/addEmployee.dart';
 import 'package:hr_and_crm/ui/Employees/Documents/documents.dart';
 import 'package:hr_and_crm/ui/Employees/Documents/view_document.dart';
+import 'package:hr_and_crm/ui/Setup%20Attendance%20Location/attendanceLocationScreen.dart';
 import 'package:hr_and_crm/ui/attendance/attendancePage.dart';
+import 'package:hr_and_crm/ui/attendance/viewAttendanceScreen.dart';
 import 'package:hr_and_crm/ui/leave%20request/leaveRequest.dart';
 import 'package:provider/provider.dart';
 
+import '../../Add account/addAccount.dart';
 import '../../Employees/employees.dart';
 import '../../Notes/reportScreen.dart';
 import '../../Settings/settingsScreen.dart';
+import '../../jobPost/jobPost.dart';
 import 'holidaysPage.dart';
 
 class Home extends StatefulWidget {
@@ -28,50 +34,19 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          PopupMenuButton<int>(
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 1,
-                child: GestureDetector(
-                  onTap: () => _showMyDialog(),
-                  child: Row(
-                    children: const [
-                      CircleAvatar(
-                        backgroundImage: AssetImage('assets/icons/man.png'),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text('Change Branch'),
-                    ],
-                  ),
-                ),
-              ),
-              PopupMenuItem(
-                value: 2,
-                child: Row(
-                  children: const [
-                    Icon(
-                      Icons.logout,
-                      color: Colors.black,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text("Log Out")
-                  ],
-                ),
-              ),
-            ],
-            // offset: Offset(0, 60),
-            color: Colors.white,
-            elevation: 2,
-            onSelected: (value) {
-              if (value == 1) {
-              } else if (value == 2) {
-                print(value);
-              }
-            },
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(
+              onTap: _showMyDialog,
+              child: Container(
+                  width: 30.0,
+                  height: 30.0,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: AssetImage('assets/icons/man.png')))),
+            ),
           ),
         ],
         backgroundColor: Colors.pink.shade900,
@@ -81,188 +56,8 @@ class _HomeState extends State<Home> {
           style: GoogleFonts.openSans(
               fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
         ),
-        centerTitle: true,
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.pink.shade900,
-              ),
-              child: Center(
-                child: Image.asset(
-                  "assets/icons/logo.png",
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: ListTile(
-                leading: Icon(Icons.shopping_bag, color: Colors.pink.shade900),
-                title: const Text('Leaves'),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.pink.shade900,
-                  size: 15,
-                ),
-              ),
-            ),
-            GestureDetector(
-              onTap: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) {
-                return HolidaysPage();
-              })),
-              child: ListTile(
-                leading:
-                    Icon(Icons.calendar_month, color: Colors.pink.shade900),
-                title: const Text('Holidays'),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.pink.shade900,
-                  size: 15,
-                ),
-              ),
-            ),
-            GestureDetector(
-              onTap: () => Navigator.of(context).pushNamed('/attendancePage'),
-              child: ListTile(
-                leading: Icon(Icons.verified_user_outlined,
-                    color: Colors.pink.shade900),
-                title: const Text('Attendance & Leaves'),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.pink.shade900,
-                  size: 15,
-                ),
-              ),
-            ),
-            // GestureDetector(
-            //   onTap: () => Navigator.of(context)
-            //       .push(MaterialPageRoute(builder: (context) {
-            //     return EmployeesScreen();
-            //   })),
-            //   child: ListTile(
-            //     leading: Icon(Icons.personal_injury_rounded,
-            //         color: Colors.pink.shade900),
-            //     title: const Text('Employees'),
-            //     trailing: Icon(
-            //       Icons.arrow_forward_ios,
-            //       color: Colors.pink.shade900,
-            //       size: 15,
-            //     ),
-            //   ),
-            // ),
-            GestureDetector(
-              onTap: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) {
-                return SettingsScreen();
-              })),
-              child: ListTile(
-                leading: Icon(Icons.settings, color: Colors.pink.shade900),
-                title: const Text('Settings'),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.pink.shade900,
-                  size: 15,
-                ),
-              ),
-            ),
-            // GestureDetector(
-            //   onTap: () => Navigator.of(context)
-            //       .push(MaterialPageRoute(builder: (context) {
-            //     return DailyReportScreen();
-            //   })),
-            //   child: ListTile(
-            //     leading: Icon(Icons.note_add, color: Colors.pink.shade900),
-            //     title: const Text('Daily Report'),
-            //     trailing: Icon(
-            //       Icons.arrow_forward_ios,
-            //       color: Colors.pink.shade900,
-            //       size: 15,
-            //     ),
-            //   ),
-            // ),
-            // GestureDetector(
-            //   onTap: () => Navigator.of(context)
-            //       .push(MaterialPageRoute(builder: (context) {
-            //     return EmployeeDocuments();
-            //   })),
-            //   child: ListTile(
-            //     leading:
-            //         Icon(Icons.document_scanner, color: Colors.pink.shade900),
-            //     title: const Text('Documents'),
-            //     trailing: Icon(
-            //       Icons.arrow_forward_ios,
-            //       color: Colors.pink.shade900,
-            //       size: 15,
-            //     ),
-            //   ),
-            // ),
-            // GestureDetector(
-            //   onTap: () {},
-            //   child: ListTile(
-            //     leading: Icon(Icons.person, color: Colors.pink.shade900),
-            //     title: const Text('Profile'),
-            //     trailing: Icon(
-            //       Icons.arrow_forward_ios,
-            //       color: Colors.pink.shade900,
-            //       size: 15,
-            //     ),
-            //   ),
-            // ),
-            GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: ((context) {
-                    return AlertDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      title: const Text('Logout',
-                          style: TextStyle(color: Colors.black)),
-                      content: const Text(
-                          'Do you want to logout from this account?'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(false);
-                          },
-                          child: Text(
-                            'No',
-                            style: TextStyle(color: Colors.pink.shade900),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () async {},
-                          child: Text(
-                            'Yes',
-                            style: TextStyle(color: Colors.pink.shade900),
-                          ),
-                        ),
-                      ],
-                    );
-                  }),
-                );
-              },
-              child: ListTile(
-                leading: Icon(Icons.logout, color: Colors.pink.shade900),
-                title: const Text('Logout'),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.pink.shade900,
-                  size: 15,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+
       // body: SingleChildScrollView(
       //   scrollDirection: Axis.vertical,
       //   physics: const BouncingScrollPhysics(),
@@ -365,96 +160,199 @@ class _HomeState extends State<Home> {
       //     ],
       //   ),
       // ),
-      body: Column(
-        children: [
-          Row(
+      body: Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+        child: SingleChildScrollView(
+          child: Column(
             children: [
-              Expanded(
-                  child: GestureDetector(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                      child: Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: GestureDetector(
+                            onTap: () => Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return AttendancePage();
+                            })),
+                            child: fancyContainer(
+                                Colors.purple,
+                                'assets/icons/checking-attendance.png',
+                                'Attendance'),
+                          ))),
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return EmployeesScreen();
+                      })),
+                      child: fancyContainer(Colors.pink,
+                          'assets/icons/business-people.png', 'Employyes'),
+                    ),
+                  ))
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                      child: Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: GestureDetector(
+                            onTap: () => Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return HolidaysPage();
+                            })),
+                            child: fancyContainer(Colors.lightBlue,
+                                'assets/icons/calendar.png', 'Holiday'),
+                          ))),
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return DailyReportScreen();
+                      })),
+                      child: fancyContainer(Colors.green,
+                          'assets/icons/report (1).png', 'Daily Report'),
+                    ),
+                  )),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              // Container(
+              //   height: 100,
+              //   width: MediaQuery.of(context).size.width,
+              //   decoration: BoxDecoration(
+              //       color: Color.fromARGB(59, 0, 0, 0),
+              //       borderRadius: BorderRadius.all(Radius.circular(20))),
+              // ),
+              // SizedBox(
+              //   height: 20,
+              // ),
+              GestureDetector(
                 onTap: () => Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return AttendancePage();
+                  return LeaveRequestScreen();
                 })),
-                child: homeContainer(
-                    'assets/icons/checking-attendance.png', 'Attendance'),
-              )),
-              Expanded(
-                  child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) {
-                    return EmployeesScreen();
-                  }));
-                },
-                child: homeContainer(
-                    'assets/icons/business-people.png', 'Employees'),
-              )),
-              Expanded(
-                  child: GestureDetector(
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return EmployeeDocuments();
-                })),
-                child: homeContainer(
-                    'assets/icons/documents-folder.png', 'Documents'),
-              ))
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                  child: GestureDetector(
-                      onTap: () => Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return DailyReportScreen();
-                          })),
-                      child: homeContainer(
-                          'assets/icons/report.png', 'Daily Repot'))),
-              Expanded(
-                  child: GestureDetector(
-                      onTap: () => Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return LeaveRequestScreen();
-                          })),
-                      child: homeContainer(
-                          'assets/icons/inbox.png', 'Leave Requests'))),
-              Expanded(
-                  child: GestureDetector(
+                child: listtileCotainer(context, Colors.lightBlue,
+                    'assets/icons/inbox.png', 'Leave Requestes'),
+              ),
+              GestureDetector(
                 onTap: () => Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
                   return CompanyReportScreen();
                 })),
-                child: homeContainer(
-                    'assets/icons/report (1).png', 'Company Report'),
-              ))
+                child: listtileCotainer(context, Colors.deepOrange,
+                    'assets/icons/report.png', 'Company Report'),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return ViewAttendance();
+                })),
+                child: listtileCotainer(
+                    context,
+                    Colors.green,
+                    'assets/icons/checking-attendance.png',
+                    'Attendance History'),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return EmployeeDocuments();
+                })),
+                child: listtileCotainer(context, Colors.purple,
+                    'assets/icons/folders.png', 'Documents'),
+              )
             ],
-          )
-        ],
+          ),
+        ),
       ),
     );
   }
 
-  Padding homeContainer(String img, String txt) {
+  Padding listtileCotainer(
+      BuildContext context, Color color, String img, String txt) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(bottom: 10, left: 6),
       child: Container(
-        height: 150,
+          height: 50,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                left: BorderSide(
+                  color: color,
+                  width: 3.0,
+                ),
+              )),
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 20,
+              right: 20,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  height: 30,
+                  width: 30,
+                  color: color.withOpacity(0.3),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image(image: AssetImage(img)),
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  txt,
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+          )),
+    );
+  }
+
+  Container fancyContainer(Color color, String img, String txt) {
+    return Container(
+        height: 100,
+        width: 100,
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.all(Radius.circular(20))),
+            color: Colors.white,
+            border: Border(
+              left: BorderSide(
+                color: color,
+                width: 3.0,
+              ),
+            )),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.only(left: 10, right: 20, top: 10),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Spacer(),
-              Center(
-                  child: Image(
+              Container(
                 height: 50,
                 width: 50,
-                image: AssetImage(img),
-                fit: BoxFit.cover,
-              )),
-              Spacer(),
+                color: color.withOpacity(0.3),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image(image: AssetImage(img)),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
               Text(
                 txt,
                 style:
@@ -462,9 +360,7 @@ class _HomeState extends State<Home> {
               )
             ],
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Future<void> _showMyDialog() async {
@@ -477,9 +373,39 @@ class _HomeState extends State<Home> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                companyDetails(context, true),
-                companyDetails(context, false),
-                companyDetails(context, false)
+                Divider(
+                  color: Colors.grey,
+                  thickness: 0.2,
+                ),
+                ListTile(
+                  leading: Container(
+                      width: 48.0,
+                      height: 48.0,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: AssetImage('assets/icons/man.png')))),
+                  title: Text(
+                    'Branch name',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text('abcdefg@gmail.com'),
+                ),
+                GestureDetector(
+                  onTap: () => Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return AddAccount();
+                  })),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.add,
+                      color: Colors.black,
+                    ),
+                    title: apBarText('Add Account', Colors.black),
+                  ),
+                )
               ],
             ),
           ),
@@ -493,46 +419,6 @@ class _HomeState extends State<Home> {
           ],
         );
       },
-    );
-  }
-
-  Column companyDetails(BuildContext context, bool itsCompany) {
-    return Column(
-      children: [
-        Divider(
-          thickness: 0.1,
-          color: Colors.grey,
-        ),
-        Container(
-          height: 50,
-          width: MediaQuery.of(context).size.width,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/icons/man.png'),
-              ),
-              Text(
-                'Company name',
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-              ),
-              // Visibility(
-              //   visible: itsCompany,
-              //   child: Icon(
-              //     // IconData(0xe156, fontFamily: 'MaterialIcons'),
-              //     Icon
-              //     color: Colors.green,
-              //   ),
-              // )
-            ],
-          ),
-        ),
-        Divider(
-          thickness: 0.1,
-          color: Colors.grey,
-        ),
-      ],
     );
   }
 }

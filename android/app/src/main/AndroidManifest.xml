@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.microclouds.hr_and_crm">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="hr_and_crm"
         android:name="${applicationName}"

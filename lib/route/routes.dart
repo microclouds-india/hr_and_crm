@@ -16,7 +16,7 @@ import '../ui/login/loginScreen.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
   '/splashScreen': (context) => const SplashScreen(),
-  '/loginPage': (context) => const LoginScreen(),
+  '/loginPage': (context) => const LoginPage(),
   '/signupPage': (context) => const SignupPage(),
   '/homePage': (context) => const HomeScreen(),
   '/leavePage': (context) => const LeavePage(),
