@@ -15,6 +15,9 @@ import 'package:provider/provider.dart';
 
 import '../../Add account/addAccount.dart';
 import '../../Employees/employees.dart';
+import '../../Expense Details/expenseDetais.dart';
+import '../../Geo/geoLocatop.dart';
+import '../../LEAVE REQUEST POP UP ALERT TO TEAMLEADER AND HR EXECTIVE/leaveRequistPopup.dart';
 import '../../Notes/reportScreen.dart';
 import '../../Settings/settingsScreen.dart';
 import '../../jobPost/jobPost.dart';
@@ -270,6 +273,14 @@ class _HomeState extends State<Home> {
                 })),
                 child: listtileCotainer(context, Colors.purple,
                     'assets/icons/folders.png', 'Documents'),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return ExpenseDetailsScreen();
+                })),
+                child: listtileCotainer(context, Colors.limeAccent,
+                    'assets/icons/calculator.png', 'Expense Details'),
               )
             ],
           ),
