@@ -1,30 +1,23 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 import 'package:hr_and_crm/repository/employees/notifier/employee.notifier.dart';
 import 'package:hr_and_crm/ui/Company%20report/companyReport.dart';
-import 'package:hr_and_crm/ui/Employees/Add%20Employees/addEmployee.dart';
 import 'package:hr_and_crm/ui/Employees/Documents/documents.dart';
-import 'package:hr_and_crm/ui/Employees/Documents/view_document.dart';
-import 'package:hr_and_crm/ui/Setup%20Attendance%20Location/attendanceLocationScreen.dart';
 import 'package:hr_and_crm/ui/attendance/attendancePage.dart';
 import 'package:hr_and_crm/ui/attendance/viewAttendanceScreen.dart';
 import 'package:hr_and_crm/ui/leave%20request/leaveRequest.dart';
 import 'package:provider/provider.dart';
-
 import '../../Add account/addAccount.dart';
 import '../../Employees/employees.dart';
+
 import '../../Expense Details/expenseDetais.dart';
-import '../../Geo/geoLocatop.dart';
-import '../../LEAVE REQUEST POP UP ALERT TO TEAMLEADER AND HR EXECTIVE/leaveRequistPopup.dart';
 import '../../Notes/reportScreen.dart';
-import '../../Settings/settingsScreen.dart';
-import '../../jobPost/jobPost.dart';
 import 'holidaysPage.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  bool hr;
+  Home({required this.hr});
 
   @override
   State<Home> createState() => _HomeState();
@@ -175,27 +168,51 @@ class _HomeState extends State<Home> {
                       child: Padding(
                           padding: const EdgeInsets.all(5),
                           child: GestureDetector(
-                            onTap: () => Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) {
-                              return AttendancePage();
-                            })),
+                            onTap: () {
+                              if (widget.hr == true) {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) {
+                                  return AttendancePage();
+                                }));
+                              } else {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) {
+                                  return ViewAttendance();
+                                }));
+                              }
+                            },
                             child: fancyContainer(
                                 Colors.purple,
                                 'assets/icons/checking-attendance.png',
                                 'Attendance'),
                           ))),
-                  Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: GestureDetector(
-                      onTap: () => Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return EmployeesScreen();
-                      })),
-                      child: fancyContainer(Colors.pink,
-                          'assets/icons/business-people.png', 'Employyes'),
-                    ),
-                  ))
+                  Visibility(
+                    visible: widget.hr,
+                    child: Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return EmployeesScreen();
+                        })),
+                        child: fancyContainer(Colors.pink,
+                            'assets/icons/business-people.png', 'Employyes'),
+                      ),
+                    )),
+                    replacement: Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return DailyReportScreen();
+                        })),
+                        child: fancyContainer(Colors.green,
+                            'assets/icons/report (1).png', 'Daily Report'),
+                      ),
+                    )),
+                  )
                 ],
               ),
               Row(
@@ -212,18 +229,32 @@ class _HomeState extends State<Home> {
                             child: fancyContainer(Colors.lightBlue,
                                 'assets/icons/calendar.png', 'Holiday'),
                           ))),
-                  Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: GestureDetector(
-                      onTap: () => Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return DailyReportScreen();
-                      })),
-                      child: fancyContainer(Colors.green,
-                          'assets/icons/report (1).png', 'Daily Report'),
+                  Visibility(
+                    visible: widget.hr,
+                    child: Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return DailyReportScreen();
+                        })),
+                        child: fancyContainer(Colors.green,
+                            'assets/icons/report (1).png', 'Daily Report'),
+                      ),
+                    )),
+                    replacement: Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          // Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                          //   return
+                          // }))
+                        },
+                        child: fancyContainer(Colors.deepOrange,
+                            'assets/icons/inbox.png', 'Request Leave'),
+                      ),
                     ),
-                  )),
+                  ),
                 ],
               ),
               SizedBox(
@@ -239,49 +270,64 @@ class _HomeState extends State<Home> {
               // SizedBox(
               //   height: 20,
               // ),
-              GestureDetector(
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return LeaveRequestScreen();
-                })),
-                child: listtileCotainer(context, Colors.lightBlue,
-                    'assets/icons/inbox.png', 'Leave Requestes'),
+              Visibility(
+                visible: widget.hr,
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return LeaveRequestScreen();
+                  })),
+                  child: listtileCotainer(context, Colors.lightBlue,
+                      'assets/icons/inbox.png', 'Leave Requestes'),
+                ),
               ),
-              GestureDetector(
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return CompanyReportScreen();
-                })),
-                child: listtileCotainer(context, Colors.deepOrange,
-                    'assets/icons/report.png', 'Company Report'),
+              Visibility(
+                visible: widget.hr,
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return CompanyReportScreen();
+                  })),
+                  child: listtileCotainer(context, Colors.deepOrange,
+                      'assets/icons/report.png', 'Company Report'),
+                ),
               ),
-              GestureDetector(
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return ViewAttendance();
-                })),
-                child: listtileCotainer(
-                    context,
-                    Colors.green,
-                    'assets/icons/checking-attendance.png',
-                    'Attendance History'),
+              Visibility(
+                visible: widget.hr,
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return ViewAttendance();
+                  })),
+                  child: listtileCotainer(
+                      context,
+                      Colors.green,
+                      'assets/icons/checking-attendance.png',
+                      'Attendance History'),
+                ),
               ),
-              GestureDetector(
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return EmployeeDocuments();
-                })),
-                child: listtileCotainer(context, Colors.purple,
-                    'assets/icons/folders.png', 'Documents'),
+              Visibility(
+                visible: widget.hr,
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return EmployeeDocuments();
+                  })),
+                  child: listtileCotainer(context, Colors.purple,
+                      'assets/icons/folders.png', 'Documents'),
+                ),
               ),
-              GestureDetector(
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return ExpenseDetailsScreen();
-                })),
-                child: listtileCotainer(context, Colors.limeAccent,
-                    'assets/icons/calculator.png', 'Expense Details'),
-              )
+              Visibility(
+                visible: widget.hr,
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return ExpenseDetailsScreen();
+                  })),
+                  child: listtileCotainer(context, Colors.limeAccent,
+                      'assets/icons/calculator.png', 'Expense Details'),
+                ),
+              ),
             ],
           ),
         ),

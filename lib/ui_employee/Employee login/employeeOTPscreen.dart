@@ -1,80 +1,25 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
-import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/common/widgets/submitContainer.dart';
-import 'package:hr_and_crm/main.dart';
-import 'package:hr_and_crm/ui/home/homeScreen.dart';
 import 'package:hr_and_crm/ui/home/tabs/home.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sms_autofill/sms_autofill.dart';
-import '../../../common/widgets/appbarTXT.dart';
 
-class OTPscreen extends StatefulWidget {
+import '../../common/widgets/appbarTXT.dart';
+import '../../ui/home/homeScreen.dart';
+
+class EmployeeOTPscreen extends StatefulWidget {
   String number;
-  OTPscreen({required this.number});
+  EmployeeOTPscreen({required this.number});
 
   @override
-  State<OTPscreen> createState() => _OTPscreenState();
+  State<EmployeeOTPscreen> createState() => _EmployeeOTPscreenState();
 }
 
-class _OTPscreenState extends State<OTPscreen> {
+class _EmployeeOTPscreenState extends State<EmployeeOTPscreen> {
   String otpVerifivationCode = '';
   String? _verificationCode;
   bool resendOTP = false;
-  indexOtp() async {
-    var url = Uri.parse('https://cashbes.com/photography/login/index');
-    var response = await http.post(url, body: {'phone': widget.number});
-    if (response.statusCode == 200) {
-      print(response.body);
-      _listenForCode();
-    } else {
-      print(response.statusCode);
-    }
-  }
-
-  existuserOtp(String otp) async {
-    var url = Uri.parse('https://cashbes.com/photography/login/existuser_otp');
-    var response =
-        await http.post(url, body: {'phone': widget.number, 'otp': otp});
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = jsonDecode(response.body);
-      final prif = await SharedPreferences.getInstance();
-      prif.setString('token', data['token']);
-      prif.setBool('HR', true);
-      print('tokeeeeeeeeeeeeeeeeeeeen${prif.getString('token')}');
-      Ui.getSnackBar(title: 'Login Successfully', context: context);
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) {
-        return HomeScreen(
-          hr: true,
-        );
-      }), (route) => false);
-    } else {
-      Ui.getSnackBar(title: 'Please Enter Valid OPT!', context: context);
-    }
-  }
-
-  void _listenForCode() async {
-    SmsAutoFill().listenForCode;
-    final code = await SmsAutoFill().getAppSignature;
-    setState(() {
-      _verificationCode = code;
-      existuserOtp(_verificationCode!);
-    });
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    indexOtp();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +46,7 @@ class _OTPscreenState extends State<OTPscreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Center(
@@ -143,7 +88,7 @@ class _OTPscreenState extends State<OTPscreen> {
                     onPressed: () {
                       setState(() {
                         resendOTP = true;
-                        indexOtp();
+
                         Timer(Duration(seconds: 30), () {
                           setState(() {
                             resendOTP = false;
@@ -161,12 +106,15 @@ class _OTPscreenState extends State<OTPscreen> {
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: GestureDetector(
-                    onTap: () {
-                      if (otpVerifivationCode.isEmpty) {
-                        existuserOtp(_verificationCode!);
-                      } else {
-                        existuserOtp(otpVerifivationCode);
-                      }
+                    onTap: () async {
+                      final prif = await SharedPreferences.getInstance();
+                      prif.setBool('HR', false);
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return HomeScreen(
+                          hr: false,
+                        );
+                      }));
                     },
                     child: submitContainer(context, 'Verify')),
               ),

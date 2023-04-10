@@ -37,7 +37,7 @@ class _AddAccountState extends State<AddAccount> {
         actions: [
           IconButton(
               onPressed: () {},
-              icon: Icon(
+              icon: const Icon(
                 Icons.logout,
                 color: Colors.black,
               ))
@@ -77,7 +77,7 @@ class _AddAccountState extends State<AddAccount> {
                 maxLines: 1,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             ElevatedButton(

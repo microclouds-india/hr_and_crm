@@ -18,7 +18,6 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/splashScreen': (context) => const SplashScreen(),
   '/loginPage': (context) => const LoginPage(),
   '/signupPage': (context) => const SignupPage(),
-  '/homePage': (context) => const HomeScreen(),
   '/leavePage': (context) => const LeavePage(),
   '/holidaysPage': (context) => const HolidaysPage(),
   '/attendancePage': (context) => const AttendancePage(),

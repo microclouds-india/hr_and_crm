@@ -5,6 +5,8 @@ import 'package:hr_and_crm/ui/home/tabs/home.dart';
 import 'package:hr_and_crm/ui/login/loginPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Employyee Or Hr/employeeORhr.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -21,13 +23,14 @@ class _SplashScreenState extends State<SplashScreen> {
       if (prif.getString('token') == null || prif.getString('token')!.isEmpty) {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
-          return LoginPage();
+          return RolePage();
         }));
       } else {
         print('tokeeeeeeeeeeeeeeeeeeeen${prif.getString('token')}');
+        bool hr = prif.get('HR') as bool;
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
-          return HomeScreen();
+          return HomeScreen(hr: hr,);
         }));
       }
     });

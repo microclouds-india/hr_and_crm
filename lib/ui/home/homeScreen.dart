@@ -6,14 +6,12 @@ import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/ui/Chat%20Screen/chatScreen.dart';
 import 'package:hr_and_crm/ui/home/tabs/holidaysPage.dart';
 import 'package:hr_and_crm/ui/home/tabs/home.dart';
-import 'package:hr_and_crm/ui/home/tabs/leavePage.dart';
 import 'package:hr_and_crm/ui/home/tabs/profilePage.dart';
 import 'package:hr_and_crm/ui/jobPost/jobPost.dart';
 
-import '../attendance/viewAttendanceScreen.dart';
-
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  bool hr;
+  HomeScreen({required this.hr});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -21,15 +19,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  List screens = [
-    const Home(),
-    const ChatScreen(),
-    const JobPost(),
-    const ProfilePage(),
-  ];
 
   @override
   Widget build(BuildContext context) {
+    List screens = [
+      Home(hr: widget.hr),
+      const ChatScreen(),
+      widget.hr ? JobPost() : HolidaysPage(),
+      const ProfilePage(),
+    ];
     return WillPopScope(
       onWillPop: () {
         showDialog(
@@ -96,8 +94,8 @@ class _HomeScreenState extends State<HomeScreen> {
               textAlign: TextAlign.center,
             ),
             BottomNavyBarItem(
-              icon: const Icon(Icons.chair_alt),
-              title: const Text('Hire Staff'),
+              icon: Icon(widget.hr ? Icons.chair_alt : Icons.calendar_month),
+              title: Text(widget.hr ? 'Hire Staff' : 'Holidays'),
               activeColor: Colors.pink.shade900,
               textAlign: TextAlign.center,
             ),
