@@ -134,7 +134,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           settingsTile('VIP Membership',
               'Track daily staff attendance and more', Icons.workspace_premium),
           settingsTile(
-              'User & Permissions', 'Staff & Managers', Icons.person_2),
+              'User & Permissions', 'Staff & Managers', Icons.person),
           settingsTile('Attendance & Leaves',
               'Attendance Modes, Leaves ,Holidays', Icons.task),
           settingsTile('Salary Settings', 'Salary Settings', Icons.money)

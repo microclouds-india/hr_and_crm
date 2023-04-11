@@ -149,7 +149,7 @@ class _CompanyReportScreenState extends State<CompanyReportScreen>
                       return const EmployeeReport();
                     })),
                 child:
-                    repostList('Employee', const Icon(Icons.person_2_rounded))),
+                    repostList('Employee', const Icon(Icons.person))),
           ],
         ),
       ),
@@ -182,7 +182,6 @@ class _CompanyReportScreenState extends State<CompanyReportScreen>
       trailing: const Icon(
         Icons.arrow_forward_ios,
         size: 15,
-        weight: 20,
         color: Colors.grey,
       ),
     );

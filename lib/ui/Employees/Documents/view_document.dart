@@ -24,7 +24,7 @@ class ViewDocuments extends StatelessWidget {
           IconButton(
               onPressed: () {},
               icon: const Icon(
-                Icons.edit_document,
+                Icons.edit,
                 color: Colors.white,
               ))
         ],

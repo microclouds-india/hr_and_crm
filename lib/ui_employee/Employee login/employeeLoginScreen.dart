@@ -14,8 +14,7 @@ class EmployeeNumberLogin extends StatefulWidget {
   State<EmployeeNumberLogin> createState() => _EmployeeNumberLoginState();
 }
 
-final TextEditingController employeemobileNumberController =
-    TextEditingController();
+final TextEditingController employeemobileNumberController = TextEditingController();
 
 class _EmployeeNumberLoginState extends State<EmployeeNumberLogin> {
   @override
@@ -111,7 +110,7 @@ class _EmployeeNumberLoginState extends State<EmployeeNumberLogin> {
                       } else {
                         Navigator.of(context)
                             .push(MaterialPageRoute(builder: (context) {
-                          return EmployeeOTPscreen(number: '9999999999999');
+                          return EmployeeOTPscreen(number: employeemobileNumberController.text);
                         }));
                       }
                     },
