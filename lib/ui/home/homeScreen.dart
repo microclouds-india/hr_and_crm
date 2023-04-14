@@ -2,7 +2,6 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/ui/Chat%20Screen/chatScreen.dart';
 import 'package:hr_and_crm/ui/home/tabs/holidaysPage.dart';
 import 'package:hr_and_crm/ui/home/tabs/home.dart';
@@ -25,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     List screens = [
       Home(hr: widget.hr),
       const ChatScreen(),
-      widget.hr ? JobPost() : HolidaysPage(),
+      widget.hr ? JobPost() : HolidaysPage(hr: widget.hr),
       const ProfilePage(),
     ];
     return WillPopScope(

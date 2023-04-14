@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:hr_and_crm/ui/leave%20request/reqestScreen.dart';
 
 import '../LEAVE REQUEST POP UP ALERT TO TEAMLEADER AND HR EXECTIVE/leaveRequistPopup.dart';

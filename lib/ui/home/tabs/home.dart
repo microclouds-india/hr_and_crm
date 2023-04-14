@@ -13,6 +13,7 @@ import '../../Employees/employees.dart';
 
 import '../../Expense Details/expenseDetais.dart';
 import '../../Notes/reportScreen.dart';
+import '../../Salary calculator/salarycalculator.dart';
 import 'holidaysPage.dart';
 
 class Home extends StatefulWidget {
@@ -224,7 +225,9 @@ class _HomeState extends State<Home> {
                           child: GestureDetector(
                             onTap: () => Navigator.of(context)
                                 .push(MaterialPageRoute(builder: (context) {
-                              return HolidaysPage();
+                              return HolidaysPage(
+                                hr: widget.hr,
+                              );
                             })),
                             child: fancyContainer(Colors.lightBlue,
                                 'assets/icons/calendar.png', 'Holiday'),
@@ -328,6 +331,16 @@ class _HomeState extends State<Home> {
                       'assets/icons/calculator.png', 'Expense Details'),
                 ),
               ),
+              Visibility(
+                  visible: widget.hr,
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return SalaryCalculator();
+                    })),
+                    child: listtileCotainer(context, Colors.black,
+                        'assets/icons/calculator.png', 'Salary Calculator'),
+                  ))
             ],
           ),
         ),

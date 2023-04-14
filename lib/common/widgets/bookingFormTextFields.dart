@@ -19,7 +19,7 @@ class BookingFormTextFields extends StatelessWidget {
         this.suffixIcon,
         this.maxLength,
         this.readOnly = false,
-        this.controller})
+        this.controller,})
       : super(key: key);
 
   @override

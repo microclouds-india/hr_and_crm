@@ -19,7 +19,6 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/loginPage': (context) => const LoginPage(),
   '/signupPage': (context) => const SignupPage(),
   '/leavePage': (context) => const LeavePage(),
-  '/holidaysPage': (context) => const HolidaysPage(),
   '/attendancePage': (context) => const AttendancePage(),
   '/jobPost': (context) => const JobPost(),
   '/templatePage': (context) => const TemplatePage(),
