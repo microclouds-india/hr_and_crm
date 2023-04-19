@@ -15,8 +15,8 @@ class QrCodePunchIn extends StatefulWidget {
 class _QrCodePunchInState extends State<QrCodePunchIn> {
   @override
   Widget build(BuildContext context) {
-
-    final dropDownServiceData = Provider.of<DropDownServiceNotifier>(context, listen: false);
+    final dropDownServiceData = Provider.of<DropDownServiceNotifier>(
+        context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -49,7 +49,7 @@ class _QrCodePunchInState extends State<QrCodePunchIn> {
                   filled: true,
                   focusedBorder: OutlineInputBorder(
                     borderSide:
-                        BorderSide(color: Colors.grey.shade100, width: 2),
+                    BorderSide(color: Colors.grey.shade100, width: 2),
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
@@ -60,14 +60,15 @@ class _QrCodePunchInState extends State<QrCodePunchIn> {
             Consumer<DropDownServiceNotifier>(builder: (context, data, _) {
               return Container(
                 width: double.infinity,
-                padding: const EdgeInsets.only(left: 10.0,right: 10.0),
+                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                 margin: const EdgeInsets.all(10.0),
                 decoration: Ui.getBoxDecoration(),
                 child: DropdownButton<String>(
                   isExpanded: true,
                   underline: const SizedBox(),
                   value: dropDownServiceData.selectedAddress,
-                  items: dropDownServiceData.addressDropDownList.map((String value) {
+                  items: dropDownServiceData.addressDropDownList.map((
+                      String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -126,5 +127,5 @@ class _QrCodePunchInState extends State<QrCodePunchIn> {
         ),
       ),
     );
-
+  }
 }
