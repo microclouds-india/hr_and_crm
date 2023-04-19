@@ -10,7 +10,7 @@ class EmployeeContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed("/Branches");
+
       },
       child: Container(
         width: double.infinity,

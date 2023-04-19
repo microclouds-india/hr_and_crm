@@ -185,7 +185,9 @@ class _AllBranchesState extends State<AllBranches> {
             ),
             side: BorderSide(width: 1, color: Colors.pink.shade900),
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pushNamed("/Branches");
+          },
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Text(
