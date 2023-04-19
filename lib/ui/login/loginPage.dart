@@ -193,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamed("/allBranches");
+                        Navigator.of(context).pushNamed("/addBiometric");
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.pink.shade700,

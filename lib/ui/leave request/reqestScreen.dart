@@ -85,8 +85,7 @@ class _RequestScreenState extends State<RequestScreen> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return leaveTypesData.leavetypesModel.data.isNotEmpty
-                      ? Consumer<LeaveTypesNotifier>(
-                      builder: (context, data, _) {
+                      ? Consumer<LeaveTypesNotifier>(builder: (context, data, _) {
                         return Align(
                           alignment: Alignment.centerLeft,
                           child: Container(

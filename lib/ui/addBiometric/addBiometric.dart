@@ -2,27 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_and_crm/common/widgets/bookingFormTextFields.dart';
 
-class AddBranches extends StatefulWidget {
-  const AddBranches({Key? key}) : super(key: key);
+class AddBiometric extends StatefulWidget {
+  const AddBiometric({Key? key}) : super(key: key);
 
   @override
-  State<AddBranches> createState() => _AddBranchesState();
+  State<AddBiometric> createState() => _AddBiometricState();
 }
 
-class _AddBranchesState extends State<AddBranches> {
-
-  TextEditingController branchNameController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-  TextEditingController timeController = TextEditingController();
+class _AddBiometricState extends State<AddBiometric> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController serialController = TextEditingController();
+  TextEditingController deviceBrandController = TextEditingController();
 
   @override
   void dispose() {
     // TODO: implement dispose
-    branchNameController.dispose();
-    addressController.dispose();
-    dateController.dispose();
-    timeController.dispose();
+    nameController.dispose();
+    serialController.dispose();
+    deviceBrandController.dispose();
     super.dispose();
   }
 
@@ -35,7 +32,7 @@ class _AddBranchesState extends State<AddBranches> {
         elevation: 0,
         centerTitle: true,
         title: const Text(
-          "Add Branches",
+          "Add Biometric",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -49,7 +46,7 @@ class _AddBranchesState extends State<AddBranches> {
           width: double.infinity,
           child: Center(
             child: Text(
-              "Submit",
+              "Add Devices",
               style: GoogleFonts.openSans(
                   color: Colors.white,
                   fontSize: 13,
@@ -58,7 +55,9 @@ class _AddBranchesState extends State<AddBranches> {
             ),
           ),
         ),
-        onTap: () async {},
+        onTap: () {
+          Navigator.of(context).pushNamed("/qrCodePunchIn");
+        },
       ),
       body: Column(
         children: [
@@ -68,31 +67,30 @@ class _AddBranchesState extends State<AddBranches> {
               children: [
                 BookingFormTextFields(
                   keyboardType: TextInputType.phone,
-                  controller: branchNameController,
-                  hint: 'Branch Name',
+                  controller: nameController,
+                  hint: 'Name',
                   maxLines: 1,
                 ),
                 const SizedBox(height: 20.0),
                 BookingFormTextFields(
+                  suffixIcon: Icon(
+                    Icons.qr_code_2_outlined,
+                    color: Colors.pink.shade900,
+                  ),
                   keyboardType: TextInputType.phone,
-                  controller: addressController,
-                  hint: 'Address',
+                  controller: serialController,
+                  hint: 'Serial Number',
                   maxLines: 1,
                 ),
                 const SizedBox(height: 20.0),
                 BookingFormTextFields(
+                  suffixIcon: const Icon(Icons.arrow_drop_down),
                   keyboardType: TextInputType.phone,
-                  controller: dateController,
-                  hint: 'Date',
+                  controller: deviceBrandController,
+                  hint: 'Device Brand',
                   maxLines: 1,
                 ),
                 const SizedBox(height: 20.0),
-                BookingFormTextFields(
-                  keyboardType: TextInputType.phone,
-                  controller: timeController,
-                  hint: 'Time',
-                  maxLines: 1,
-                ),
               ],
             ),
           ),
