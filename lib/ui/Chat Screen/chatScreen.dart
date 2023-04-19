@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 import 'package:hr_and_crm/ui/Chat%20Screen/chatRoom.dart';
 

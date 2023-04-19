@@ -33,6 +33,8 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.pink.shade900,
         title: apBarText('Salary Calculator', Colors.white),
       ),

@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:hr_and_crm/repository/branches/model/branches.model.dart';
-import 'package:hr_and_crm/repository/branches/networking/branches.networking.dart';
-import 'package:hr_and_crm/repository/employees/model/employee.model.dart';
-import 'package:hr_and_crm/repository/employees/networking/employee.networking.dart';
 import 'package:hr_and_crm/repository/holidays/model/holidays.model.dart';
-import 'package:hr_and_crm/repository/holidays/networking/holidays.networking.dart';
+import 'package:hr_and_crm/repository/requestLeave/model/requestLeave.model.dart';
+import 'package:hr_and_crm/repository/requestLeave/networking/requestLeave.networking.dart';
 
 class HolidaysNotifier extends ChangeNotifier {
-  final HolidaysNetworking _holidaysNetworking = HolidaysNetworking();
+  final RequestLeaveNetworking _requestLeaveNetworking = RequestLeaveNetworking();
 
   bool isLoading = false;
   late String employeeId = "";
 
-  late HolidaysModel holidaysModel;
+  late RequestLeaveModel requestLeaveModel;
 
   loading(bool isLoading) {
     this.isLoading = isLoading;
     notifyListeners();
   }
 
-  getHolidays() async {
+  getRequestLeave() async {
     loading(true);
     try {
-      holidaysModel = await _holidaysNetworking.getHolidays();
+      requestLeaveModel = await _requestLeaveNetworking.getRequestLeave();
       loading(false);
-      return holidaysModel;
+      return requestLeaveModel;
     } catch (e) {
       loading(false);
     }

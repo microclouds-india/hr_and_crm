@@ -5,7 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:hr_and_crm/common/strings.dart';
 import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/common/widgets/bookingFormTextFields.dart';
+import 'package:hr_and_crm/ui/addBranches/addBranchesScreen.dart';
+import 'package:hr_and_crm/ui/branches/allBranches.dart';
+import 'package:hr_and_crm/ui/branches/branches.dart';
+import 'package:hr_and_crm/ui/home/homeScreen.dart';
 import 'package:hr_and_crm/ui/login%20Screens/numberScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Forgot password/mailScreen.dart';
 import '../login Screens/Otp/OTPscreen.dart';
@@ -109,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (emailController.text.isEmpty &&
                         passwordController.text.isEmpty) {
                       Ui.getSnackBar(
@@ -120,7 +125,11 @@ class _LoginPageState extends State<LoginPage> {
                       String passwordData = passwordController.text;
 
                       if (emailData != "" && passwordData != "") {
-                        Navigator.of(context).pushNamed("/homePage");
+                        // Navigator.of(context).pushNamed("/homePage");
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) {
+                              return HomeScreen(hr: true,);
+                            }));
                       } else {
                         Ui.getSnackBar(
                             title: Strings().incorrectEmailOrPassword,
@@ -183,7 +192,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushNamed("/allBranches");
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.pink.shade700,
                       ),

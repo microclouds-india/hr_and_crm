@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hr_and_crm/storage/storage.dart';
 import 'package:hr_and_crm/ui/home/homeScreen.dart';
-import 'package:hr_and_crm/ui/home/tabs/home.dart';
-import 'package:hr_and_crm/ui/login/loginPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Employyee Or Hr/employeeORhr.dart';

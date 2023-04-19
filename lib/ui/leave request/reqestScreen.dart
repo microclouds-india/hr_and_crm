@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:hr_and_crm/common/ui.dart';
+import 'package:hr_and_crm/repository/leaveTypes/notifier/leaveTypes.notifier.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class RequestScreen extends StatefulWidget {
   const RequestScreen({super.key});
@@ -19,6 +22,9 @@ class _RequestScreenState extends State<RequestScreen> {
   List<String> options = ['Reason 1', 'Reason 2', 'Reason 3'];
   @override
   Widget build(BuildContext context) {
+
+    final leaveTypesData = Provider.of<LeaveTypesNotifier>(context, listen: false);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -73,6 +79,73 @@ class _RequestScreenState extends State<RequestScreen> {
                   style: TextStyle(color: Colors.black),
                 )
               ],
+            ),
+            FutureBuilder(
+              future: leaveTypesData.getLeaveTypes(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return leaveTypesData.leavetypesModel.data.isNotEmpty
+                      ? Consumer<LeaveTypesNotifier>(
+                      builder: (context, data, _) {
+                        return Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.all(8),
+                            padding:
+                            const EdgeInsets.only(left: 8, right: 8),
+                            decoration: Ui.getBoxDecorationWithoutBorder(),
+                            child: DropdownButton(
+                              value: leaveTypesData.leaveReason,
+                              underline: SizedBox(),
+                              iconEnabledColor: Colors.pink.shade900,
+                              isExpanded: true,
+                              hint: Text(
+                                "Reason for Leave",
+                                style:
+                                const TextStyle(color: Colors.black),
+                              ),
+                              items: leaveTypesData.leavetypesModel.data
+                                  .map(
+                                    (map) => DropdownMenuItem(
+                                  value: map.id,
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.only(
+                                        left: 10.0,
+                                        right: 10.0,
+                                        top: 15.0,
+                                        bottom: 15.0),
+                                    // decoration: Ui.getBoxDecorationWithoutBorder(),
+                                    child: Text(
+                                      map.leaveType,
+                                      style: const TextStyle(
+                                          color: Colors.black),
+                                    ),
+                                  ),
+                                ),
+                              )
+                                  .toList(),
+                              style: const TextStyle(
+                                color: Colors.black,
+                              ),
+                              onChanged: (value) {
+                                leaveTypesData.getLeaveReason(value.toString());
+                              },
+                            ),
+                          ),
+                        );
+                      })
+                      : const Center(child: Text("No items"));
+                } else {
+                  return Container(
+                    margin: EdgeInsets.all(10),
+                    child:  CircularProgressIndicator(
+                      color: Colors.pink.shade900,
+                    ),
+                  );
+                }
+              },
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

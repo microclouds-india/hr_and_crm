@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hr_and_crm/ui/addBranches/addBranchesScreen.dart';
 import 'package:hr_and_crm/ui/attendance/attendancePage.dart';
+import 'package:hr_and_crm/ui/branches/allBranches.dart';
+import 'package:hr_and_crm/ui/branches/branches.dart';
 import 'package:hr_and_crm/ui/employeeDetails/employeeDetailsPage.dart';
 import 'package:hr_and_crm/ui/home/homeScreen.dart';
 import 'package:hr_and_crm/ui/home/tabs/holidaysPage.dart';
@@ -25,4 +28,7 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/employeeDetailsPage': (context) => const EmployeeDetailsPage(),
   '/attendancePage': (context) => const AttendancePage(),
   '/leaveRequestPage': (context) => const LeaveRequestScreen(),
+  '/allBranches': (context) => const AllBranches(),
+  '/Branches': (context) => const Branches(),
+  '/addBranches': (context) => const AddBranches(),
 };
