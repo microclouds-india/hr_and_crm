@@ -126,5 +126,5 @@ class _QrCodePunchInState extends State<QrCodePunchIn> {
         ),
       ),
     );
-  }
+
 }
