@@ -46,6 +46,7 @@ class _OTPscreenState extends State<OTPscreen> {
       Map<String, dynamic> data = jsonDecode(response.body);
       final prif = await SharedPreferences.getInstance();
       prif.setString('token', data['token']);
+      print('newTikeeeeeeeen${data['token']}');
       prif.setBool('HR', true);
       print('tokeeeeeeeeeeeeeeeeeeeen${prif.getString('token')}');
       Ui.getSnackBar(title: 'Login Successfully', context: context);

@@ -100,7 +100,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                     _selectedDate == DateTime.now

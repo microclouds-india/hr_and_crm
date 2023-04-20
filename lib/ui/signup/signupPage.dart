@@ -1,8 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_and_crm/common/strings.dart';
 import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/common/widgets/bookingFormTextFields.dart';
+import 'package:hr_and_crm/ui/Employees/Add%20Employees/addEmployee.dart';
+import 'package:hr_and_crm/ui/home/homeScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../repository/register/register_network.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -12,6 +19,20 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  File? _imageFile;
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+
+    setState(() {
+      if (pickedFile != null) {
+        _imageFile = File(pickedFile.path);
+      } else {
+        Ui.getSnackBar(title: 'No Image Selected', context: context);
+      }
+    });
+  }
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -19,6 +40,10 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
+  final TextEditingController jobRoleController = TextEditingController();
+  final TextEditingController dobController = TextEditingController();
+  final TextEditingController cityControllerr = TextEditingController();
+  final TextEditingController otpController = TextEditingController();
 
   @override
   void dispose() {
@@ -31,6 +56,11 @@ class _SignupPageState extends State<SignupPage> {
     confirmPasswordController.clear();
     super.dispose();
   }
+
+  bool otpOn = false;
+
+  String dropdownValue = 'Male';
+  List<String> options = ['Male', 'Female', 'Other'];
 
   @override
   Widget build(BuildContext context) {
@@ -87,17 +117,29 @@ class _SignupPageState extends State<SignupPage> {
                       child: Padding(
                     padding:
                         const EdgeInsets.only(left: 10, right: 20, top: 10),
-                    child: Container(
-                      height: 40,
-                      width: 50,
-                      decoration: BoxDecoration(
-                          color: Colors.pink.shade900,
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: const Center(
-                        child: Text(
-                          'Get OTP',
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          otpOn = true;
+                        });
+                        RegisterNetwork().indexOtp(phoneController.text);
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 50,
+                        decoration: BoxDecoration(
+                            color: otpOn
+                                ? Color.fromARGB(0, 233, 30, 98)
+                                : Colors.pink.shade900,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: const Center(
+                          child: Text(
+                            'Get OTP',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ),
@@ -109,7 +151,16 @@ class _SignupPageState extends State<SignupPage> {
                     const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                 child: BookingFormTextFields(
                   hint: 'Enter OTP',
-                  controller: addressController,
+                  controller: otpController,
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                child: BookingFormTextFields(
+                  hint: Strings().dob,
+                  controller: dobController,
+                  maxLines: 1,
                 ),
               ),
               Padding(
@@ -118,6 +169,47 @@ class _SignupPageState extends State<SignupPage> {
                 child: BookingFormTextFields(
                   hint: Strings().address,
                   controller: addressController,
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                child: BookingFormTextFields(
+                  hint: Strings().city,
+                  controller: cityControllerr,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 30,
+                  right: 30,
+                  top: 15,
+                ),
+                child: DropdownButton<String>(
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  isExpanded: true,
+                  value: dropdownValue,
+                  icon: const Icon(Icons.arrow_downward),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      dropdownValue = newValue!;
+                    });
+                  },
+                  items: options.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                child: BookingFormTextFields(
+                  hint: Strings().jobRole,
+                  controller: jobRoleController,
+                  maxLines: 1,
                 ),
               ),
               Padding(
@@ -148,17 +240,35 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {
+                  onPressed: () {
+                    _pickImage(ImageSource.camera);
+                  },
+                  child: Text('Upload Image')),
+              ElevatedButton(
+                onPressed: () async {
+                  final prif = await SharedPreferences.getInstance();
                   if (nameController.text.isEmpty &&
                       emailController.text.isEmpty &&
                       phoneController.text.isEmpty &&
                       addressController.text.isEmpty &&
                       passwordController.text.isEmpty &&
+                      jobRoleController.text.isEmpty &&
                       confirmPasswordController.text.isEmpty) {
                     Ui.getSnackBar(
                         title: Strings().pleaseFillAllFields, context: context);
                   } else {
-                    Navigator.of(context).pushNamed("/loginPage");
+                    RegisterNetwork().register(
+                        context: context,
+                        phone: phoneController.text,
+                        name: nameController.text,
+                        otp: otpController.text,
+                        gender: dropdownValue,
+                        email: emailController.text,
+                        dob: dobController.text,
+                        city: cityControllerr.text,
+                        jobrole: jobRoleController.text,
+                        photo: _imageFile!.path);
+                   
                   }
                 },
                 style: ElevatedButton.styleFrom(

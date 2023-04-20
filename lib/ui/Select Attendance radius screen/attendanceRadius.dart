@@ -18,7 +18,7 @@ class _MapViewState extends State<MapView> {
     _getCurrentLocation();
   }
 
-  // Method to get the current location of the user
+
   void _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);

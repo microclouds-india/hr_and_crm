@@ -22,7 +22,7 @@ class LeavePage extends StatelessWidget {
         elevation: 5.0,
         child: const Icon(Icons.add),
         onPressed: () {
-          Navigator.of(context).pushNamed("/jobPost");
+        
         },
       ),
       body: Column(
