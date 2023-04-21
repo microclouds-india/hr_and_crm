@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 import 'package:intl/intl.dart';
 
+import 'attendanceViewAlert.dart';
+
 class ViewAttendance extends StatefulWidget {
   const ViewAttendance({super.key});
 
@@ -122,17 +124,62 @@ class _ViewAttendanceState extends State<ViewAttendance> {
           physics: const BouncingScrollPhysics(),
           itemCount: 5,
           itemBuilder: (context, index) {
-            return ListTile(
-              title: const Text(
-                'Wed, 16 Dec',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+            return GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Date: 09/09/2000'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.calendar_today,
+                                color: Colors.pink.shade900,
+                              ),
+                              SizedBox(width: 10),
+                              Text('09/09/2000'),
+                              SizedBox(width: 20),
+                              Icon(
+                                Icons.access_time,
+                                color: Colors.pink,
+                              ),
+                              SizedBox(width: 10),
+                              Text('09:29'),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.verified,
+                                color: Colors.blue,
+                              ),
+                              SizedBox(width: 10),
+                              Text('Check out'),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+              child: ListTile(
+                title: const Text(
+                  'Wed, 16 Dec',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+                subtitle: const Text('Casual'),
+                trailing: trailingContainer(
+                    backgroundColor[index], leave[index], textClr[index]),
               ),
-              subtitle: const Text('Casual'),
-              trailing: trailingContainer(
-                  backgroundColor[index], leave[index], textClr[index]),
             );
           },
         ))

@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../repository/holidayModel/holiday.dart';
+import '../../Add new holiday/newHoliday.dart';
+import '../../addPublicHolidays/addPublicHolidays.dart';
 
 class HolidaysPage extends StatefulWidget {
   bool hr;
@@ -100,21 +102,27 @@ class _HolidaysPageState extends State<HolidaysPage> {
       bottomNavigationBar: GestureDetector(
         child: Visibility(
           visible: widget.hr,
-          child: Container(
-            margin: const EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                color: Colors.pink.shade900),
-            height: kBottomNavigationBarHeight - 5,
-            width: 150,
-            child: Center(
-              child: Text(
-                "Add new holidays",
-                style: GoogleFonts.openSans(
-                    color: Colors.white,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600),
-                overflow: TextOverflow.ellipsis,
+          child: GestureDetector(
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) {
+              return NewHolidayScreen();
+            })),
+            child: Container(
+              margin: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.pink.shade900),
+              height: kBottomNavigationBarHeight - 5,
+              width: 150,
+              child: Center(
+                child: Text(
+                  "Add new holidays",
+                  style: GoogleFonts.openSans(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ),
@@ -214,7 +222,10 @@ class _HolidaysPageState extends State<HolidaysPage> {
                           side:
                               BorderSide(width: 1, color: Colors.pink.shade900),
                         ),
-                        onPressed: () {},
+                        onPressed: () => Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return PublicHolidayScreen();
+                        })),
                         child: Padding(
                           padding: const EdgeInsets.all(15.0),
                           child: Text(

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hr_and_crm/ui/leave%20request/reqestScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../LEAVE REQUEST POP UP ALERT TO TEAMLEADER AND HR EXECTIVE/leaveRequistPopup.dart';
 
 class LeaveRequestScreen extends StatefulWidget {
-  const LeaveRequestScreen({super.key});
-
   @override
   State<LeaveRequestScreen> createState() => _LeaveRequestScreenState();
 }
@@ -48,8 +47,12 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
         itemCount: 8,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {
-              showLeaveRequestAlert(context);
+            onTap: () async {
+              final prif = await SharedPreferences.getInstance();
+              bool? hr = prif.getBool('HR');
+              if (hr == true) {
+                showLeaveRequestAlert(context);
+              } else {}
             },
             child: ListTile(
               leading: CircleAvatar(

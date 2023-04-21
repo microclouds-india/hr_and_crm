@@ -58,7 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Icons.quiz,
                   color: Colors.white,
                 ),
-                label: Text(
+                label: const Text(
                   'Help',
                   style: TextStyle(color: Colors.white),
                 )),

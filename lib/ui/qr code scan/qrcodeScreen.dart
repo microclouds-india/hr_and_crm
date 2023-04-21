@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:hr_and_crm/ui/qr%20code%20scan/scanQr.dart';
 
 class QrCodeScreen extends StatelessWidget {
   const QrCodeScreen({super.key});
@@ -54,18 +55,26 @@ class QrCodeScreen extends StatelessWidget {
             Spacer(),
             Image(height: 200, image: AssetImage('assets/icons/qr-code.gif')),
             Spacer(),
-            Container(
-              height: 50,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Colors.pink.shade900,
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              ),
-              child: Center(
-                child: Text(
-                  'SCAN',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return QRViewWidget();
+                }));
+              },
+              child: Container(
+                height: 50,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Colors.pink.shade900,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                child: Center(
+                  child: Text(
+                    'SCAN',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             )

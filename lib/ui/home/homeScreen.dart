@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     List screens = [
       Home(hr: widget.hr),
       const ChatScreen(),
-      widget.hr ? JobPost() : HolidaysPage(hr: widget.hr),
+      widget.hr ? const JobPost() : HolidaysPage(hr: widget.hr),
       const ProfilePage(),
     ];
     return WillPopScope(

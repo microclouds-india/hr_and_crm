@@ -1,5 +1,4 @@
-class Strings{
-
+class Strings {
   // SnackBar title
   var pleaseFillAllFields = 'Please fill all fields';
   var incorrectEmailOrPassword = 'Incorrect email or password';
@@ -8,6 +7,7 @@ class Strings{
   var welcomeBack = 'Welcome Back!';
   var loginToYourExistingAccount = 'Login to your existing account';
   var email = 'Email';
+  var dob = 'Date OF Birth';
   var password = 'Password';
   var forgotPassword = 'Forgot Password?';
   var login = '   Login   ';
@@ -26,5 +26,6 @@ class Strings{
   var createAccount = '   Create Account   ';
   var alreadyHaveAnAccount = 'Already have an account?';
   var loginSignUp = 'Login';
-
+  var city = 'City';
+  var jobRole = 'Jobe Role';
 }

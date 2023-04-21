@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:hr_and_crm/common/widgets/submitContainer.dart';
+import 'package:hr_and_crm/repository/Employee%20login/employeeLogin.dart';
 import 'package:hr_and_crm/ui/home/tabs/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,6 +21,13 @@ class _EmployeeOTPscreenState extends State<EmployeeOTPscreen> {
   String otpVerifivationCode = '';
   String? _verificationCode;
   bool resendOTP = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    EmployeeLoginNetWork().getOTP(widget.number);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,13 +116,8 @@ class _EmployeeOTPscreenState extends State<EmployeeOTPscreen> {
                 child: GestureDetector(
                     onTap: () async {
                       final prif = await SharedPreferences.getInstance();
-                      prif.setBool('HR', false);
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return HomeScreen(
-                          hr: false,
-                        );
-                      }));
+                      EmployeeLoginNetWork().existuserOtp(
+                          otpVerifivationCode, context, widget.number);
                     },
                     child: submitContainer(context, 'Verify')),
               ),
