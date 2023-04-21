@@ -70,7 +70,7 @@ class EmployeeContainer extends StatelessWidget {
                     width: 15,
                   ),
                   const Icon(
-                    Icons.whatsapp,
+                    Icons.chat,
                     size: 20,
                     color: Colors.grey,
                   ),

@@ -49,9 +49,17 @@ class RegisterNetwork {
           'Successsssssssssssssssssssssssssssssssssssss${response.stream.bytesToString()}');
       // ignore: use_build_context_synchronously
       Ui.getSnackBar(title: 'Registration Completed', context: context);
+    } else if (response.statusCode == 404) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.pink.shade900,
+          content: Text("File not found"),
+        ),
+      );
     } else {
       // ignore: use_build_context_synchronously
-      Ui.getSnackBar(title: 'Registration Faild', context: context);
+      Ui.getSnackBar(title: 'Something went wrong!', context: context);
       print(
           'failllllllllllllllllllllllllllllllllllllll${response.stream.bytesToString()}');
     }
