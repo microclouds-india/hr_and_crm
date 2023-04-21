@@ -15,8 +15,7 @@ class QrCodePunchIn extends StatefulWidget {
 class _QrCodePunchInState extends State<QrCodePunchIn> {
   @override
   Widget build(BuildContext context) {
-    final dropDownServiceData = Provider.of<DropDownServiceNotifier>(
-        context, listen: false);
+    final dropDownServiceData = Provider.of<DropDownServiceNotifier>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(

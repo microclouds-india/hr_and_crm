@@ -48,9 +48,9 @@ class _ProfilePageState extends State<ProfilePage> {
           IconButton(
               onPressed: () => Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
-                    return SettingsScreen();
+                    return const SettingsScreen();
                   })),
-              icon: Icon(
+              icon: const Icon(
                 Icons.settings,
                 color: Colors.white,
               ))

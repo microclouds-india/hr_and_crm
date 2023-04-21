@@ -3,6 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_and_crm/common/strings.dart';
 import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/common/widgets/bookingFormTextFields.dart';
+import 'package:hr_and_crm/repository/dropDownServices/dropDownServices.notifier.dart';
+import 'package:hr_and_crm/repository/login/notifier/login.notifier.dart';
+import 'package:hr_and_crm/ui/home/homeScreen.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -17,6 +22,7 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController otpController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
@@ -24,6 +30,7 @@ class _SignupPageState extends State<SignupPage> {
   void dispose() {
     // TODO: implement dispose
     nameController.clear();
+    otpController.clear();
     emailController.clear();
     phoneController.clear();
     addressController.clear();
@@ -34,6 +41,9 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final dropDownServiceData = Provider.of<DropDownServiceNotifier>(context, listen: false);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -84,24 +94,107 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                   ),
                   Expanded(
-                      child: Padding(
-                    padding:
-                        const EdgeInsets.only(left: 10, right: 20, top: 10),
-                    child: Container(
-                      height: 40,
-                      width: 50,
-                      decoration: BoxDecoration(
-                          color: Colors.pink.shade900,
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: const Center(
-                        child: Text(
-                          'Get OTP',
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      ),
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(left: 10, right: 20, top: 10),
+                      child:
+                          Consumer<LoginNotifier>(builder: (context, data, _) {
+                        return data.isLoading2
+                            ? Center(
+                                heightFactor: 1,
+                                widthFactor: 1,
+                                child: SizedBox(
+                                  height: 30,
+                                  width: 30,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.pink.shade900,
+                                  ),
+                                ),
+                              )
+                            : InkWell(
+                                onTap: () async {
+                                  if (phoneController.text.isNotEmpty) {
+                                    try {
+                                      await data.registerUser(
+                                          phone: phoneController.text);
+
+                                      if (data.loginModel.status == "200") {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            behavior: SnackBarBehavior.floating,
+                                            backgroundColor:
+                                                Colors.pink.shade900,
+                                            content: Text(
+                                                "OTP send to ${phoneController.text}"),
+                                          ),
+                                        );
+                                      } else if (data.loginModel.status ==
+                                          "404") {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            behavior: SnackBarBehavior.floating,
+                                            backgroundColor:
+                                                Colors.pink.shade900,
+                                            content:
+                                                Text(data.loginModel.response),
+                                          ),
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            behavior: SnackBarBehavior.floating,
+                                            backgroundColor:
+                                                Colors.pink.shade900,
+                                            content:
+                                                Text("Something went wrong!"),
+                                          ),
+                                        );
+                                      }
+                                    } catch (_) {
+                                      // ScaffoldMessenger.of(context)
+                                      //     .showSnackBar(
+                                      //   SnackBar(
+                                      //     behavior: SnackBarBehavior.floating,
+                                      //     backgroundColor: Colors.pink.shade900,
+                                      //     content:
+                                      //         Text("Something went wrong!"),
+                                      //   ),
+                                      // );
+                                    }
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.pink.shade900,
+                                        content:
+                                            Text("Please fill all the fields"),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Container(
+                                  height: 40,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                      color: Colors.pink.shade900,
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10))),
+                                  child: const Center(
+                                    child: Text(
+                                      'Get OTP',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                              );
+                      }),
                     ),
-                  ))
+                  ),
                 ],
               ),
               Padding(
@@ -109,7 +202,8 @@ class _SignupPageState extends State<SignupPage> {
                     const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                 child: BookingFormTextFields(
                   hint: 'Enter OTP',
-                  controller: addressController,
+                  controller: otpController,
+                  keyboardType: TextInputType.number,
                 ),
               ),
               Padding(
@@ -129,49 +223,122 @@ class _SignupPageState extends State<SignupPage> {
                   maxLines: 1,
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
-                child: BookingFormTextFields(
-                  hint: Strings().password,
-                  controller: passwordController,
-                  maxLines: 1,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 20.0, right: 20.0, top: 10.0, bottom: 20.0),
-                child: BookingFormTextFields(
-                  hint: Strings().confirmPassword,
-                  controller: confirmPasswordController,
-                  maxLines: 1,
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (nameController.text.isEmpty &&
-                      emailController.text.isEmpty &&
-                      phoneController.text.isEmpty &&
-                      addressController.text.isEmpty &&
-                      passwordController.text.isEmpty &&
-                      confirmPasswordController.text.isEmpty) {
-                    Ui.getSnackBar(
-                        title: Strings().pleaseFillAllFields, context: context);
-                  } else {
-                    Navigator.of(context).pushNamed("/loginPage");
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.pink.shade900,
-                ),
-                child: Text(
-                  Strings().createAccount,
-                  style: GoogleFonts.openSans(
-                    color: Colors.white,
-                    fontSize: 13,
+              Consumer<DropDownServiceNotifier>(builder: (context, data, _) {
+                return Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                  margin: const EdgeInsets.all(10.0),
+                  decoration: Ui.getBoxDecoration(),
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    underline: const SizedBox(),
+                    value: dropDownServiceData.selectedregistrationJobrole,
+                    items: dropDownServiceData.registrationJobrole.map((
+                        String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      dropDownServiceData.setRegistrationJobrole(value.toString());
+                    },
                   ),
-                ),
-              ),
+                );
+              }),
+              Consumer<LoginNotifier>(builder: (context, data, _) {
+                return data.isLoading3
+                    ? Center(
+                        heightFactor: 1,
+                        widthFactor: 1,
+                        child: SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: CircularProgressIndicator(
+                            color: Colors.pink.shade900,
+                          ),
+                        ),
+                      )
+                    : ElevatedButton(
+                        onPressed: () async {
+                          if (nameController.text.isEmpty &&
+                              emailController.text.isEmpty &&
+                              phoneController.text.isEmpty &&
+                              addressController.text.isEmpty &&
+                              passwordController.text.isEmpty &&
+                              confirmPasswordController.text.isEmpty) {
+                            Ui.getSnackBar(
+                                title: Strings().pleaseFillAllFields,
+                                context: context);
+                          } else {
+                            if (phoneController.text.isNotEmpty) {
+                              try {
+                                await data.registerUserwithotp(
+                                  phone: phoneController.text,
+                                  otp: otpController.text,
+                                );
+
+                                if (data.loginModel.status == "200") {
+                                  final prif =
+                                      await SharedPreferences.getInstance();
+                                  prif.setString('token', data.otpModel.token);
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return HomeScreen(
+                                      hr: true,
+                                    );
+                                  }));
+                                } else if (data.loginModel.status == "404") {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: Colors.pink.shade900,
+                                      content: Text(data.loginModel.response),
+                                    ),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: Colors.pink.shade900,
+                                      content: Text("Something went wrong!"),
+                                    ),
+                                  );
+                                }
+                              } catch (_) {
+                                // ScaffoldMessenger.of(context)
+                                //     .showSnackBar(
+                                //   SnackBar(
+                                //     behavior: SnackBarBehavior.floating,
+                                //     backgroundColor: Colors.pink.shade900,
+                                //     content:
+                                //         Text("Something went wrong!"),
+                                //   ),
+                                // );
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.pink.shade900,
+                                  content: Text("Please fill all the fields"),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.pink.shade900,
+                        ),
+                        child: Text(
+                          Strings().createAccount,
+                          style: GoogleFonts.openSans(
+                            color: Colors.white,
+                            fontSize: 13,
+                          ),
+                        ),
+                      );
+              }),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10.0),
                 child: Row(
