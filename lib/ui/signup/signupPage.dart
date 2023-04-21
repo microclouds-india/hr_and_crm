@@ -22,7 +22,7 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   File? _imageFile;
 
-   DateTime? _selectedDate;
+  DateTime? _selectedDate;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -53,10 +53,6 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController signupemailController = TextEditingController();
   final TextEditingController signupphoneController = TextEditingController();
   final TextEditingController signupaddressController = TextEditingController();
-  final TextEditingController signuppasswordController =
-      TextEditingController();
-  final TextEditingController signupconfirmPasswordController =
-      TextEditingController();
   final TextEditingController signupjobRoleController = TextEditingController();
   final TextEditingController signupdobController = TextEditingController();
   final TextEditingController signupotpController = TextEditingController();
@@ -69,8 +65,7 @@ class _SignupPageState extends State<SignupPage> {
     emailController.clear();
     signupphoneController.clear();
     addressController.clear();
-    signuppasswordController.clear();
-    signupconfirmPasswordController.clear();
+
     super.dispose();
   }
 
@@ -174,33 +169,44 @@ class _SignupPageState extends State<SignupPage> {
                   controller: signupotpController,
                 ),
               ),
-               Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
-              child: GestureDetector(
-                onTap: () => _selectDate(context),
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(5.0)),
-                  padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        _selectedDate == null
-                            ? 'Select Date'
-                            : DateFormat('dd/MM/yyyy').format(_selectedDate!),
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                      Icon(Icons.calendar_today)
-                    ],
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                child: GestureDetector(
+                  onTap: () => _selectDate(context),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(5.0)),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          _selectedDate == null
+                              ? 'Select Date'
+                              : DateFormat('dd/MM/yyyy').format(_selectedDate!),
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                        Icon(Icons.calendar_today)
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                child: BookingFormTextFields(
+                  hint: Strings().email,
+                  controller: signupemailController,
+                  maxLines: 1,
+                ),
+              ),
               Padding(
                 padding:
                     const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
@@ -275,33 +281,7 @@ class _SignupPageState extends State<SignupPage> {
               //     maxLines: 1,
               //   ),
               // ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
-                child: BookingFormTextFields(
-                  hint: Strings().email,
-                  controller: signupemailController,
-                  maxLines: 1,
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
-                child: BookingFormTextFields(
-                  hint: Strings().password,
-                  controller: signuppasswordController,
-                  maxLines: 1,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 20.0, right: 20.0, top: 10.0, bottom: 20.0),
-                child: BookingFormTextFields(
-                  hint: Strings().confirmPassword,
-                  controller: signupconfirmPasswordController,
-                  maxLines: 1,
-                ),
-              ),
+
               ElevatedButton(
                   onPressed: () {
                     _pickImage(ImageSource.gallery);
@@ -314,9 +294,7 @@ class _SignupPageState extends State<SignupPage> {
                       signupemailController.text.isEmpty &&
                       signupphoneController.text.isEmpty &&
                       signupaddressController.text.isEmpty &&
-                      signuppasswordController.text.isEmpty &&
-                      signupjobRoleController.text.isEmpty &&
-                      signupconfirmPasswordController.text.isEmpty) {
+                      signupjobRoleController.text.isEmpty) {
                     // ignore: use_build_context_synchronously
                     Ui.getSnackBar(
                         title: Strings().pleaseFillAllFields, context: context);
@@ -344,33 +322,6 @@ class _SignupPageState extends State<SignupPage> {
                     color: Colors.white,
                     fontSize: 13,
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      Strings().alreadyHaveAnAccount,
-                      style: GoogleFonts.openSans(
-                        color: Colors.black,
-                        fontSize: 15,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed("/loginPage");
-                      },
-                      child: Text(
-                        Strings().loginSignUp,
-                        style: GoogleFonts.openSans(
-                          color: Colors.pink.shade900,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ),
             ],
