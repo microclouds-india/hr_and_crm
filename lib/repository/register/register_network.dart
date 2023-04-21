@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 
 import '../../common/ui.dart';
@@ -18,6 +19,10 @@ class RegisterNetwork {
       required String city,
       required String jobrole,
       required String photo}) async {
+    await EasyLoading.show(
+      status: 'Please Wait...',
+      maskType: EasyLoadingMaskType.black,
+    );
     var headers = {
       'Cookie': 'ci_session=e56e429efc33b0d6f1d1341d71db33db74d39d69'
     };
@@ -39,15 +44,16 @@ class RegisterNetwork {
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
+      await EasyLoading.dismiss();
+      print(
+          'Successsssssssssssssssssssssssssssssssssssss${response.stream.bytesToString()}');
+      // ignore: use_build_context_synchronously
       Ui.getSnackBar(title: 'Registration Completed', context: context);
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) {
-        return HomeScreen(hr: true);
-      }), (route) => false);
     } else {
-      print(response.stream.bytesToString());
+      // ignore: use_build_context_synchronously
       Ui.getSnackBar(title: 'Registration Faild', context: context);
+      print(
+          'failllllllllllllllllllllllllllllllllllllll${response.stream.bytesToString()}');
     }
   }
 

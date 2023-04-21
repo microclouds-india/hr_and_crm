@@ -56,10 +56,10 @@ class _BiometricScreenState extends State<BiometricScreen> {
     try {
       setState(() {
         _isAuthenticating = true;
-        _authorized = 'Authenticating';
+        _authorized = 'Attendance';
       });
       authenticated = await auth.authenticate(
-        localizedReason: 'Let OS determine authentication method',
+        localizedReason: 'Please be absent with your\nfingerint',
         options: const AuthenticationOptions(
           stickyAuth: true,
           biometricOnly: true

@@ -253,7 +253,7 @@ class _HomeState extends State<Home> {
                           } else {
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: (context) {
-                              return LeaveReport();
+                              return LeaveRequestScreen();
                             }));
                           }
                         },
@@ -342,6 +342,15 @@ class _HomeState extends State<Home> {
                     child: listtileCotainer(context, Colors.black,
                         'assets/icons/calculator.png', 'Salary Calculator'),
                   )),
+              Visibility(
+                  visible: widget.hr,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed("/signupPage");
+                    },
+                    child: listtileCotainer(context, Colors.teal,
+                        'assets/icons/employee.png', "Register new people"),
+                  ))
             ],
           ),
         ),

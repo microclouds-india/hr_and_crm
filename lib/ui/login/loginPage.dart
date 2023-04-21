@@ -8,7 +8,6 @@ import 'package:hr_and_crm/common/widgets/bookingFormTextFields.dart';
 import 'package:hr_and_crm/ui/login%20Screens/numberScreen.dart';
 
 import '../Forgot password/mailScreen.dart';
-import '../login Screens/Otp/OTPscreen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -23,7 +22,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     emailController.clear();
     passwordController.clear();
     super.dispose();
@@ -158,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                     ElevatedButton(
                       onPressed: () => Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
-                        return NumberLogin();
+                        return const NumberLogin();
                       })),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.pink.shade700,
@@ -216,25 +214,25 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        Strings().dontHaveAnAccount,
-                        style: GoogleFonts.openSans(
-                          color: Colors.black,
-                          fontSize: 15,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed("/signupPage");
-                        },
-                        child: Text(
-                          Strings().signUp,
-                          style: GoogleFonts.openSans(
-                            color: Colors.pink.shade900,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
+                      // Text(
+                      //   Strings().dontHaveAnAccount,
+                      //   style: GoogleFonts.openSans(
+                      //     color: Colors.black,
+                      //     fontSize: 15,
+                      //   ),
+                      // ),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     Navigator.of(context).pushNamed("/signupPage");
+                      //   },
+                      //   child: Text(
+                      //     Strings().signUp,
+                      //     style: GoogleFonts.openSans(
+                      //       color: Colors.pink.shade900,
+                      //       fontSize: 15,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

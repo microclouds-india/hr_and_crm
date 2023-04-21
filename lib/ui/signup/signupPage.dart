@@ -7,6 +7,7 @@ import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/common/widgets/bookingFormTextFields.dart';
 import 'package:hr_and_crm/ui/Employees/Add%20Employees/addEmployee.dart';
 import 'package:hr_and_crm/ui/home/homeScreen.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../repository/register/register_network.dart';
@@ -21,6 +22,21 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   File? _imageFile;
 
+   DateTime? _selectedDate;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1990, 1),
+        lastDate: DateTime.now());
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await ImagePicker().pickImage(source: source);
 
@@ -33,27 +49,28 @@ class _SignupPageState extends State<SignupPage> {
     });
   }
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
+  final TextEditingController signupnameController = TextEditingController();
+  final TextEditingController signupemailController = TextEditingController();
+  final TextEditingController signupphoneController = TextEditingController();
+  final TextEditingController signupaddressController = TextEditingController();
+  final TextEditingController signuppasswordController =
       TextEditingController();
-  final TextEditingController jobRoleController = TextEditingController();
-  final TextEditingController dobController = TextEditingController();
-  final TextEditingController cityControllerr = TextEditingController();
-  final TextEditingController otpController = TextEditingController();
+  final TextEditingController signupconfirmPasswordController =
+      TextEditingController();
+  final TextEditingController signupjobRoleController = TextEditingController();
+  final TextEditingController signupdobController = TextEditingController();
+  final TextEditingController signupotpController = TextEditingController();
+  final TextEditingController signupCityController = TextEditingController();
 
   @override
   void dispose() {
     // TODO: implement dispose
     nameController.clear();
     emailController.clear();
-    phoneController.clear();
+    signupphoneController.clear();
     addressController.clear();
-    passwordController.clear();
-    confirmPasswordController.clear();
+    signuppasswordController.clear();
+    signupconfirmPasswordController.clear();
     super.dispose();
   }
 
@@ -61,6 +78,8 @@ class _SignupPageState extends State<SignupPage> {
 
   String dropdownValue = 'Male';
   List<String> options = ['Male', 'Female', 'Other'];
+  String jobRole = 'Employee';
+  List<String> jobroleOptions = ['Employee', 'Hr', 'Manager'];
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +114,7 @@ class _SignupPageState extends State<SignupPage> {
                     const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                 child: BookingFormTextFields(
                   hint: Strings().name,
-                  controller: nameController,
+                  controller: signupnameController,
                   maxLines: 1,
                 ),
               ),
@@ -107,7 +126,7 @@ class _SignupPageState extends State<SignupPage> {
                           left: 20.0, right: 20.0, top: 10.0),
                       child: BookingFormTextFields(
                         hint: Strings().phone,
-                        controller: phoneController,
+                        controller: signupphoneController,
                         keyboardType: TextInputType.number,
                         maxLines: 1,
                       ),
@@ -122,7 +141,7 @@ class _SignupPageState extends State<SignupPage> {
                         setState(() {
                           otpOn = true;
                         });
-                        RegisterNetwork().indexOtp(phoneController.text);
+                        RegisterNetwork().indexOtp(signupphoneController.text);
                       },
                       child: Container(
                         height: 40,
@@ -150,25 +169,44 @@ class _SignupPageState extends State<SignupPage> {
                 padding:
                     const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                 child: BookingFormTextFields(
+                  keyboardType: TextInputType.phone,
                   hint: 'Enter OTP',
-                  controller: otpController,
+                  controller: signupotpController,
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
-                child: BookingFormTextFields(
-                  hint: Strings().dob,
-                  controller: dobController,
-                  maxLines: 1,
+               Padding(
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+              child: GestureDetector(
+                onTap: () => _selectDate(context),
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        _selectedDate == null
+                            ? 'Select Date'
+                            : DateFormat('dd/MM/yyyy').format(_selectedDate!),
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                      Icon(Icons.calendar_today)
+                    ],
+                  ),
                 ),
               ),
+            ),
               Padding(
                 padding:
                     const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                 child: BookingFormTextFields(
                   hint: Strings().address,
-                  controller: addressController,
+                  controller: signupaddressController,
                 ),
               ),
               Padding(
@@ -176,7 +214,7 @@ class _SignupPageState extends State<SignupPage> {
                     const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                 child: BookingFormTextFields(
                   hint: Strings().city,
-                  controller: cityControllerr,
+                  controller: signupCityController,
                 ),
               ),
               Padding(
@@ -204,20 +242,45 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
-                child: BookingFormTextFields(
-                  hint: Strings().jobRole,
-                  controller: jobRoleController,
-                  maxLines: 1,
+                padding: const EdgeInsets.only(
+                  left: 30,
+                  right: 30,
+                  top: 15,
+                ),
+                child: DropdownButton<String>(
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  isExpanded: true,
+                  value: jobRole,
+                  icon: const Icon(Icons.arrow_downward),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      jobRole = newValue!;
+                    });
+                  },
+                  items: jobroleOptions
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
                 ),
               ),
+              // Padding(
+              //   padding:
+              //       const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+              //   child: BookingFormTextFields(
+              //     hint: Strings().jobRole,
+              //     controller: jobRoleController,
+              //     maxLines: 1,
+              //   ),
+              // ),
               Padding(
                 padding:
                     const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                 child: BookingFormTextFields(
                   hint: Strings().email,
-                  controller: emailController,
+                  controller: signupemailController,
                   maxLines: 1,
                 ),
               ),
@@ -226,7 +289,7 @@ class _SignupPageState extends State<SignupPage> {
                     const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                 child: BookingFormTextFields(
                   hint: Strings().password,
-                  controller: passwordController,
+                  controller: signuppasswordController,
                   maxLines: 1,
                 ),
               ),
@@ -235,40 +298,39 @@ class _SignupPageState extends State<SignupPage> {
                     left: 20.0, right: 20.0, top: 10.0, bottom: 20.0),
                 child: BookingFormTextFields(
                   hint: Strings().confirmPassword,
-                  controller: confirmPasswordController,
+                  controller: signupconfirmPasswordController,
                   maxLines: 1,
                 ),
               ),
               ElevatedButton(
                   onPressed: () {
-                    _pickImage(ImageSource.camera);
+                    _pickImage(ImageSource.gallery);
                   },
                   child: Text('Upload Image')),
               ElevatedButton(
                 onPressed: () async {
                   final prif = await SharedPreferences.getInstance();
-                  if (nameController.text.isEmpty &&
-                      emailController.text.isEmpty &&
-                      phoneController.text.isEmpty &&
-                      addressController.text.isEmpty &&
-                      passwordController.text.isEmpty &&
-                      jobRoleController.text.isEmpty &&
-                      confirmPasswordController.text.isEmpty) {
+                  if (signupnameController.text.isEmpty &&
+                      signupemailController.text.isEmpty &&
+                      signupphoneController.text.isEmpty &&
+                      signupaddressController.text.isEmpty &&
+                      signuppasswordController.text.isEmpty &&
+                      signupjobRoleController.text.isEmpty &&
+                      signupconfirmPasswordController.text.isEmpty) {
                     Ui.getSnackBar(
                         title: Strings().pleaseFillAllFields, context: context);
                   } else {
                     RegisterNetwork().register(
                         context: context,
-                        phone: phoneController.text,
-                        name: nameController.text,
-                        otp: otpController.text,
+                        phone: signupphoneController.text,
+                        name: signupnameController.text,
+                        otp: signupotpController.text,
                         gender: dropdownValue,
-                        email: emailController.text,
-                        dob: dobController.text,
-                        city: cityControllerr.text,
-                        jobrole: jobRoleController.text,
+                        email: signupemailController.text,
+                        dob: DateFormat('dd/MM/yyyy').format(_selectedDate!),
+                        city: signupCityController.text,
+                        jobrole: signupjobRoleController.text,
                         photo: _imageFile!.path);
-                   
                   }
                 },
                 style: ElevatedButton.styleFrom(

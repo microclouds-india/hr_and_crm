@@ -67,6 +67,7 @@ class _PublicHolidayScreenState extends State<PublicHolidayScreen> {
     );
 
     if (holidayName != null) {
+      // ignore: use_build_context_synchronously
       final holidayDate = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
@@ -105,7 +106,7 @@ class _PublicHolidayScreenState extends State<PublicHolidayScreen> {
         backgroundColor: Colors.pink.shade900,
         onPressed: _addPublicHoliday,
         tooltip: 'Add Public Holiday',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

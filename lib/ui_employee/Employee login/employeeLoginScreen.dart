@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hr_and_crm/ui/login%20Screens/Otp/OTPscreen.dart';
-import 'package:hr_and_crm/ui/signup/signupPage.dart';
 
 import '../../common/ui.dart';
 import '../../common/widgets/bookingFormTextFields.dart';
@@ -118,7 +116,7 @@ class _EmployeeNumberLoginState extends State<EmployeeNumberLogin> {
                     },
                     child: submitContainer(context, 'Get OTP')),
               ),
-              Spacer()
+              const Spacer()
             ],
           ),
         ),
