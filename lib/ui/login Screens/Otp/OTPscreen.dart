@@ -47,15 +47,34 @@ class _OTPscreenState extends State<OTPscreen> {
       final prif = await SharedPreferences.getInstance();
       prif.setString('token', data['token']);
       print('newTikeeeeeeeen${data['token']}');
-      prif.setBool('HR', true);
+      print('Roleeeeeeeeeeeeee${data['user_signup']}');
+      prif.setString('role', data['user_signup']);
       print('tokeeeeeeeeeeeeeeeeeeeen${prif.getString('token')}');
-      Ui.getSnackBar(title: 'Login Successfully', context: context);
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) {
-        return HomeScreen(
-          hr: true,
-        );
-      }), (route) => false);
+      if (prif.getString('role') == null || prif.getString('role')!.isEmpty) {
+        Ui.getSnackBar(title: 'Please Add your role!', context: context);
+      } else if (prif.getString('role')!.contains('Manager') ||
+          prif.getString('role')!.contains('Hr')) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+          return HomeScreen(
+            hr: true,
+          );
+        }), (route) => false);
+      } else if (prif.getString('role')!.contains('Employee')) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+          return HomeScreen(
+            hr: false,
+          );
+        }), (route) => false);
+      } else {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+          return HomeScreen(
+            hr: true,
+          );
+        }), (route) => false);
+      }
     } else {
       Ui.getSnackBar(title: 'Please Enter Valid OPT!', context: context);
     }

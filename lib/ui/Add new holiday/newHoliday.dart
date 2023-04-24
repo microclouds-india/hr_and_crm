@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../../repository/addHoliday/notifier/add_holiday_notifier.dart';
 
 class NewHolidayScreen extends StatefulWidget {
   @override
@@ -12,6 +17,7 @@ class _NewHolidayScreenState extends State<NewHolidayScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final data = Provider.of<AddHolidayNotifier>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -39,14 +45,29 @@ class _NewHolidayScreenState extends State<NewHolidayScreen> {
                 suffixIcon: IconButton(
                   icon: Icon(Icons.calendar_today),
                   onPressed: () {
-                    _selectDate(context);
+                    _selectDate(context, data);
                   },
                 ),
               ),
             ),
             SizedBox(height: 32.0),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                if (data.year.isEmpty ||
+                    data.year == null && _nameController.text.isEmpty ||
+                    _nameController.text == '') {
+                  Ui.getSnackBar(
+                      title: 'Please Enter a Value', context: context);
+                } else {
+                  data.addHolidays(
+                    context: context,
+                      year: data.year,
+                      holidayDate: _dateController.text == ''
+                          ? data.date
+                          : _dateController.text,
+                      tittle: _nameController.text);
+                }
+              },
               child: Text('Save'),
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.pink.shade900),
@@ -57,7 +78,8 @@ class _NewHolidayScreenState extends State<NewHolidayScreen> {
     );
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectDate(
+      BuildContext context, AddHolidayNotifier addHolidayNotifier) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -65,7 +87,9 @@ class _NewHolidayScreenState extends State<NewHolidayScreen> {
       lastDate: DateTime.now().add(Duration(days: 365)),
     );
     if (pickedDate != null) {
-      _dateController.text = pickedDate.toString();
+      final dateFormate = DateFormat("dd-MM-yyyy").format(pickedDate);
+      _dateController.text = DateFormat("dd-MM-yyyy").format(pickedDate);
+      addHolidayNotifier.addDate(pickedDate.year.toString(), dateFormate);
     }
   }
 

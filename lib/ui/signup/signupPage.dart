@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_and_crm/common/strings.dart';
 import 'package:hr_and_crm/common/ui.dart';
+import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 import 'package:hr_and_crm/common/widgets/bookingFormTextFields.dart';
 import 'package:hr_and_crm/ui/Employees/Add%20Employees/addEmployee.dart';
 import 'package:hr_and_crm/ui/home/homeScreen.dart';
@@ -79,31 +80,39 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.pink.shade900,
+        title: apBarText(
+          'Register New account',
+          Colors.white,
+        ),
+        centerTitle: true,
+      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
-              const SizedBox(
-                height: 80,
-              ),
-              Image.asset(
-                "assets/icons/logo.png",
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                Strings().letsGetStarted,
-                style: GoogleFonts.openSans(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
+              // const SizedBox(
+              //   height: 80,
+              // ),
+              // Image.asset(
+              //   "assets/icons/logo.png",
+              //   width: 100,
+              //   height: 100,
+              //   fit: BoxFit.cover,
+              // ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
+              // Text(
+              //   Strings().letsGetStarted,
+              //   style: GoogleFonts.openSans(
+              //     fontSize: 25,
+              //     fontWeight: FontWeight.bold,
+              //     color: Colors.black,
+              //   ),
+              // ),
               Padding(
                 padding:
                     const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),

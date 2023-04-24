@@ -49,6 +49,7 @@ class RegisterNetwork {
           'Successsssssssssssssssssssssssssssssssssssss${response.stream.bytesToString()}');
       // ignore: use_build_context_synchronously
       Ui.getSnackBar(title: 'Registration Completed', context: context);
+      Navigator.pop(context);
     } else if (response.statusCode == 404) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

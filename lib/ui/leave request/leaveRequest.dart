@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hr_and_crm/repository/Leave%20Requests/Netwoking/leaveRequest_network.dart';
+import 'package:hr_and_crm/repository/Leave%20Requests/notifier/leaveRequestsNotifier.dart';
 import 'package:hr_and_crm/ui/leave%20request/reqestScreen.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../LEAVE REQUEST POP UP ALERT TO TEAMLEADER AND HR EXECTIVE/leaveRequistPopup.dart';
 
-class LeaveRequestScreen extends StatefulWidget {
-  @override
-  State<LeaveRequestScreen> createState() => _LeaveRequestScreenState();
-}
-
-class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
+class LeaveRequestScreen extends StatelessWidget {
   TextEditingController fromDate = TextEditingController();
+
   List status = [
     'Approved',
     'Not Approved',
@@ -21,8 +20,10 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
     'Approved',
     'Not Approved',
   ];
+
   @override
   Widget build(BuildContext context) {
+    final data = Provider.of<leaveRequestNotifier>(context, listen: false);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.pink.shade900,
@@ -43,62 +44,76 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
         ),
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemCount: 8,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () async {
-              final prif = await SharedPreferences.getInstance();
-              bool? hr = prif.getBool('HR');
-              if (hr == true) {
-                showLeaveRequestAlert(context);
-              } else {}
-            },
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.pink.shade900,
-                child: Center(
-                  child: Text(
-                    '08',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
-                  ),
+      body: FutureBuilder(
+          future: data.getDatas(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: data.leaveRequestModel.data!.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () async {
+                      final prif = await SharedPreferences.getInstance();
+                      bool? hr = prif.getBool('HR');
+                      if (hr == true) {
+                        showLeaveRequestAlert(context);
+                      } else {}
+                    },
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.pink.shade900,
+                        child: Center(
+                          child: Text(
+                            '08',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 10),
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        data.leaveRequestModel.data![index].reason ??
+                            'No Reason',
+                        style: TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        'date:${data.leaveRequestModel.data![index].ldate}',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: Container(
+                        height: 25,
+                        width: 60,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: status[index] == 'Approved'
+                                    ? Colors.green
+                                    : Colors.red),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Center(
+                          child: Text(
+                            'Approved',
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: status[index] == 'Approved'
+                                    ? Colors.green
+                                    : Colors.red),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Colors.pink.shade900,
                 ),
-              ),
-              title: Text(
-                'Reason of Leave',
-                style: TextStyle(
-                    overflow: TextOverflow.ellipsis,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(
-                'date:01/02/03',
-                overflow: TextOverflow.ellipsis,
-              ),
-              trailing: Container(
-                height: 25,
-                width: 60,
-                decoration: BoxDecoration(
-                    border: Border.all(
-                        color: status[index] == 'Approved'
-                            ? Colors.green
-                            : Colors.red),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                child: Center(
-                  child: Text(
-                    'Approved',
-                    style: TextStyle(
-                        fontSize: 10,
-                        color: status[index] == 'Approved'
-                            ? Colors.green
-                            : Colors.red),
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+              );
+            }
+          }),
     );
   }
 

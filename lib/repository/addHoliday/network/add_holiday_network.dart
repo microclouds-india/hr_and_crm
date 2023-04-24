@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/repository/addHoliday/model/add_holiday_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,7 +13,7 @@ class AddHolidayNetwork {
   Future<AddHolidayModel?> addHoliDay(
       {required String year,
       required String holidayDate,
-      required String title}) async {
+      required String title,required BuildContext context}) async {
     try {
       var url = Uri.parse(endpoint);
       var response = await http.post(url, body: {
@@ -23,6 +25,7 @@ class AddHolidayNetwork {
         var json = jsonDecode(response.body);
         addHolidayModel = AddHolidayModel.fromJson(json);
         print(response.body);
+        Ui.getSnackBar(title: 'Holiday Posted!', context: context);
       }
     } catch (e) {
       return Future.error(e);

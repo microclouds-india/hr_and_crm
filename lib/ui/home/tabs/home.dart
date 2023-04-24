@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 import 'package:hr_and_crm/repository/employees/notifier/employee.notifier.dart';
-import 'package:hr_and_crm/ui/Company%20report/Leave%20Report/leaveReport.dart';
 import 'package:hr_and_crm/ui/Company%20report/companyReport.dart';
 import 'package:hr_and_crm/ui/Employees/Documents/documents.dart';
+import 'package:hr_and_crm/ui/Salary%20calculator/salarycalculator.dart';
 import 'package:hr_and_crm/ui/attendance/attendancePage.dart';
 import 'package:hr_and_crm/ui/attendance/viewAttendanceScreen.dart';
-import 'package:hr_and_crm/ui/home/tabs/leavePage.dart';
 import 'package:hr_and_crm/ui/leave%20request/leaveRequest.dart';
 import 'package:provider/provider.dart';
 import '../../Add account/addAccount.dart';
@@ -15,7 +14,6 @@ import '../../Employees/employees.dart';
 
 import '../../Expense Details/expenseDetais.dart';
 import '../../Notes/reportScreen.dart';
-import '../../Salary calculator/salarycalculator.dart';
 import '../../multi_login/multi_login.dart';
 import 'holidaysPage.dart';
 
@@ -41,7 +39,7 @@ class _HomeState extends State<Home> {
               child: Container(
                   width: 30.0,
                   height: 30.0,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
                           fit: BoxFit.fill,
@@ -337,7 +335,7 @@ class _HomeState extends State<Home> {
                   child: GestureDetector(
                     onTap: () => Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return Multilogin();
+                      return SalaryCalculator();
                     })),
                     child: listtileCotainer(context, Colors.black,
                         'assets/icons/calculator.png', 'Salary Calculator'),

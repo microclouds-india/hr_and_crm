@@ -6,19 +6,28 @@ class AddHolidayNotifier extends ChangeNotifier {
   bool isLoading = false;
   final AddHolidayNetwork addHolidayNetwork = AddHolidayNetwork();
   late AddHolidayModel addHolidayModel;
-
+  String year = '';
+  String date = '';
   loading(bool isloading) {
     isLoading = isloading;
     notifyListeners();
   }
 
+  addDate(String year, String date) {
+    this.year = year;
+    print(year);
+    this.date = date;
+    print(date);
+  }
+
   addHolidays(
       {required String year,
       required String holidayDate,
-      required String tittle}) async {
+      required String tittle,required BuildContext context}) async {
     try {
       loading(true);
       addHolidayModel = (await addHolidayNetwork.addHoliDay(
+        context: context,
           year: year, holidayDate: holidayDate, title: tittle))!;
       loading(false);
     } catch (e) {

@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final holiDayModel = holiDayModelFromJson(jsonString);
-
 import 'dart:convert';
 
 HoliDayModel holiDayModelFromJson(String str) => HoliDayModel.fromJson(json.decode(str));
