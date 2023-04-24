@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: providers,
       child: MaterialApp(
-        builder: EasyLoading.init(),
+          builder: EasyLoading.init(),
           theme: ThemeData(primarySwatch: Colors.pink),
           debugShowCheckedModeBanner: false,
           home: const MyHomePage(),

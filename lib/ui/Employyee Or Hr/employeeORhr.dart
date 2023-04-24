@@ -5,6 +5,7 @@ import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 import 'package:hr_and_crm/ui/login/loginPage.dart';
 
 import '../../ui_employee/Employee login/employeeLoginScreen.dart';
+import '../login Screens/numberScreen.dart';
 
 class RolePage extends StatelessWidget {
   const RolePage({super.key});
@@ -41,7 +42,7 @@ class RolePage extends StatelessWidget {
             GestureDetector(
               onTap: () => Navigator.of(context)
                   .push(MaterialPageRoute(builder: (context) {
-                return LoginPage();
+                return NumberLogin();
               })),
               child: roleContaine(
                   context,
