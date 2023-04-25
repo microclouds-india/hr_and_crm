@@ -117,16 +117,16 @@ class _NumberLoginState extends State<NumberLogin> {
                     child: submitContainer(context, 'Get OTP')),
               ),
               const Spacer(),
-              TextButton(
-                  onPressed: () => Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return const SignupPage();
-                      })),
-                  child: Text(
-                    'Create new account!',
-                    style: TextStyle(color: Colors.pink.shade900),
-                  )),
-              const Spacer(),
+              // TextButton(
+              //     onPressed: () => Navigator.of(context)
+              //             .push(MaterialPageRoute(builder: (context) {
+              //           return const SignupPage();
+              //         })),
+              //     child: Text(
+              //       'Create new account!',
+              //       style: TextStyle(color: Colors.pink.shade900),
+              //     )),
+              // const Spacer(),
             ],
           ),
         ),

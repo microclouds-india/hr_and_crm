@@ -46,7 +46,7 @@ class RegisterNetwork {
     if (response.statusCode == 200) {
       await EasyLoading.dismiss();
       print(
-          'Successsssssssssssssssssssssssssssssssssssss${response.stream.bytesToString()}');
+          'Successsssssssssssssssssssssssssssssssssssss${response.stream.bytesToString().toString()}');
       // ignore: use_build_context_synchronously
       Ui.getSnackBar(title: 'Registration Completed', context: context);
       Navigator.pop(context);
@@ -62,7 +62,7 @@ class RegisterNetwork {
       // ignore: use_build_context_synchronously
       Ui.getSnackBar(title: 'Something went wrong!', context: context);
       print(
-          'failllllllllllllllllllllllllllllllllllllll${response.stream.bytesToString()}');
+          'failllllllllllllllllllllllllllllllllllllll${response.stream.bytesToString().toString()}');
     }
   }
 

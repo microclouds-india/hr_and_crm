@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
+import 'package:hr_and_crm/provider/providers.dart';
+import 'package:hr_and_crm/repository/branches/notifier/branches.notifier.dart';
 import 'package:hr_and_crm/repository/employees/notifier/employee.notifier.dart';
 import 'package:hr_and_crm/ui/Company%20report/companyReport.dart';
 import 'package:hr_and_crm/ui/Employees/Documents/documents.dart';
@@ -14,6 +16,7 @@ import '../../Employees/employees.dart';
 
 import '../../Expense Details/expenseDetais.dart';
 import '../../Notes/reportScreen.dart';
+import '../../branches/branches.dart';
 import '../../multi_login/multi_login.dart';
 import 'holidaysPage.dart';
 
@@ -29,13 +32,19 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final employeeData = Provider.of<EmployeeNotifier>(context, listen: false);
+    final branches = Provider.of<BranchesNotifier>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
-              onTap: _showMyDialog,
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return Branches();
+                }));
+              },
               child: Container(
                   width: 30.0,
                   height: 30.0,
@@ -439,64 +448,5 @@ class _HomeState extends State<Home> {
             ],
           ),
         ));
-  }
-
-  Future<void> _showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Center(child: Text('AlertDialog Title')),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Divider(
-                  color: Colors.grey,
-                  thickness: 0.2,
-                ),
-                ListTile(
-                  leading: Container(
-                      width: 48.0,
-                      height: 48.0,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: AssetImage('assets/icons/man.png')))),
-                  title: Text(
-                    'Branch name',
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text('abcdefg@gmail.com'),
-                ),
-                GestureDetector(
-                  onTap: () => Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) {
-                    return AddAccount();
-                  })),
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.add,
-                      color: Colors.black,
-                    ),
-                    title: apBarText('Add Account', Colors.black),
-                  ),
-                )
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Approve'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 }

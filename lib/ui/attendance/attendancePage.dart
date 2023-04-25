@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Selfi attendance screen/selfiAttendance.dart';
 import '../biometric scanning/biomatricScreen.dart';
@@ -41,10 +42,14 @@ class AttendancePage extends StatelessWidget {
                     height: 10,
                   ),
                   GestureDetector(
-                    onTap: () => Navigator.of(context)
+                    onTap: () async {
+                      final prif = await SharedPreferences.getInstance();
+                      
+                      Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return SelfieAttendanceScreen();
-                    })),
+                      return SelfieAttendanceScreen(attend: prif.getBool('auth')??false,);
+                    }));
+                    },
                     child: AttendanceChild(Icons.camera_alt_outlined,
                         "Selfie Attendance", Icons.radio_button_checked),
                   ),
@@ -70,10 +75,12 @@ class AttendancePage extends StatelessWidget {
                     height: 10,
                   ),
                   GestureDetector(
-                    onTap: () => Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return BiometricScreen();
-                    })),
+                    onTap: () async {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return BiometricScreen();
+                      }));
+                    },
                     child: AttendanceChild(Icons.fingerprint,
                         "Biometric Devices", Icons.arrow_forward_ios),
                   ),

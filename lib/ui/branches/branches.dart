@@ -47,11 +47,11 @@ class _BranchesState extends State<Branches> {
                 return Container(
                   margin: const EdgeInsets.only(top: 20.0, bottom: 20.0),
                   child: ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: branchData.branchesModel.data.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: branchData.branchesModel.data.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
                           leading: Container(
                             width: 100,
                             height: 100,
@@ -92,10 +92,13 @@ class _BranchesState extends State<Branches> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18),
                           ),
-                          subtitle: Text(branchData.branchesModel.data[index].address),
-                          trailing: const Icon(Icons.more_horiz),
-                        );
-                      },
+                          subtitle: Text(
+                              branchData.branchesModel.data[index].address),
+                          trailing: IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.more_horiz),
+                          ));
+                    },
                   ),
                 );
               } else {

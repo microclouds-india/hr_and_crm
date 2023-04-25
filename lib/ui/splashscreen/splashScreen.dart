@@ -43,12 +43,13 @@ class _SplashScreenState extends State<SplashScreen> {
             );
           }));
         } else {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) {
-            return HomeScreen(
-              hr: true,
-            );
-          }));
+          // Navigator.pushReplacement(context,
+          //     MaterialPageRoute(builder: (context) {
+          //   return HomeScreen(
+          //     hr: true,
+          //   );
+          // }));
+          Ui.getSnackBar(title: 'Plese Register!', context: context);
         }
       }
     });

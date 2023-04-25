@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_and_crm/common/strings.dart';
@@ -21,7 +22,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  File? _imageFile;
+  FilePickerResult? _imageFile;
 
   DateTime? _selectedDate;
 
@@ -39,11 +40,14 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Future<void> _pickImage(ImageSource source) async {
-    final pickedFile = await ImagePicker().pickImage(source: source);
+    _imageFile = await FilePicker.platform.pickFiles(
+  type: FileType.custom,
+  allowedExtensions: ['jpg', 'png', ],
+);
 
     setState(() {
-      if (pickedFile != null) {
-        _imageFile = File(pickedFile.path);
+      if (_imageFile != null) {
+        _imageFile = File(_imageFile!.files.single.path!) as FilePickerResult?;
       } else {
         Ui.getSnackBar(title: 'No Image Selected', context: context);
       }
@@ -319,7 +323,7 @@ class _SignupPageState extends State<SignupPage> {
                         dob: DateFormat('dd/MM/yyyy').format(_selectedDate!),
                         city: signupCityController.text,
                         jobrole: signupjobRoleController.text,
-                        photo: _imageFile!.path);
+                        photo: _imageFile!.files.single.path!);
                   }
                 },
                 style: ElevatedButton.styleFrom(

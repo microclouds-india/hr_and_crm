@@ -16,6 +16,7 @@ class ClockOUTNotifier extends ChangeNotifier {
   clockOut(
       {required String id,
       required String clockOuttime,
+      required BuildContext context,
       required String attendDate}) async {
     final prif = await SharedPreferences.getInstance();
     String token = prif.getString('token').toString();
@@ -23,8 +24,9 @@ class ClockOUTNotifier extends ChangeNotifier {
     try {
       loading(true);
       clockInModel = (await clockOUTNetwork.clockOUT(
-          token: '1168066224546464646464',
-          id: '1',
+        context: context,
+          token: token,
+          id: prif.getString('emploee_id')!,
           clockOutime: '5:00',
           attendDate: '2023-04-23')) as ClockInModel;
       loading(false);

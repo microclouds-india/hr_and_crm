@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/repository/clock_out/model/clock_OUT_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,6 +13,7 @@ class ClockOUTNetwork {
       {required String token,
       required String id,
       required String clockOutime,
+      required BuildContext context,
       required String attendDate}) async {
     try {
       var url = Uri.parse(endpoint);
@@ -24,6 +27,7 @@ class ClockOUTNetwork {
         var json = jsonDecode(response.body);
         clockOutModel = ClockOutModel.fromJson(json);
         print(response.body);
+        Ui.getSnackBar(title: 'Attendance Closed', context: context);
       }
     } catch (e) {
       return Future.error(e);
