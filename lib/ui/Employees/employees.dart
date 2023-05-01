@@ -77,8 +77,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
               onSelected: (value) {
                 if (value == 1) {
                   Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) {
-                    return const AddEmployeeScreen();
+                      .pushReplacement(MaterialPageRoute(builder: (context) {
+                    return AddEmployeeScreen();
                   }));
                 } else if (value == 2) {}
               },
@@ -98,6 +98,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                       onTap: () => Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
                         return ViewEmployee(
+                          username: employeesDetails.data![index].name!,
                           id: employeesDetails.data![index].id!,
                         );
                       })),
@@ -111,7 +112,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                               'Name Not Available',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        subtitle: const Text('  '),
+                        subtitle: const Text(''),
                         trailing: IconButton(
                             onPressed: () {},
                             icon: const Icon(Icons.more_horiz_sharp)),

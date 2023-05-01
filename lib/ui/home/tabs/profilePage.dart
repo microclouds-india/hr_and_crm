@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_and_crm/repository/Profile%20View%20Model/profileViewModel.dart';
+import 'package:hr_and_crm/repository/log%20out/notifier/logout_notifier.dart';
 import 'package:http/http.dart' as http;
 import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/ui/Settings/settingsScreen.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -41,6 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final logout = Provider.of<LogoutNotifier>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -84,14 +87,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     decoration: Ui.getBoxDecorationWithoutBorder(),
                     child: Column(
                       children: [
-                         UserInfo(
+                        UserInfo(
                           title: "Name",
-                          text: profileViewMode.data![0].name??'',
+                          text: profileViewMode.data![0].name ?? '',
                           icon: Icons.person,
                         ),
-                         UserInfo(
+                        UserInfo(
                           title: "Email",
-                          text: profileViewMode.data![0].email??'',
+                          text: profileViewMode.data![0].email ?? '',
                           icon: Icons.description,
                         ),
                         const UserInfo(
@@ -99,9 +102,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           text: "address" ?? "",
                           icon: Icons.location_on,
                         ),
-                         UserInfo(
+                        UserInfo(
                           title: "Phone",
-                          text: profileViewMode.data![0].phone??'',
+                          text: profileViewMode.data![0].phone ?? '',
                           icon: Icons.call,
                         ),
                         GestureDetector(
@@ -148,7 +151,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                     ),
                                     TextButton(
-                                      onPressed: () async {},
+                                      onPressed: () async {
+                                        logout.LogOut(context);
+                                      },
                                       child: Text(
                                         'Yes',
                                         style: TextStyle(

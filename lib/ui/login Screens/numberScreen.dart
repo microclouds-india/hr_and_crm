@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hr_and_crm/ui/login%20Screens/Otp/OTPscreen.dart';
 import 'package:hr_and_crm/ui/signup/signupPage.dart';
 import '../../common/ui.dart';
 import '../../common/widgets/bookingFormTextFields.dart';
+import 'package:http/http.dart' as http;
+
 import '../../common/widgets/submitContainer.dart';
 
 class NumberLogin extends StatefulWidget {
@@ -100,33 +105,55 @@ class _NumberLoginState extends State<NumberLogin> {
               Padding(
                 padding: const EdgeInsets.only(left: 30, right: 30),
                 child: GestureDetector(
-                    onTap: () {
-                      if (mobileNumberController.text.isEmpty) {
+                    onTap: () async {
+                      if (mobileNumberController.text.isEmpty ||
+                          mobileNumberController.text.length > 10 ||
+                          mobileNumberController.text.length < 10) {
                         Ui.getSnackBar(
                             title: 'Please Enter Mobile Number',
                             context: context);
                       } else {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return OTPscreen(
-                            number: mobileNumberController.text,
-                          );
-                        }));
+                        await EasyLoading.show(status: 'Please Wait...');
+                        var url = Uri.parse(
+                            'https://cashbes.com/attendance/login/index');
+                        var response = await http.post(url,
+                            body: {'phone': mobileNumberController.text});
+                        if (response.statusCode == 200) {
+                          print(response.body);
+                          var json = jsonDecode(response.body);
+                          if (json['user'] == 'new user') {
+                            await EasyLoading.dismiss();
+                            Ui.getSnackBar(
+                                title: 'no such user exists', context: context);
+                          } else {
+                            await EasyLoading.dismiss();
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return OTPscreen(
+                                number: mobileNumberController.text,
+                              );
+                            }));
+                          }
+                        } else {
+                          await EasyLoading.dismiss();
+                          Ui.getSnackBar(
+                              title: 'Server Down!', context: context);
+                        }
                       }
                     },
                     child: submitContainer(context, 'Get OTP')),
               ),
               const Spacer(),
-              // TextButton(
-              //     onPressed: () => Navigator.of(context)
-              //             .push(MaterialPageRoute(builder: (context) {
-              //           return const SignupPage();
-              //         })),
-              //     child: Text(
-              //       'Create new account!',
-              //       style: TextStyle(color: Colors.pink.shade900),
-              //     )),
-              // const Spacer(),
+              TextButton(
+                  onPressed: () => Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return const SignupPage();
+                      })),
+                  child: Text(
+                    'Create new account!',
+                    style: TextStyle(color: Colors.pink.shade900),
+                  )),
+              const Spacer(),
             ],
           ),
         ),

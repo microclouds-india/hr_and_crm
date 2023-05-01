@@ -35,6 +35,7 @@ class LeaveRequestAlert extends StatelessWidget {
     context: context,
     builder: (BuildContext context) {
       return LeaveRequestAlert(
+        
         title: 'Leave Request',
         message: 'Do you want to approve this leave request?',
         onAccept: () {

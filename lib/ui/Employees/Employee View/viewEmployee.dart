@@ -9,8 +9,9 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../common/widgets/appbarTXT.dart';
 
 class ViewEmployee extends StatefulWidget {
+  String username;
   String id;
-  ViewEmployee({required this.id});
+  ViewEmployee({required this.id, required this.username});
 
   @override
   State<ViewEmployee> createState() => _ViewEmployeeState();
@@ -44,7 +45,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink.shade900,
-        title: apBarText('Username', Colors.white),
+        title: apBarText(widget.username, Colors.white),
         centerTitle: true,
       ),
       body: _loading
@@ -103,11 +104,11 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                             child: shareIMG('assets/icons/gmail (1).png')),
                         GestureDetector(
                             onTap: () async {
-                              const number =
-                                  '08592119XXXX'; //set the number here
+                              var number = (employeesViewModel
+                                  .data![0].phone); //set the number here
                               bool? res =
                                   await FlutterPhoneDirectCaller.callNumber(
-                                      number);
+                                      number!);
                             },
                             child: shareIMG('assets/icons/phone-call.png'))
                       ],
@@ -139,7 +140,8 @@ class _ViewEmployeeState extends State<ViewEmployee> {
         ListTile(
           title: Text(
             tittle,
-            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold),
           ),
           trailing: Text(
             trailling,

@@ -4,14 +4,14 @@ AttendanceAllModel attendanceAllModelFromJson(String str) => AttendanceAllModel.
 
 class AttendanceAllModel {
     AttendanceAllModel({
-        required this.message,
-        required this.data,
-        required this.status,
+         this.message,
+         this.data,
+         this.status,
     });
 
-    String message;
-    List<Datum> data;
-    String status;
+    String? message;
+    List<Datum>? data;
+    String? status;
 
     factory AttendanceAllModel.fromJson(Map<String, dynamic> json) => AttendanceAllModel(
         message: json["message"],
@@ -22,26 +22,26 @@ class AttendanceAllModel {
 
 class Datum {
     Datum({
-        required this.name,
-        required this.attendDate,
-        required this.clockIn,
-        required this.clockOut,
-        required this.workTime,
-        required this.status,
-        required this.attendType,
-        required this.tdate,
-        required this.ttime,
+         this.name,
+         this.attendDate,
+         this.clockIn,
+         this.clockOut,
+         this.workTime,
+         this.status,
+         this.attendType,
+         this.tdate,
+         this.ttime,
     });
 
-    String name;
-    DateTime attendDate;
-    String clockIn;
-    String clockOut;
-    String workTime;
-    String status;
-    String attendType;
-    DateTime tdate;
-    String ttime;
+    String? name;
+    DateTime? attendDate;
+    String? clockIn;
+    String? clockOut;
+    String? workTime;
+    String? status;
+    String? attendType;
+    DateTime? tdate;
+    String? ttime;
 
     factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         name: json["name"],

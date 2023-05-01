@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/ui/home/homeScreen.dart';
+import 'package:hr_and_crm/ui/login/loginPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../login Screens/numberScreen.dart';
@@ -22,20 +23,26 @@ class _SplashScreenState extends State<SplashScreen> {
           prif.getString('token')!.isEmpty && prif.getString('role') == null ||
           prif.getString('role')!.isEmpty) {
         // ignore: use_build_context_synchronously
+        print('222222222222222222${prif.getString('token')}');
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
           return const NumberLogin();
         }));
       } else {
-        if (prif.getString('role')!.contains('Hr') ||
-            prif.getString('role')!.contains('Manager')) {
+        if (prif.getString('role')!.contains('hr') ||
+            prif.getString('role')!.contains('manager') ||
+            prif.getString('role')!.contains('Hr') ||
+            prif.getString('role')!.contains('Manager')
+            ) {
+          // ignore: use_build_context_synchronously
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) {
             return HomeScreen(
               hr: true,
             );
           }));
-        } else if (prif.getString('role')!.contains('Employee')) {
+        } else if (prif.getString('role')!.contains('Employee') || prif.getString('role')!.contains('employee')) {
+          // ignore: use_build_context_synchronously
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) {
             return HomeScreen(
@@ -43,13 +50,13 @@ class _SplashScreenState extends State<SplashScreen> {
             );
           }));
         } else {
-          // Navigator.pushReplacement(context,
-          //     MaterialPageRoute(builder: (context) {
-          //   return HomeScreen(
-          //     hr: true,
-          //   );
-          // }));
-          Ui.getSnackBar(title: 'Plese Register!', context: context);
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) {
+            return const NumberLogin();
+          }));
+          // ignore: use_build_context_synchronously
+          Ui.getSnackBar(title: 'Plese login!', context: context);
         }
       }
     });

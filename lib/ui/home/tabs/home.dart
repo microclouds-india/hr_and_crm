@@ -7,16 +7,19 @@ import 'package:hr_and_crm/repository/employees/notifier/employee.notifier.dart'
 import 'package:hr_and_crm/ui/Company%20report/companyReport.dart';
 import 'package:hr_and_crm/ui/Employees/Documents/documents.dart';
 import 'package:hr_and_crm/ui/Salary%20calculator/salarycalculator.dart';
+import 'package:hr_and_crm/ui/Salary%20view/salary_view.dart';
 import 'package:hr_and_crm/ui/attendance/attendancePage.dart';
 import 'package:hr_and_crm/ui/attendance/viewAttendanceScreen.dart';
 import 'package:hr_and_crm/ui/leave%20request/leaveRequest.dart';
 import 'package:provider/provider.dart';
 import '../../Add account/addAccount.dart';
+import '../../Attendance management/attendance_management.dart';
 import '../../Employees/employees.dart';
 
 import '../../Expense Details/expenseDetais.dart';
 import '../../Notes/reportScreen.dart';
 import '../../branches/branches.dart';
+import '../../employee management/employeeManagement.dart';
 import '../../multi_login/multi_login.dart';
 import 'holidaysPage.dart';
 
@@ -31,6 +34,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    print('000000000000000000000${widget.hr}');
     final employeeData = Provider.of<EmployeeNotifier>(context, listen: false);
     final branches = Provider.of<BranchesNotifier>(context, listen: false);
     return Scaffold(
@@ -182,13 +186,17 @@ class _HomeState extends State<Home> {
                             onTap: () {
                               Navigator.of(context)
                                   .push(MaterialPageRoute(builder: (context) {
-                                return AttendancePage();
+                                return AttendanceManagement(
+                                  hr: widget.hr,
+                                );
                               }));
                             },
                             child: fancyContainer(
                                 Colors.purple,
                                 'assets/icons/checking-attendance.png',
-                                'Attendance'),
+                                widget.hr
+                                    ? 'Attendance Management'
+                                    : 'Attendance'),
                           ))),
                   Visibility(
                     visible: widget.hr,
@@ -198,10 +206,12 @@ class _HomeState extends State<Home> {
                       child: GestureDetector(
                         onTap: () => Navigator.of(context)
                             .push(MaterialPageRoute(builder: (context) {
-                          return const EmployeesScreen();
+                          return const EmployeeManagement();
                         })),
-                        child: fancyContainer(Colors.pink,
-                            'assets/icons/business-people.png', 'Employyes'),
+                        child: fancyContainer(
+                            Colors.pink,
+                            'assets/icons/business-people.png',
+                            'Employyes Management'),
                       ),
                     )),
                     replacement: Expanded(
@@ -306,28 +316,7 @@ class _HomeState extends State<Home> {
                       'assets/icons/report.png', 'Company Report'),
                 ),
               ),
-              GestureDetector(
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return ViewAttendance();
-                })),
-                child: listtileCotainer(
-                    context,
-                    Colors.green,
-                    'assets/icons/checking-attendance.png',
-                    'Attendance History'),
-              ),
-              Visibility(
-                visible: widget.hr,
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) {
-                    return EmployeeDocuments();
-                  })),
-                  child: listtileCotainer(context, Colors.purple,
-                      'assets/icons/folders.png', 'Documents'),
-                ),
-              ),
+
               Visibility(
                 visible: widget.hr,
                 child: GestureDetector(
@@ -349,15 +338,19 @@ class _HomeState extends State<Home> {
                     child: listtileCotainer(context, Colors.black,
                         'assets/icons/calculator.png', 'Salary Calculator'),
                   )),
-              Visibility(
-                  visible: widget.hr,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushNamed("/signupPage");
-                    },
-                    child: listtileCotainer(context, Colors.teal,
-                        'assets/icons/employee.png', "Register new people"),
-                  ))
+
+              widget.hr == false
+                  ? GestureDetector(
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return SalaryViewScreen();
+                        }));
+                      },
+                      child: listtileCotainer(context, Colors.teal,
+                          'assets/icons/employee.png', "Salary view"),
+                    )
+                  : SizedBox(),
             ],
           ),
         ),
@@ -413,7 +406,7 @@ class _HomeState extends State<Home> {
 
   Container fancyContainer(Color color, String img, String txt) {
     return Container(
-        height: 100,
+        height: 120,
         width: 100,
         decoration: BoxDecoration(
             color: Colors.white,

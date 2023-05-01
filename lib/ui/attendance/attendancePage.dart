@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Punch Attendance/punch_attendance.dart';
 import '../Selfi attendance screen/selfiAttendance.dart';
 import '../biometric scanning/biomatricScreen.dart';
 import '../leave request/leaveRequest.dart';
@@ -44,11 +45,13 @@ class AttendancePage extends StatelessWidget {
                   GestureDetector(
                     onTap: () async {
                       final prif = await SharedPreferences.getInstance();
-                      
+
                       Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return SelfieAttendanceScreen(attend: prif.getBool('auth')??false,);
-                    }));
+                          .push(MaterialPageRoute(builder: (context) {
+                        return SelfieAttendanceScreen(
+                          attend: prif.getBool('auth') ?? false,
+                        );
+                      }));
                     },
                     child: AttendanceChild(Icons.camera_alt_outlined,
                         "Selfie Attendance", Icons.radio_button_checked),
@@ -56,8 +59,16 @@ class AttendancePage extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  AttendanceChild(Icons.punch_clock, "Multiple Punch In",
-                      Icons.radio_button_checked),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return PunchInAttendance();
+                      }));
+                    },
+                    child: AttendanceChild(Icons.punch_clock,
+                        "Multiple Punch In", Icons.radio_button_checked),
+                  ),
                   const SizedBox(
                     height: 10,
                   ),

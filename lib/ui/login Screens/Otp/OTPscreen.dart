@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/common/widgets/submitContainer.dart';
@@ -28,18 +29,22 @@ class _OTPscreenState extends State<OTPscreen> {
   String? _verificationCode;
   bool resendOTP = false;
   indexOtp() async {
-    var url = Uri.parse('https://cashbes.com/photography/login/index');
+    EasyLoading.show(status: 'Loading...');
+    var url = Uri.parse('https://cashbes.com/attendance/login/index');
     var response = await http.post(url, body: {'phone': widget.number});
     if (response.statusCode == 200) {
+      EasyLoading.dismiss();
       print(response.body);
-      _listenForCode();
+      // _listenForCode();
     } else {
+      EasyLoading.dismiss();
       print(response.statusCode);
     }
   }
 
   existuserOtp(String otp) async {
-    var url = Uri.parse('https://cashbes.com/photography/login/existuser_otp');
+    EasyLoading.show(status: 'loading...');
+    var url = Uri.parse('https://cashbes.com/attendance/login/existuser_otp');
     var response =
         await http.post(url, body: {'phone': widget.number, 'otp': otp});
     if (response.statusCode == 200) {
@@ -47,20 +52,28 @@ class _OTPscreenState extends State<OTPscreen> {
       final prif = await SharedPreferences.getInstance();
       prif.setString('token', data['token']);
       print('newTikeeeeeeeen${data['token']}');
-      print('Roleeeeeeeeeeeeee${data['user_signup']}');
-      prif.setString('role', data['user_signup']);
-      print('tokeeeeeeeeeeeeeeeeeeeen${prif.getString('token')}');
-      if (prif.getString('role') == null || prif.getString('role')!.isEmpty) {
-        Ui.getSnackBar(title: 'Please Add your role!', context: context);
-      } else if (prif.getString('role')!.contains('Manager') ||
+      print('Roleeeeeeeeeeeeee${data['job_role']}');
+      prif.setString('role', data['job_role']);
+      if (prif.getString('role') == null ||
+          prif.getString('role')!.isEmpty ||
+          prif.getString('role') == '0') {
+        // ignore: use_build_context_synchronously
+        Ui.getSnackBar(title: 'no such user exists', context: context);
+      } else if (prif.getString('role')!.contains('manager') ||
+          prif.getString('role')!.contains('Manager') ||
+          prif.getString('role')!.contains('hr') ||
           prif.getString('role')!.contains('Hr')) {
+        EasyLoading.dismiss();
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) {
           return HomeScreen(
             hr: true,
           );
         }), (route) => false);
-      } else if (prif.getString('role')!.contains('Employee')) {
+      } else if (prif.getString('role')!.contains('Employee') ||
+          prif.getString('role')!.contains('employee')) {
+        EasyLoading.dismiss();
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) {
           return HomeScreen(
@@ -68,6 +81,7 @@ class _OTPscreenState extends State<OTPscreen> {
           );
         }), (route) => false);
       } else {
+        EasyLoading.dismiss();
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) {
           return HomeScreen(
@@ -75,25 +89,44 @@ class _OTPscreenState extends State<OTPscreen> {
           );
         }), (route) => false);
       }
-    } else {
-      Ui.getSnackBar(title: 'Please Enter Valid OPT!', context: context);
+    } else if (response.statusCode == 404) {
+      EasyLoading.dismiss();
+      Ui.getSnackBar(title: 'Please Enter Valid OTP!', context: context);
     }
   }
 
-  void _listenForCode() async {
-    SmsAutoFill().listenForCode;
-    final code = await SmsAutoFill().getAppSignature;
-    setState(() {
-      _verificationCode = code;
-      existuserOtp(_verificationCode!);
-    });
-  }
+  // void _listenForCode() async {
+  //   SmsAutoFill().listenForCode;
+  //   final code = await SmsAutoFill().getAppSignature;
+  //   setState(() {
+  //     _verificationCode = code;
+  //     existuserOtp(_verificationCode!);
+  //   });
+  // }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    indexOtp();
+  Timer? _timer;
+  int _start = 30;
+
+  void startTimer() {
+    _start = 30;
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+            setState(() {
+              resendOTP = false;
+            });
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
   }
 
   @override
@@ -163,18 +196,14 @@ class _OTPscreenState extends State<OTPscreen> {
                     onPressed: () {
                       setState(() {
                         resendOTP = true;
-                        indexOtp();
-                        Timer(Duration(seconds: 30), () {
-                          setState(() {
-                            resendOTP = false;
-                          });
-                        });
                       });
+                      indexOtp();
+                      startTimer();
                     },
                     child: Text(
-                      'Resend OTP!',
+                      resendOTP ? _start.toString() : 'Resend OTP!',
                       style: TextStyle(
-                          color: resendOTP ? Colors.grey : Colors.pink.shade900,
+                          color: Colors.pink.shade900,
                           fontWeight: FontWeight.bold),
                     )),
               ),
@@ -184,7 +213,9 @@ class _OTPscreenState extends State<OTPscreen> {
                     onTap: () {
                       if (otpVerifivationCode.isEmpty) {
                         existuserOtp(_verificationCode!);
+                        _timer!.cancel();
                       } else {
+                        _timer!.cancel;
                         existuserOtp(otpVerifivationCode);
                       }
                     },

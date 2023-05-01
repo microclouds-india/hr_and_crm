@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +10,11 @@ import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 import 'package:hr_and_crm/common/widgets/bookingFormTextFields.dart';
 import 'package:hr_and_crm/ui/Employees/Add%20Employees/addEmployee.dart';
-import 'package:hr_and_crm/ui/home/homeScreen.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../repository/register/register_network.dart';
+import 'package:http/http.dart' as http;
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -22,7 +24,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  FilePickerResult? _imageFile;
+  late File _imageFile;
 
   DateTime? _selectedDate;
 
@@ -36,28 +38,27 @@ class _SignupPageState extends State<SignupPage> {
       setState(() {
         _selectedDate = picked;
       });
+    } else {
+      Ui.getSnackBar(title: 'Not Date picked!', context: context);
     }
   }
 
-  Future<void> _pickImage(ImageSource source) async {
-    _imageFile = await FilePicker.platform.pickFiles(
-  type: FileType.custom,
-  allowedExtensions: ['jpg', 'png', ],
-);
-
-    setState(() {
-      if (_imageFile != null) {
-        _imageFile = File(_imageFile!.files.single.path!) as FilePickerResult?;
-      } else {
-        Ui.getSnackBar(title: 'No Image Selected', context: context);
-      }
-    });
+  Future<void> _pickImage() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
+    if (result == null) {
+      Ui.getSnackBar(title: 'Not Image picked!', context: context);
+    } else {
+      setState(() {
+        _imageFile = File(result.files.single.path!);
+      });
+    }
   }
 
   final TextEditingController signupnameController = TextEditingController();
   final TextEditingController signupemailController = TextEditingController();
   final TextEditingController signupphoneController = TextEditingController();
-  final TextEditingController signupaddressController = TextEditingController();
   final TextEditingController signupjobRoleController = TextEditingController();
   final TextEditingController signupdobController = TextEditingController();
   final TextEditingController signupotpController = TextEditingController();
@@ -76,10 +77,10 @@ class _SignupPageState extends State<SignupPage> {
 
   bool otpOn = false;
 
-  String dropdownValue = 'Male';
-  List<String> options = ['Male', 'Female', 'Other'];
-  String jobRole = 'Employee';
-  List<String> jobroleOptions = ['Employee', 'Hr', 'Manager'];
+  String dropdownValue = 'male';
+  List<String> options = ['male', 'female', 'other'];
+  String jobRole = 'employee';
+  List<String> jobroleOptions = ['employee', 'hr', 'manager'];
 
   @override
   Widget build(BuildContext context) {
@@ -97,26 +98,26 @@ class _SignupPageState extends State<SignupPage> {
         child: Center(
           child: Column(
             children: [
-              // const SizedBox(
-              //   height: 80,
-              // ),
-              // Image.asset(
-              //   "assets/icons/logo.png",
-              //   width: 100,
-              //   height: 100,
-              //   fit: BoxFit.cover,
-              // ),
-              // const SizedBox(
-              //   height: 20,
-              // ),
-              // Text(
-              //   Strings().letsGetStarted,
-              //   style: GoogleFonts.openSans(
-              //     fontSize: 25,
-              //     fontWeight: FontWeight.bold,
-              //     color: Colors.black,
-              //   ),
-              // ),
+              const SizedBox(
+                height: 10,
+              ),
+              Image.asset(
+                "assets/icons/logo.png",
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                Strings().letsGetStarted,
+                style: GoogleFonts.openSans(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
               Padding(
                 padding:
                     const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
@@ -146,18 +147,26 @@ class _SignupPageState extends State<SignupPage> {
                         const EdgeInsets.only(left: 10, right: 20, top: 10),
                     child: GestureDetector(
                       onTap: () {
-                        setState(() {
-                          otpOn = true;
-                        });
-                        RegisterNetwork().indexOtp(signupphoneController.text);
+                        if (signupphoneController.text.isEmpty ||
+                            signupphoneController.text == null ||
+                            signupphoneController.text.length < 10 ||
+                            signupphoneController.text.length > 10) {
+                          Ui.getSnackBar(
+                              title: 'Please enter your phone number!',
+                              context: context);
+                        } else {
+                          setState(() {
+                            otpOn = true;
+                          });
+                          RegisterNetwork()
+                              .indexOtp(signupphoneController.text, context);
+                        }
                       },
                       child: Container(
                         height: 40,
                         width: 50,
                         decoration: BoxDecoration(
-                            color: otpOn
-                                ? Color.fromARGB(0, 233, 30, 98)
-                                : Colors.pink.shade900,
+                            color: Colors.pink.shade900,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10))),
                         child: const Center(
@@ -201,7 +210,7 @@ class _SignupPageState extends State<SignupPage> {
                       children: <Widget>[
                         Text(
                           _selectedDate == null
-                              ? 'Select Date'
+                              ? 'Date of Birth'
                               : DateFormat('dd/MM/yyyy').format(_selectedDate!),
                           style: TextStyle(fontSize: 16.0),
                         ),
@@ -218,14 +227,6 @@ class _SignupPageState extends State<SignupPage> {
                   hint: Strings().email,
                   controller: signupemailController,
                   maxLines: 1,
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
-                child: BookingFormTextFields(
-                  hint: Strings().address,
-                  controller: signupaddressController,
                 ),
               ),
               Padding(
@@ -297,33 +298,69 @@ class _SignupPageState extends State<SignupPage> {
 
               ElevatedButton(
                   onPressed: () {
-                    _pickImage(ImageSource.gallery);
+                    _pickImage();
                   },
-                  child: Text('Upload Image')),
+                  child: const Text('Upload Image')),
               ElevatedButton(
                 onPressed: () async {
-                  final prif = await SharedPreferences.getInstance();
                   if (signupnameController.text.isEmpty &&
                       signupemailController.text.isEmpty &&
                       signupphoneController.text.isEmpty &&
-                      signupaddressController.text.isEmpty &&
                       signupjobRoleController.text.isEmpty) {
                     // ignore: use_build_context_synchronously
                     Ui.getSnackBar(
                         title: Strings().pleaseFillAllFields, context: context);
                   } else {
                     // ignore: use_build_context_synchronously
-                    RegisterNetwork().register(
-                        context: context,
-                        phone: signupphoneController.text,
-                        name: signupnameController.text,
-                        otp: signupotpController.text,
-                        gender: dropdownValue,
-                        email: signupemailController.text,
-                        dob: DateFormat('dd/MM/yyyy').format(_selectedDate!),
-                        city: signupCityController.text,
-                        jobrole: signupjobRoleController.text,
-                        photo: _imageFile!.files.single.path!);
+                    // RegisterNetwork().register(
+                    //     context: context,
+                    //     phone: signupphoneController.text,
+                    //     name: signupnameController.text,
+                    //     otp: signupotpController.text,
+                    //     gender: dropdownValue,
+                    //     email: signupemailController.text,
+                    //     dob: DateFormat('dd/MM/yyyy').format(_selectedDate!),
+                    //     city: signupCityController.text,
+                    //     jobrole: signupjobRoleController.text,
+                    //     photo: _imageFile.path);
+                    print(signupphoneController.text);
+                    print(signupnameController.text);
+                    print(signupotpController.text);
+                    print(signupemailController.text);
+                    print(signupCityController.text);
+
+                    final client = http.Client();
+                    try {
+                      final request = await client.post(
+                          Uri.parse(
+                              'https://cashbes.com/attendance/login/register'),
+                          body: {
+                            "phone": signupphoneController.text,
+                            "name": signupnameController.text,
+                            "otp": signupotpController.text,
+                            "gender": dropdownValue,
+                            "email": signupemailController.text,
+                            "dob":
+                                DateFormat('dd-MM-yyyy').format(_selectedDate!),
+                            "city": signupCityController.text,
+                            "jobrole": jobRole,
+                            "photo": _imageFile.path
+                          });
+
+                      if (request.statusCode == 200) {
+                        var json = jsonDecode(request.body);
+                        Ui.getSnackBar(
+                            title: json['response'], context: context);
+                        print(request.body);
+                      } else {
+                        var json = jsonDecode(request.body);
+                        Ui.getSnackBar(
+                            title: json['response'], context: context);
+                      }
+                    } catch (e) {
+                      print(e);
+                      throw Exception(e);
+                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(

@@ -8,71 +8,50 @@ import '../../common/ui.dart';
 import '../../ui/home/homeScreen.dart';
 
 class RegisterNetwork {
-  register(
-      {required String phone,
-      required BuildContext context,
-      required String name,
-      required String otp,
-      required String gender,
-      required String email,
-      required String dob,
-      required String city,
-      required String jobrole,
-      required String photo}) async {
-    await EasyLoading.show(
-      status: 'Please Wait...',
-      maskType: EasyLoadingMaskType.black,
-    );
-    var headers = {
-      'Cookie': 'ci_session=e56e429efc33b0d6f1d1341d71db33db74d39d69'
-    };
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('https://cashbes.com/attendance/login/register'));
-    request.fields.addAll({
-      'phone': phone,
-      'name': name,
-      'otp': otp,
-      'gender': gender,
-      'email': email,
-      'dob': dob,
-      'city': city,
-      'jobrole': jobrole
-    });
-    request.files.add(await http.MultipartFile.fromPath('photo', photo));
-    request.headers.addAll(headers);
+  // register(
+  //     {required String phone,
+  //     required BuildContext context,
+  //     required String name,
+  //     required String otp,
+  //     required String gender,
+  //     required String email,
+  //     required String dob,
+  //     required String city,
+  //     required String jobrole,
+  //     required String photo}) async {
+  //     final client = http.Client();
+  //    try {
+  //     final request = await client.post(Uri.parse('https://cashbes.com/attendance/login/register'), body: {
+  //       "phone": phone,
+  //       "name": name,
+  //       "otp": otp,
+  //       "gender": gender,
+  //       "email": email,
+  //       "dob":'10/12/1990',
+  //       "city":city,
+  //       "jobrole":jobrole,
+  //     }).timeout(const Duration(seconds: 10));
 
-    http.StreamedResponse response = await request.send();
+  //     if (request.statusCode == 200) {
+  //       print(request.body);
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //     throw Exception(e);
+  //   }
+  // }
 
-    if (response.statusCode == 200) {
-      await EasyLoading.dismiss();
-      print(
-          'Successsssssssssssssssssssssssssssssssssssss${response.stream.bytesToString().toString()}');
-      // ignore: use_build_context_synchronously
-      Ui.getSnackBar(title: 'Registration Completed', context: context);
-      Navigator.pop(context);
-    } else if (response.statusCode == 404) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.pink.shade900,
-          content: Text("File not found"),
-        ),
-      );
-    } else {
-      // ignore: use_build_context_synchronously
-      Ui.getSnackBar(title: 'Something went wrong!', context: context);
-      print(
-          'failllllllllllllllllllllllllllllllllllllll${response.stream.bytesToString().toString()}');
-    }
-  }
-
-  indexOtp(String number) async {
-    var url = Uri.parse('https://cashbes.com/photography/login/index');
+  indexOtp(String number, BuildContext context) async {
+    EasyLoading.show(status: 'loading...');
+    var url = Uri.parse('https://cashbes.com/attendance/login/index');
     var response = await http.post(url, body: {'phone': number});
     if (response.statusCode == 200) {
       print(response.body);
+      EasyLoading.dismiss();
+      Ui.getSnackBar(title: 'OTP Recived', context: context);
     } else {
-      print(response.statusCode);
+      EasyLoading.dismiss();
+      print('rrrrrrrrrr${response.statusCode}');
     }
   }
 }

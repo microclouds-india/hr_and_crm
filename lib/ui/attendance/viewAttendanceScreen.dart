@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
-import 'attendanceViewAlert.dart';
+import '../../repository/attendace_all/model/attendance_all_model.dart';
 
 class ViewAttendance extends StatefulWidget {
   const ViewAttendance({super.key});
@@ -42,13 +45,25 @@ class _ViewAttendanceState extends State<ViewAttendance> {
     Colors.yellow,
     Colors.purple
   ];
+  AttendanceAllModel attendanceAllModel = AttendanceAllModel();
+  late Stream<http.Response> _stream;
+
+  @override
+  void initState() {
+    super.initState();
+    _stream = http
+        .post(Uri.parse('https://cashbes.com/attendance/apis/attendance_all'))
+        .asStream();
+  }
+
   @override
   Widget build(BuildContext context) {
     String viewDate = DateFormat('MMMM dd').format(_selectedDate);
     return Scaffold(
       appBar: AppBar(
-        leading:
-            IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
+        leading: IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Icons.arrow_back)),
         actions: [
           TextButton.icon(
               onPressed: () {},
@@ -119,71 +134,102 @@ class _ViewAttendanceState extends State<ViewAttendance> {
             ],
           ),
         ),
-        Expanded(
-            child: ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          itemCount: 5,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Date: 09/09/2000'),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.calendar_today,
-                                color: Colors.pink.shade900,
+        StreamBuilder(
+            stream: _stream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var json = jsonDecode(snapshot.data!.body);
+                attendanceAllModel = AttendanceAllModel.fromJson(json);
+
+                return Expanded(
+                    child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: attendanceAllModel.data!.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text(
+                                  attendanceAllModel.data![index].name ??
+                                      'No Name'),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  popuoItem(
+                                      index,
+                                      DateFormat('MM/dd/yyyy').format(
+                                          attendanceAllModel
+                                              .data![index].attendDate!),
+                                      Icons.calendar_month),
+                                  popuoItem(
+                                      index,
+                                      'Clock in :${attendanceAllModel.data![index].clockIn!}',
+                                      Icons.access_time),
+                                  popuoItem(
+                                      index,
+                                      'Clock out :${attendanceAllModel.data![index].clockOut}',
+                                      Icons.access_time),
+                                  popuoItem(
+                                      index,
+                                      'Status :${attendanceAllModel.data![index].status}',
+                                      Icons.mode)
+                                ],
                               ),
-                              SizedBox(width: 10),
-                              Text('09/09/2000'),
-                              SizedBox(width: 20),
-                              Icon(
-                                Icons.access_time,
-                                color: Colors.pink,
-                              ),
-                              SizedBox(width: 10),
-                              Text('09:29'),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.verified,
-                                color: Colors.blue,
-                              ),
-                              SizedBox(width: 10),
-                              Text('Check out'),
-                            ],
-                          ),
-                        ],
+                            );
+                          },
+                        );
+                      },
+                      child: ListTile(
+                        title: Text(
+                          DateFormat('E, d MMM')
+                              .format(
+                                  attendanceAllModel.data![index].attendDate!)
+                              .toString(),
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(attendanceAllModel.data![index].name!),
+                        // trailing: trailingContainer(backgroundColor[index],
+                        //     attendanceAllModel.data![index].status??'', textClr[index]),
+                        trailing: Text(
+                          attendanceAllModel.data![index].status ?? '',
+                          style: TextStyle(
+                              color: Colors.blue, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     );
                   },
+                ));
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.pink.shade900,
+                  ),
                 );
-              },
-              child: ListTile(
-                title: const Text(
-                  'Wed, 16 Dec',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-                subtitle: const Text('Casual'),
-                trailing: trailingContainer(
-                    backgroundColor[index], leave[index], textClr[index]),
-              ),
-            );
-          },
-        ))
+              }
+            })
       ]),
+    );
+  }
+
+  Padding popuoItem(int index, String txt, IconData iconData) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: Row(
+        children: [
+          Icon(
+            iconData,
+            color: Colors.pink.shade900,
+          ),
+          SizedBox(width: 10),
+          Text(txt),
+        ],
+      ),
     );
   }
 
