@@ -34,6 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
             prif.getString('role')!.contains('Hr') ||
             prif.getString('role')!.contains('Manager')
             ) {
+               print('hrrrrrrrrrrrrrr${prif.getString('token')}');
           // ignore: use_build_context_synchronously
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) {
@@ -43,6 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
           }));
         } else if (prif.getString('role')!.contains('Employee') || prif.getString('role')!.contains('employee')) {
           // ignore: use_build_context_synchronously
+           print('emploeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee${prif.getString('token')}');
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) {
             return HomeScreen(

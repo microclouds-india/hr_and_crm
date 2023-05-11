@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_and_crm/repository/Profile%20View%20Model/profileViewModel.dart';
 import 'package:hr_and_crm/repository/log%20out/notifier/logout_notifier.dart';
@@ -9,6 +10,8 @@ import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/ui/Settings/settingsScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../login Screens/numberScreen.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -73,14 +76,23 @@ class _ProfilePageState extends State<ProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 30),
-                  Center(
-                    child: Image.asset(
-                      "assets/icons/logo.png",
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  profileViewMode.data![0].photo == ''
+                      ? Center(
+                          child: Image.network(
+                            'https://t4.ftcdn.net/jpg/04/99/93/31/360_F_499933117_ZAUBfv3P1HEOsZDrnkbNCt4jc3AodArl.jpg',
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : Center(
+                          child: Image.network(
+                            profileViewMode.data![0].photo!,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                   Container(
                     padding: const EdgeInsets.all(10),
                     margin: const EdgeInsets.only(left: 15, right: 15, top: 30),
@@ -97,9 +109,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           text: profileViewMode.data![0].email ?? '',
                           icon: Icons.description,
                         ),
-                        const UserInfo(
+                        UserInfo(
                           title: "Address",
-                          text: "address" ?? "",
+                          text:
+                              profileViewMode.data![0].address ?? 'Not Address',
                           icon: Icons.location_on,
                         ),
                         UserInfo(
@@ -152,7 +165,32 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                     TextButton(
                                       onPressed: () async {
-                                        logout.LogOut(context);
+                                        await EasyLoading.show(
+                                            status: 'Plase Wait....');
+                                        final prif = await SharedPreferences
+                                            .getInstance();
+                                        var url = Uri.parse(
+                                            'https://cashbes.com/attendance/login/logout');
+                                        var response =
+                                            await http.post(url, body: {
+                                          'token': prif.getString('token')!,
+                                        });
+                                        if (response.statusCode == 200) {
+                                          await prif.remove('token');
+                                          await prif.remove('role');
+                                          EasyLoading.dismiss();
+                                          Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                            return NumberLogin();
+                                          }), (route) => false);
+                                        } else {
+                                          EasyLoading.dismiss();
+                                          Ui.getSnackBar(
+                                              title: 'Server Error!',
+                                              context: context);
+                                        }
                                       },
                                       child: Text(
                                         'Yes',

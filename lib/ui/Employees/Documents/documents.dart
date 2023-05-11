@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
+import 'package:hr_and_crm/common/widgets/bookingFormTextFields.dart';
 import 'package:hr_and_crm/repository/documents/notifier/upload_document_notifier.dart';
 import 'package:hr_and_crm/ui/Employees/Documents/view_document.dart';
 import 'package:provider/provider.dart';
@@ -105,11 +106,9 @@ class EmployeeDocuments extends StatelessWidget {
           content: SingleChildScrollView(
             child: ListBody(
               children: [
-                TextFormField(
+                BookingFormTextFields(
                   controller: fileNameCntrl,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Enter your folder name'),
+                  hint: 'Enter your file name',
                 ),
                 const SizedBox(
                   height: 10,

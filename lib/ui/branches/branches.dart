@@ -19,7 +19,7 @@ class _BranchesState extends State<Branches> {
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Colors.pink.shade900,
         onPressed: () {
-          Navigator.of(context).pushNamed("/addBranches");
+          Navigator.of(context).pushReplacementNamed("/addBranches");
         },
         label: const Text(
           'Add Branch',

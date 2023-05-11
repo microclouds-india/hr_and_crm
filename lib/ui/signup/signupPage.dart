@@ -11,8 +11,6 @@ import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 import 'package:hr_and_crm/common/widgets/bookingFormTextFields.dart';
 import 'package:hr_and_crm/ui/Employees/Add%20Employees/addEmployee.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../repository/register/register_network.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,7 +22,8 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  late File _imageFile;
+  File? _imageFile;
+  bool imageView = true;
 
   DateTime? _selectedDate;
 
@@ -63,6 +62,7 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController signupdobController = TextEditingController();
   final TextEditingController signupotpController = TextEditingController();
   final TextEditingController signupCityController = TextEditingController();
+   final TextEditingController signUpAddressController = TextEditingController();
 
   @override
   void dispose() {
@@ -286,26 +286,39 @@ class _SignupPageState extends State<SignupPage> {
                   }).toList(),
                 ),
               ),
-              // Padding(
-              //   padding:
-              //       const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
-              //   child: BookingFormTextFields(
-              //     hint: Strings().jobRole,
-              //     controller: jobRoleController,
-              //     maxLines: 1,
-              //   ),
-              // ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                child: BookingFormTextFields(
+                  hint: 'Address',
+                  controller: signUpAddressController,
+                  maxLines: 1,
+                ),
+              ),
+              _imageFile == null
+                  ? SizedBox()
+                  : ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      child: Image.file(
+                        File(_imageFile!.path),
+                        height: 100,
+                        width: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
 
               ElevatedButton(
                   onPressed: () {
                     _pickImage();
                   },
                   child: const Text('Upload Image')),
+
               ElevatedButton(
                 onPressed: () async {
                   if (signupnameController.text.isEmpty &&
                       signupemailController.text.isEmpty &&
                       signupphoneController.text.isEmpty &&
+                      signUpAddressController.text.isEmpty&&
                       signupjobRoleController.text.isEmpty) {
                     // ignore: use_build_context_synchronously
                     Ui.getSnackBar(
@@ -344,9 +357,9 @@ class _SignupPageState extends State<SignupPage> {
                                 DateFormat('dd-MM-yyyy').format(_selectedDate!),
                             "city": signupCityController.text,
                             "jobrole": jobRole,
-                            "photo": _imageFile.path
+                            "photo": _imageFile!.path,
+                            'address': signUpAddressController.text
                           });
-
                       if (request.statusCode == 200) {
                         var json = jsonDecode(request.body);
                         Ui.getSnackBar(
@@ -359,6 +372,7 @@ class _SignupPageState extends State<SignupPage> {
                       }
                     } catch (e) {
                       print(e);
+                      Ui.getSnackBar(title: "Network Issue!", context: context);
                       throw Exception(e);
                     }
                   }

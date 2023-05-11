@@ -1,7 +1,7 @@
 
 import 'dart:convert';
 
-EmployeesDetails emptyFromJson(String str) => EmployeesDetails.fromJson(json.decode(str));
+EmployeesDetails employeesDetailsFromJson(String str) => EmployeesDetails.fromJson(json.decode(str));
 
 
 class EmployeesDetails {
@@ -20,7 +20,6 @@ class EmployeesDetails {
         data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
         status: json["status"],
     );
-
 }
 
 class Datum {
@@ -31,6 +30,7 @@ class Datum {
     String? city;
     String? email;
     String? address;
+    String? jobrole;
     String? gender;
     String? photo;
     String? tdate;
@@ -44,6 +44,7 @@ class Datum {
         this.city,
         this.email,
         this.address,
+        this.jobrole,
         this.gender,
         this.photo,
         this.tdate,
@@ -58,9 +59,11 @@ class Datum {
         city: json["city"],
         email: json["email"],
         address: json["address"],
+        jobrole: json["jobrole"],
         gender: json["gender"],
         photo: json["photo"],
         tdate: json["tdate"],
         ttime: json["ttime"],
     );
+
 }

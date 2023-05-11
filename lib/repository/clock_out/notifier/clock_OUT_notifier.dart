@@ -14,7 +14,8 @@ class ClockOUTNotifier extends ChangeNotifier {
   }
 
   clockOut(
-      {required String id,
+      {required String clockin,
+      required String id,
       required String clockOuttime,
       required BuildContext context,
       required String attendDate}) async {
@@ -23,12 +24,13 @@ class ClockOUTNotifier extends ChangeNotifier {
 
     try {
       loading(true);
-      clockInModel = (await clockOUTNetwork.clockOUT(
-        context: context,
+       clockOUTNetwork.clockOUT(
+          clockin: clockin,
+          context: context,
           token: token,
-          id: prif.getString('emploee_id')!,
-          clockOutime: '5:00',
-          attendDate: '2023-04-23')) as ClockInModel;
+          id: id,
+          clockOutime: clockOuttime,
+          attendDate: attendDate);
       loading(false);
     } catch (e) {
       loading(false);

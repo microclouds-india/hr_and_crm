@@ -1,9 +1,18 @@
-import 'dart:ffi';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:hr_and_crm/common/ui.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pdfLib;
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 import 'package:hr_and_crm/common/widgets/submitContainer.dart';
 import 'package:intl/intl.dart';
+
+import '../../../repository/attendance report/model/attendanceReportModel.dart';
 
 class AttendanceDetailedReport extends StatefulWidget {
   const AttendanceDetailedReport({super.key});
@@ -23,24 +32,39 @@ final List<String> _dropdownValues = [
 int groupValue = 1;
 
 class _AttendanceDetailedReportState extends State<AttendanceDetailedReport> {
-  DateTime _selectedDate = DateTime.now();
+  DateTime _fromDaate = DateTime.now();
+  DateTime _toDate = DateTime.now();
   final List<String> downloadmode = ["PDF", "CSV"];
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectFromDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
-        initialDate: _selectedDate == null ? DateTime.now() : _selectedDate,
+        initialDate: _fromDaate == null ? DateTime.now() : _fromDaate,
         firstDate: DateTime(1900),
         lastDate: DateTime(2100));
-    if (picked != null && picked != _selectedDate) {
+    if (picked != null && picked != _fromDaate) {
       setState(() {
-        _selectedDate = picked;
+        _fromDaate = picked;
+      });
+    }
+  }
+
+  Future<void> _selectTodate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: _toDate == null ? DateTime.now() : _toDate,
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2100));
+    if (picked != null && picked != _toDate) {
+      setState(() {
+        _toDate = picked;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    String viewDate = DateFormat('MMMM dd').format(_selectedDate);
+    String _fromDateView = DateFormat('MMMM dd').format(_fromDaate);
+    String _toDateView = DateFormat('MMMM dd').format(_toDate);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink.shade900,
@@ -83,7 +107,7 @@ class _AttendanceDetailedReportState extends State<AttendanceDetailedReport> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 GestureDetector(
-                  onTap: () => _selectDate(context),
+                  onTap: () => _selectFromDate(context),
                   child: Container(
                     height: 30,
                     width: 150,
@@ -100,7 +124,7 @@ class _AttendanceDetailedReportState extends State<AttendanceDetailedReport> {
                             color: Colors.black,
                           ),
                           Text(
-                            viewDate,
+                            _fromDateView,
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold),
@@ -119,7 +143,7 @@ class _AttendanceDetailedReportState extends State<AttendanceDetailedReport> {
                   style: TextStyle(color: Colors.grey),
                 ),
                 GestureDetector(
-                  onTap: () => _selectDate(context),
+                  onTap: () => _selectTodate(context),
                   child: Container(
                     height: 30,
                     width: 150,
@@ -136,7 +160,7 @@ class _AttendanceDetailedReportState extends State<AttendanceDetailedReport> {
                             color: Colors.black,
                           ),
                           Text(
-                            viewDate,
+                            _toDateView,
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold),
@@ -171,11 +195,69 @@ class _AttendanceDetailedReportState extends State<AttendanceDetailedReport> {
             const SizedBox(
               height: 20,
             ),
-            submitContainer(context, 'Download Report')
+            GestureDetector(
+                onTap: () async {
+                  EasyLoading.show(status: 'loading...');
+                  AttendanceReportModel model = AttendanceReportModel();
+                  print(DateFormat('yyyy-MM-dd').format(_toDate));
+                  var response = await http.post(
+                      Uri.parse(
+                          'https://cashbes.com/attendance/apis/attend_report'),
+                      body: {
+                        'employee_id': '31',
+                        'from_date': '2023-05-01',
+                        'to_date': '2023-05-08'
+                      });
+                  if (response.statusCode == 200) {
+                    print(response.body);
+                    var json = jsonDecode(response.body);
+                    model = AttendanceReportModel.fromJson(json);
+                    createPDF(model.data![0].name ?? 'No name',
+                        model.data!.toString(), context);
+                    EasyLoading.dismiss();
+                  } else {
+                    EasyLoading.dismiss();
+                    print('reeee');
+                  }
+                },
+                child: submitContainer(context, 'Download Report'))
           ],
         ),
       ),
     );
+  }
+
+  createPDF(String pdfName, String body, BuildContext ctx) async {
+    final pdf = pdfLib.Document();
+
+    pdf.addPage(
+      pdfLib.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (context) {
+          return pdfLib.Column(
+            mainAxisAlignment: pdfLib.MainAxisAlignment.center,
+            children: [
+              pdfLib.Text(
+                '$pdfName\'s Attendance Report',
+                style: pdfLib.TextStyle(
+                  fontSize: 24,
+                  fontWeight: pdfLib.FontWeight.bold,
+                ),
+              ),
+              pdfLib.SizedBox(height: 20),
+              pdfLib.Text(
+                body,
+                style: pdfLib.TextStyle(fontSize: 16),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    final dir = await getExternalStorageDirectory();
+    final file = File('${dir!.path}/$pdfName\'s Report.pdf');
+    await file.writeAsBytes(await pdf.save());
   }
 
   Row downloadType() {

@@ -15,12 +15,21 @@ class ClockINNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  attend(bool attend) async {
+    final prif = await SharedPreferences.getInstance();
+    this.isAttended = attend;
+    prif.setBool('Attend', isAttended);
+    notifyListeners();
+  }
+
   clockIN(String date, String time, String token, BuildContext context) async {
     try {
       loading(true);
+      
       clockInModel =
           (await clockINNetWork.clockINnetwork(date, time, token, context))!;
       loading(false);
+      
       return clockInModel;
     } catch (e) {
       loading(true);

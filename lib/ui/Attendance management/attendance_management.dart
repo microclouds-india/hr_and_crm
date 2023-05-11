@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../add Absent/add_absent.dart';
 import '../attendance/attendancePage.dart';
 import '../attendance/viewAttendanceScreen.dart';
 import '../leave request/leaveRequest.dart';
@@ -29,20 +31,26 @@ class AttendanceManagement extends StatelessWidget {
               child: ateendanceTile('Attendance & Leaves')),
           GestureDetector(
               child: ateendanceTile('Attendace History'),
-              onTap: () {
+              onTap: () async {
+                final prif = await SharedPreferences.getInstance();
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return ViewAttendance();
+                  return ViewAttendance(
+                    toke: prif.getString('token')!,
+                  );
                 }));
               }),
           // Visibility(
           //   visible: hr,
           //   child: GestureDetector(
-          //       child: ateendanceTile('Leave Requestes'),
+          //       child: ateendanceTile('Absent'),
           //       onTap: () {
           //         Navigator.of(context)
           //             .push(MaterialPageRoute(builder: (context) {
-          //           return LeaveRequestScreen();
+          //           return AddAbsentScreen(
+          //             name: ,
+          //             id: '31',
+          //           );
           //         }));
           //       }),
           // )

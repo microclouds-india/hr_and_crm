@@ -44,14 +44,17 @@ class _SelfieAttendanceScreenState extends State<SelfieAttendanceScreen> {
           notifier.clockIN(dateFormate.toString(), _currentTime.toString(),
               prif.getString('token')!, context);
           prif.setBool('auth', notifier.isAttended = true);
-          notifier.isAttended = true;
+          notifier.attend(true);
         } else {
-          clockOUTNotifier.clockOut(
-            context: context,
+          print(
+            prif.getString('emploee_id')!,
+          );
+          clockOUTNotifier.clockOut(clockin: prif.getString('clockin_time')??'9:00',
+              context: context,
               id: prif.getString('emploee_id')!,
               clockOuttime: dateFormate,
               attendDate: _currentTime);
-          notifier.isAttended = false;
+          notifier.attend(false);
           prif.setBool('auth', notifier.isAttended = false);
         }
       } else {

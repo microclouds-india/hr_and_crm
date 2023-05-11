@@ -11,6 +11,7 @@ import 'package:hr_and_crm/ui/Salary%20view/salary_view.dart';
 import 'package:hr_and_crm/ui/attendance/attendancePage.dart';
 import 'package:hr_and_crm/ui/attendance/viewAttendanceScreen.dart';
 import 'package:hr_and_crm/ui/leave%20request/leaveRequest.dart';
+import 'package:hr_and_crm/ui/video/video_confi.dart';
 import 'package:provider/provider.dart';
 import '../../Add account/addAccount.dart';
 import '../../Attendance management/attendance_management.dart';
@@ -49,14 +50,21 @@ class _HomeState extends State<Home> {
                   return Branches();
                 }));
               },
-              child: Container(
-                  width: 30.0,
-                  height: 30.0,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage('assets/icons/man.png')))),
+              child: const Center(
+                child: Text(
+                  "Branch Name",
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
+              // child: Container(
+              //     width: 30.0,
+              //     height: 30.0,
+              //     decoration: const BoxDecoration(
+              //         shape: BoxShape.circle,
+              //         image: DecorationImage(
+              //             fit: BoxFit.fill,
+              //             image: AssetImage('assets/icons/man.png')))),
             ),
           ),
         ],
@@ -351,6 +359,16 @@ class _HomeState extends State<Home> {
                           'assets/icons/employee.png', "Salary view"),
                     )
                   : SizedBox(),
+              // GestureDetector(
+              //   onTap: () {
+              //     Navigator.of(context)
+              //         .push(MaterialPageRoute(builder: (context) {
+              //       return VideoConfig();
+              //     }));
+              //   },
+              //   child: listtileCotainer(context, Colors.blueAccent,
+              //       'assets/icons/employee.png', 'gitsi'),
+              // )
             ],
           ),
         ),

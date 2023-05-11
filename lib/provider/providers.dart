@@ -1,4 +1,6 @@
 import 'package:hr_and_crm/repository/Leave%20Requests/notifier/leaveRequestsNotifier.dart';
+import 'package:hr_and_crm/repository/absent_all/notifier/absent_all_notifier.dart';
+import 'package:hr_and_crm/repository/add_branch/notifier/add_branch_notifier.dart';
 import 'package:hr_and_crm/repository/branches/notifier/branches.notifier.dart';
 import 'package:hr_and_crm/repository/clock_in/clock_in_notifier/clock_IN_notifier.dart';
 import 'package:hr_and_crm/repository/documents/notifier/upload_document_notifier.dart';
@@ -10,6 +12,7 @@ import 'package:hr_and_crm/repository/login/notifier/login.notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
+import '../repository/Clock in view/notifier/clockInview_notifier.dart';
 import '../repository/addHoliday/notifier/add_holiday_notifier.dart';
 import '../repository/attendance report/notifier.dart';
 import '../repository/clock_out/notifier/clock_OUT_notifier.dart';
@@ -28,4 +31,7 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<AddHolidayNotifier>(create: (context) => AddHolidayNotifier(),),
   ChangeNotifierProvider<AttendanceReportNotifier>(create: (context) => AttendanceReportNotifier(),),
   ChangeNotifierProvider<LogoutNotifier>(create: (context) => LogoutNotifier(),),
+  ChangeNotifierProvider<ClockInViewNotifier>(create: (context) => ClockInViewNotifier(),),
+  ChangeNotifierProvider<AbsentAllNotifier>(create: (context) => AbsentAllNotifier(),),
+  ChangeNotifierProvider<AddBranchersNotifier>(create: (context) => AddBranchersNotifier(),)
 ];

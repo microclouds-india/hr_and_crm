@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
+import 'package:hr_and_crm/common/widgets/bookingFormTextFields.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -29,25 +30,19 @@ class _NewHolidayScreenState extends State<NewHolidayScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
+            BookingFormTextFields(
               controller: _nameController,
-              decoration: InputDecoration(
-                labelText: 'Holiday Name',
-                border: OutlineInputBorder(),
-              ),
+              hint: 'Holiday Tittle',
             ),
             SizedBox(height: 16.0),
-            TextField(
+            BookingFormTextFields(
               controller: _dateController,
-              decoration: InputDecoration(
-                labelText: 'Date',
-                border: OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.calendar_today),
-                  onPressed: () {
-                    _selectDate(context, data);
-                  },
-                ),
+              hint: 'Date',
+              suffixIcon: IconButton(
+                icon: Icon(Icons.calendar_today),
+                onPressed: () {
+                  _selectDate(context, data);
+                },
               ),
             ),
             SizedBox(height: 32.0),
@@ -60,7 +55,7 @@ class _NewHolidayScreenState extends State<NewHolidayScreen> {
                       title: 'Please Enter a Value', context: context);
                 } else {
                   data.addHolidays(
-                    context: context,
+                      context: context,
                       year: data.year,
                       holidayDate: _dateController.text == ''
                           ? data.date

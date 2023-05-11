@@ -6,9 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 import '../../repository/attendace_all/model/attendance_all_model.dart';
+import '../Absent view/absent_view.dart';
 
 class ViewAttendance extends StatefulWidget {
-  const ViewAttendance({super.key});
+  String toke;
+  ViewAttendance({required this.toke});
 
   @override
   State<ViewAttendance> createState() => _ViewAttendanceState();
@@ -51,9 +53,9 @@ class _ViewAttendanceState extends State<ViewAttendance> {
   @override
   void initState() {
     super.initState();
-    _stream = http
-        .post(Uri.parse('https://cashbes.com/attendance/apis/attendance_all'))
-        .asStream();
+    _stream = http.post(
+        Uri.parse('https://cashbes.com/attendance/apis/attendance_all'),
+        body: {'token': widget.toke}).asStream();
   }
 
   @override
@@ -128,7 +130,13 @@ class _ViewAttendanceState extends State<ViewAttendance> {
             children: [
               leaveContainer(const Color(0xffCCFFCC), 'Presend', '0'),
               leaveContainer(const Color(0xffFFFFCC), 'Late', '0'),
-              leaveContainer(const Color(0xffFFCCCC), 'Absent', '0'),
+              GestureDetector(
+                  onTap: () => Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return AbsentViewScreen();
+                      })),
+                  child:
+                      leaveContainer(const Color(0xffFFCCCC), 'Absent', '0')),
               leaveContainer(const Color(0xffFFFFCC), 'Half Day', '0'),
               leaveContainer(const Color(0xffFFCCFF), 'Paid Leave', '0')
             ],
@@ -140,7 +148,6 @@ class _ViewAttendanceState extends State<ViewAttendance> {
               if (snapshot.hasData) {
                 var json = jsonDecode(snapshot.data!.body);
                 attendanceAllModel = AttendanceAllModel.fromJson(json);
-
                 return Expanded(
                     child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
@@ -160,9 +167,8 @@ class _ViewAttendanceState extends State<ViewAttendance> {
                                 children: [
                                   popuoItem(
                                       index,
-                                      DateFormat('MM/dd/yyyy').format(
-                                          attendanceAllModel
-                                              .data![index].attendDate!),
+                                      attendanceAllModel
+                                          .data![index].attendDate!,
                                       Icons.calendar_month),
                                   popuoItem(
                                       index,
@@ -175,7 +181,15 @@ class _ViewAttendanceState extends State<ViewAttendance> {
                                   popuoItem(
                                       index,
                                       'Status :${attendanceAllModel.data![index].status}',
-                                      Icons.mode)
+                                      Icons.mode),
+                                  popuoItem(
+                                      index,
+                                      'Attendance type: ${attendanceAllModel.data![index].attendType}',
+                                      Icons.mark_chat_read),
+                                  popuoItem(
+                                      index,
+                                      'Work Time:${attendanceAllModel.data![index].workTime}',
+                                      Icons.timer)
                                 ],
                               ),
                             );
@@ -184,10 +198,7 @@ class _ViewAttendanceState extends State<ViewAttendance> {
                       },
                       child: ListTile(
                         title: Text(
-                          DateFormat('E, d MMM')
-                              .format(
-                                  attendanceAllModel.data![index].attendDate!)
-                              .toString(),
+                          attendanceAllModel.data![index].attendDate ?? '',
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 20,

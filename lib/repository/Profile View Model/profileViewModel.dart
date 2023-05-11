@@ -8,15 +8,15 @@ ProfileViewMode profileViewModeFromJson(String str) => ProfileViewMode.fromJson(
 
 
 class ProfileViewMode {
+    String? message;
+    List<Datum>? data;
+    String? status;
+
     ProfileViewMode({
         this.message,
         this.data,
         this.status,
     });
-
-    String? message;
-    List<Datum>? data;
-    String? status;
 
     factory ProfileViewMode.fromJson(Map<String, dynamic> json) => ProfileViewMode(
         message: json["message"],
@@ -26,22 +26,53 @@ class ProfileViewMode {
 }
 
 class Datum {
+    String? id;
+    String? name;
+    String? dob;
+    String? phone;
+    String? city;
+    String? email;
+    String? address;
+    String? jobrole;
+    String? gender;
+    String? photo;
+
     Datum({
         this.id,
         this.name,
+        this.dob,
         this.phone,
+        this.city,
         this.email,
+        this.address,
+        this.jobrole,
+        this.gender,
+        this.photo,
     });
-
-    String? id;
-    String? name;
-    String? phone;
-    String? email;
 
     factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
         name: json["name"],
+        dob: json["dob"],
         phone: json["phone"],
+        city: json["city"],
         email: json["email"],
+        address: json["address"],
+        jobrole: json["jobrole"],
+        gender: json["gender"],
+        photo: json["photo"],
     );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "dob": dob,
+        "phone": phone,
+        "city": city,
+        "email": email,
+        "address": address,
+        "jobrole": jobrole,
+        "gender": gender,
+        "photo": photo,
+    };
 }

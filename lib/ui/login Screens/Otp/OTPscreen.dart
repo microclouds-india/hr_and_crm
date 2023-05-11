@@ -2,22 +2,19 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/common/widgets/submitContainer.dart';
-import 'package:hr_and_crm/main.dart';
 import 'package:hr_and_crm/ui/home/homeScreen.dart';
-import 'package:hr_and_crm/ui/home/tabs/home.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 import '../../../common/widgets/appbarTXT.dart';
 
+// ignore: must_be_immutable
 class OTPscreen extends StatefulWidget {
   String number;
+  // ignore: use_key_in_widget_constructors
   OTPscreen({required this.number});
 
   @override
@@ -74,6 +71,7 @@ class _OTPscreenState extends State<OTPscreen> {
       } else if (prif.getString('role')!.contains('Employee') ||
           prif.getString('role')!.contains('employee')) {
         EasyLoading.dismiss();
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) {
           return HomeScreen(
@@ -82,6 +80,7 @@ class _OTPscreenState extends State<OTPscreen> {
         }), (route) => false);
       } else {
         EasyLoading.dismiss();
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) {
           return HomeScreen(
@@ -91,6 +90,7 @@ class _OTPscreenState extends State<OTPscreen> {
       }
     } else if (response.statusCode == 404) {
       EasyLoading.dismiss();
+      // ignore: use_build_context_synchronously
       Ui.getSnackBar(title: 'Please Enter Valid OTP!', context: context);
     }
   }
@@ -104,13 +104,15 @@ class _OTPscreenState extends State<OTPscreen> {
   //   });
   // }
 
+  // ignore: unused_field
   Timer? _timer;
   int _start = 30;
 
   void startTimer() {
     _start = 30;
+    // ignore: unnecessary_const
     const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
+    _timer =  Timer.periodic(
       oneSec,
       (Timer timer) {
         if (_start == 0) {
@@ -154,10 +156,10 @@ class _OTPscreenState extends State<OTPscreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
-              Center(
+              const Center(
                   child: Text(
                 'Please Enter The 4 Digit Code Send To',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
@@ -165,10 +167,10 @@ class _OTPscreenState extends State<OTPscreen> {
               Center(
                 child: Text(
                   '+91 ${widget.number}',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               OtpTextField(
@@ -185,10 +187,9 @@ class _OTPscreenState extends State<OTPscreen> {
                 //runs when every textfield is filled
                 onSubmit: (String verificationCode) {
                   otpVerifivationCode = verificationCode;
-                  print(otpVerifivationCode);
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Center(
@@ -208,20 +209,18 @@ class _OTPscreenState extends State<OTPscreen> {
                     )),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: const EdgeInsets.only(left: 20, right: 20),
                 child: GestureDetector(
                     onTap: () {
                       if (otpVerifivationCode.isEmpty) {
                         existuserOtp(_verificationCode!);
-                        _timer!.cancel();
                       } else {
-                        _timer!.cancel;
                         existuserOtp(otpVerifivationCode);
                       }
                     },
                     child: submitContainer(context, 'Verify')),
               ),
-              Spacer(),
+              const Spacer(),
               TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(
@@ -230,7 +229,7 @@ class _OTPscreenState extends State<OTPscreen> {
                       color: Colors.pink.shade900,
                     ),
                   )),
-              Spacer()
+              const Spacer()
             ],
           ),
         ),

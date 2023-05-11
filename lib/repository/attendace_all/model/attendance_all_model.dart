@@ -1,17 +1,19 @@
+
 import 'dart:convert';
 
 AttendanceAllModel attendanceAllModelFromJson(String str) => AttendanceAllModel.fromJson(json.decode(str));
 
-class AttendanceAllModel {
-    AttendanceAllModel({
-         this.message,
-         this.data,
-         this.status,
-    });
 
+class AttendanceAllModel {
     String? message;
     List<Datum>? data;
     String? status;
+
+    AttendanceAllModel({
+        this.message,
+        this.data,
+        this.status,
+    });
 
     factory AttendanceAllModel.fromJson(Map<String, dynamic> json) => AttendanceAllModel(
         message: json["message"],
@@ -21,20 +23,8 @@ class AttendanceAllModel {
 }
 
 class Datum {
-    Datum({
-         this.name,
-         this.attendDate,
-         this.clockIn,
-         this.clockOut,
-         this.workTime,
-         this.status,
-         this.attendType,
-         this.tdate,
-         this.ttime,
-    });
-
     String? name;
-    DateTime? attendDate;
+    String? attendDate;
     String? clockIn;
     String? clockOut;
     String? workTime;
@@ -43,9 +33,21 @@ class Datum {
     DateTime? tdate;
     String? ttime;
 
+    Datum({
+        this.name,
+        this.attendDate,
+        this.clockIn,
+        this.clockOut,
+        this.workTime,
+        this.status,
+        this.attendType,
+        this.tdate,
+        this.ttime,
+    });
+
     factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        name: json["name"],
-        attendDate: DateTime.parse(json["attend_date"]),
+        name:json["name"],
+        attendDate:json["attend_date"],
         clockIn: json["clock_in"],
         clockOut: json["clock_out"],
         workTime: json["work_time"],
@@ -54,4 +56,31 @@ class Datum {
         tdate: DateTime.parse(json["tdate"]),
         ttime: json["ttime"],
     );
+
+}
+
+enum Name { MIRSHAD }
+
+final nameValues = EnumValues({
+    "mirshad ": Name.MIRSHAD
+});
+
+enum WorkTime { EMPTY, THE_4_HOURS, THE_0_HOURS }
+
+final workTimeValues = EnumValues({
+    "": WorkTime.EMPTY,
+    "0 hours": WorkTime.THE_0_HOURS,
+    "4 hours": WorkTime.THE_4_HOURS
+});
+
+class EnumValues<T> {
+    Map<String, T> map;
+    late Map<T, String> reverseMap;
+
+    EnumValues(this.map);
+
+    Map<T, String> get reverse {
+        reverseMap = map.map((k, v) => MapEntry(v, k));
+        return reverseMap;
+    }
 }

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hr_and_crm/repository/Employee%20List/employeeListModel.dart';
-import 'package:hr_and_crm/repository/employeeDetails/model/employeeDetails.model.dart';
+import 'package:hr_and_crm/ui/add%20Absent/add_absent.dart';
 import 'package:http/http.dart' as http;
 import 'package:hr_and_crm/ui/Employees/Employee%20View/viewEmployee.dart';
 
@@ -98,6 +98,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                       onTap: () => Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
                         return ViewEmployee(
+                          jobrole: employeesDetails.data![index].jobrole ?? '',
                           username: employeesDetails.data![index].name!,
                           id: employeesDetails.data![index].id!,
                         );
@@ -112,16 +113,35 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                               'Name Not Available',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        subtitle: const Text(''),
-                        trailing: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.more_horiz_sharp)),
+                        subtitle: Text(employeesDetails.data![index].jobrole ??
+                            'Jobrole Not Available'),
+                        trailing: PopupMenuButton<String>(
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuEntry<String>>[
+                            const PopupMenuItem<String>(
+                              value: 'absent',
+                              child: Text('Absent'),
+                            ),
+                            const PopupMenuItem<String>(
+                              value: '2',
+                              child: Text('Delete'),
+                            ),
+                          ],
+                          onSelected: (String value) {
+                            if (value == 'absent') {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => AddAbsentScreen(name: employeesDetails.data![index].name!,
+                                    id: employeesDetails.data![index].id!),
+                              ));
+                            }
+                          },
+                        ),
                       ),
                     );
                   },
                 );
               } else {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               }

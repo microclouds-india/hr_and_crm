@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hr_and_crm/common/ui.dart';
+import 'package:hr_and_crm/common/widgets/bookingFormTextFields.dart';
 import 'package:hr_and_crm/repository/leaveTypes/notifier/leaveTypes.notifier.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +21,7 @@ class _RequestScreenState extends State<RequestScreen> {
   Widget build(BuildContext context) {
     final leaveTypesData =
         Provider.of<LeaveTypesNotifier>(context, listen: false);
-    
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -41,34 +42,28 @@ class _RequestScreenState extends State<RequestScreen> {
                 Expanded(
                     child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: TextField(
+                  child: BookingFormTextFields(
                     controller: fromDateController,
-                    decoration: InputDecoration(
-                      labelText: 'From Date',
-                      border: const OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.calendar_today),
-                        onPressed: () {
-                          _selectDate(fromDateController, context);
-                        },
-                      ),
+                    hint: 'From Date',
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.calendar_today),
+                      onPressed: () {
+                        _selectDate(fromDateController, context);
+                      },
                     ),
                   ),
                 )),
                 Expanded(
                     child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: TextField(
+                  child: BookingFormTextFields(
+                    hint: 'To Date',
                     controller: toDateController,
-                    decoration: InputDecoration(
-                      labelText: 'To Date',
-                      border: const OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.calendar_today),
-                        onPressed: () {
-                          _selectDate(toDateController, context);
-                        },
-                      ),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.calendar_today),
+                      onPressed: () {
+                        _selectDate(toDateController, context);
+                      },
                     ),
                   ),
                 ))
@@ -162,9 +157,8 @@ class _RequestScreenState extends State<RequestScreen> {
             ),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: TextFormField(
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), hintText: 'Reason of leave'),
+              child: BookingFormTextFields(
+                hint: 'Reason of leave',
               ),
             ),
             const Spacer(),

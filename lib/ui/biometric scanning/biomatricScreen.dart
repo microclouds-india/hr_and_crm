@@ -101,6 +101,7 @@ class _BiometricScreenState extends State<BiometricScreen> {
           prif.setBool('auth', notifier.isAttended = true);
      }else if (notifier.isAttended==false){
       clockOUTNotifier.clockOut(
+        clockin: prif.getString('clockin_time')??'9:00',
             context: context,
               id: prif.getString('emploee_id')!,
               clockOuttime: dateFormate,

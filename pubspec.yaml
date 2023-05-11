@@ -52,7 +52,7 @@ dependencies:
   location: ^4.4.0
   shared_preferences: ^2.1.0
   flutter_phone_direct_caller: ^2.1.1
-  share_plus: ^6.3.1
+  share_plus: ^4.5.3
   geolocator: ^9.0.2
   image_picker: ^0.8.7+1
   sms_otp_auto_verify: ^2.1.0
@@ -61,6 +61,9 @@ dependencies:
   local_auth: ^2.1.6
   flutter_easyloading: ^3.0.5
   file_picker: ^5.2.10
+  pdf: ^3.6.4
+  path_provider: ^2.0.15
+  # jitsi_meet_wrapper: ^0.0.6
   
 dev_dependencies:
   flutter_test:

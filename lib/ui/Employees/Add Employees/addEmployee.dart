@@ -1,10 +1,12 @@
+import 'dart:io';
 import 'dart:math';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:hr_and_crm/common/widgets/bookingFormTextFields.dart';
 import 'package:intl/intl.dart';
 import '../../../common/ui.dart';
-import '../../../common/widgets/addProfilePic.dart';
 import 'package:http/http.dart' as http;
 import '../../../common/widgets/appbarTXT.dart';
 import '../../../common/widgets/submitContainer.dart';
@@ -36,6 +38,7 @@ addNewEmployee(
     'gender': gender,
     'address': addressController.text,
     'phone': mobileNumberController.text,
+    
   });
   if (response.statusCode == 200) {
     Ui.getSnackBar(title: 'New Employye Added', context: context);
@@ -47,35 +50,43 @@ addNewEmployee(
 }
 
 class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
-  late DateTime _selectedDate;
+  DateTime? _selectedDate;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: _selectedDate ?? DateTime.now(),
       firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
+      lastDate: DateTime(2100),
     );
-    if (picked != null && picked != _selectedDate) {
+    if (picked != null) {
       setState(() {
         _selectedDate = picked;
       });
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _selectedDate = DateTime.now();
-  }
-
   String dropdownValue = 'Male';
   List<String> options = ['Male', 'Female', 'Other'];
 
+  File? _imageFile;
+
+  Future<void> _pickImage() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
+    if (result == null) {
+      Ui.getSnackBar(title: 'Not Image picked!', context: context);
+    } else {
+      setState(() {
+        _imageFile = File(result.files.single.path!);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final DateFormat formatter = DateFormat('dd/MM/yyyy');
-    final String formattedDate = formatter.format(_selectedDate);
+    final format = DateFormat('yyyy-MM-dd');
     return WillPopScope(
       onWillPop: () async {
         Navigator.of(context)
@@ -107,47 +118,56 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                 Row(
                   children: [
                     Expanded(
-                        child:
-                            addProfilePic(imageUrl: 'assets/icons/logo.png')),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                              onTap: () => _selectDate(context),
-                              child: Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey)),
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      _selectedDate == DateTime.now
-                                          ? Text('Date Of Birth')
-                                          : Text(formattedDate),
-                                    ],
-                                  ),
+                        child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: _imageFile == null
+                              ? Image.asset(
+                                  'assets/icons/logo.png',
+                                  height: 100.0,
+                                  width: 100.0,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.file(
+                                  _imageFile!,
+                                  height: 100.0,
+                                  width: 100.0,
+                                  fit: BoxFit.cover,
                                 ),
-                              )),
-                          const SizedBox(
-                            height: 5,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 50, left: 69),
+                          child: GestureDetector(
+                            onTap: _pickImage,
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.blue, shape: BoxShape.circle),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ),
+                                )),
                           ),
-                          // TextFormField(
-                          //   keyboardType: TextInputType.multiline,
-                          //   decoration: const InputDecoration(
-                          //       hintText: 'Employee ID',
-                          //       isDense: true,
-                          //       border: OutlineInputBorder(
-                          //           borderSide: BorderSide(color: Colors.black))),
-                          //   maxLines: 1,
-                          //   minLines: 1,
-                          // ),
-                        ],
+                        )
+                      ],
+                    )),
+                    Expanded(
+                        child: GestureDetector(
+                      onTap: () => _selectDate(context),
+                      child: AbsorbPointer(
+                        child: BookingFormTextFields(
+                          hint: 'Date of Birth',
+                          controller: TextEditingController(
+                            text: _selectedDate != null
+                                ? format.format(_selectedDate!)
+                                : '',
+                          ),
+                        ),
                       ),
-                    )
+                    ))
                   ],
                 ),
                 const SizedBox(
@@ -159,58 +179,38 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
-                  child: TextFormField(
+                  child: BookingFormTextFields(
                     controller: nameController,
                     keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
-                        hintText: 'Full Name',
-                        isDense: true,
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black))),
+                    hint: 'Full name',
                     maxLines: 1,
-                    minLines: 1,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
-                  child: TextFormField(
+                  child: BookingFormTextFields(
                     controller: mobileNumberController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                        hintText: 'Mobile Number',
-                        isDense: true,
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black))),
+                    hint: 'Mobile Number',
                     maxLines: 1,
-                    minLines: 1,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
-                  child: TextFormField(
+                  child: BookingFormTextFields(
                     controller: addressController,
                     keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
-                        hintText: 'Address',
-                        isDense: true,
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black))),
+                    hint: 'Address',
                     maxLines: 1,
-                    minLines: 1,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
-                  child: TextFormField(
+                  child: BookingFormTextFields(
+                    hint: 'Email',
                     controller: emailController,
                     keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
-                        hintText: 'Email',
-                        isDense: true,
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black))),
                     maxLines: 1,
-                    minLines: 1,
                   ),
                 ),
                 // Row(
@@ -259,15 +259,10 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
-                  child: TextFormField(
+                  child: BookingFormTextFields(
+                    hint: 'Reference (optional)',
                     keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
-                        hintText: 'Reference (optional)',
-                        isDense: true,
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black))),
                     maxLines: 1,
-                    minLines: 1,
                   ),
                 ),
                 GestureDetector(
@@ -281,7 +276,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                             title: 'Please Enter Valid Details',
                             context: context);
                       } else {
-                        addNewEmployee(_selectedDate, dropdownValue, context);
+                        addNewEmployee(_selectedDate!, dropdownValue, context);
                       }
                     },
                     child: submitContainer(context, 'SUBMIT'))

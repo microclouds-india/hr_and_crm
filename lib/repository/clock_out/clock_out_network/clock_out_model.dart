@@ -9,8 +9,10 @@ class ClockOUTNetwork {
   String endpoint = 'https://cashbes.com/attendance/apis/clock_out';
   late ClockOutModel clockOutModel;
 
-  Future<ClockOutModel?> clockOUT(
-      {required String token,
+  clockOUT(
+      {
+        required String clockin,
+        required String token,
       required String id,
       required String clockOutime,
       required BuildContext context,
@@ -21,17 +23,17 @@ class ClockOUTNetwork {
         'token': token,
         'id': id,
         'clock_out': clockOutime,
-        'attend_date': attendDate
+        'attend_date': attendDate,
+        'clock_in': clockin,
       });
       if (response.statusCode == 200) {
         var json = jsonDecode(response.body);
-        clockOutModel = ClockOutModel.fromJson(json);
+        print('Clock out');
         print(response.body);
         Ui.getSnackBar(title: 'Attendance Closed', context: context);
       }
     } catch (e) {
       return Future.error(e);
     }
-    return clockOutModel;
   }
 }

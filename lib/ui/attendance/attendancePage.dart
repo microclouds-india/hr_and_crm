@@ -60,10 +60,13 @@ class AttendancePage extends StatelessWidget {
                     height: 10,
                   ),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
+                      final prif = await SharedPreferences.getInstance();
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
-                        return PunchInAttendance();
+                        return PunchInAttendance(
+                          token: prif.getString('token')!,
+                        );
                       }));
                     },
                     child: AttendanceChild(Icons.punch_clock,

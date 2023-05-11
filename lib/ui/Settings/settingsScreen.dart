@@ -5,7 +5,10 @@ import 'package:hr_and_crm/repository/Profile%20View%20Model/profileViewModel.da
 import 'package:http/http.dart' as http;
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 import 'package:hr_and_crm/ui/editProfile/editProfileScreen.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../Absent view/notifications/notifications.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -45,7 +48,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return NotificationsScreen();
+                }));
+              },
               icon: Icon(
                 Icons.notifications,
                 color: Colors.white,
@@ -67,83 +75,99 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: Colors.pink.shade900,
         title: apBarText('Settings', Colors.white),
       ),
-      body:_load? Column(
-        children: [
-          Container(
-            color: Colors.white,
-            child: ListTile(
-              leading: const CircleAvatar(
-                backgroundImage: AssetImage('assets/icons/man.png'),
-              ),
-              title:  Text(
-                profileViewMode.data![0].name??'',
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(profileViewMode.data![0].email??''),
-              trailing: IconButton(
-                  onPressed: () => Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return EditProfileScreen(email: profileViewMode.data![0].email??'',name: profileViewMode.data![0].name??'',phone: profileViewMode.data![0].phone??'',);
-                      })),
-                  icon: const Icon(Icons.edit)),
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: ListTile(
-              tileColor: Colors.white,
-              leading: Icon(
-                Icons.format_list_numbered,
-                color: Colors.pink.shade900,
-              ),
-              title: Text(
-                'Company Code:ABCD88',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text('Share this code with staff'),
-              trailing: Container(
-                height: 30,
-                width: 80,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    border: Border.all(color: Colors.pink.shade900)),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Icon(
-                        Icons.share,
-                        color: Colors.pink.shade900,
-                        size: 15,
-                      ),
-                      Text(
-                        'Share',
-                        style: TextStyle(
-                            color: Colors.pink.shade900, fontSize: 15),
-                      )
-                    ],
+      body: _load
+          ? Column(
+              children: [
+                Container(
+                  color: Colors.white,
+                  child: ListTile(
+                    leading: CircleAvatar(
+                        backgroundImage: NetworkImage(profileViewMode
+                                    .data![0].photo ==
+                                ''
+                            ? 'https://t4.ftcdn.net/jpg/04/99/93/31/360_F_499933117_ZAUBfv3P1HEOsZDrnkbNCt4jc3AodArl.jpg'
+                            : profileViewMode.data![0].photo!)),
+                    title: Text(
+                      profileViewMode.data![0].name ?? '',
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(profileViewMode.data![0].email ?? ''),
+                    trailing: IconButton(
+                        onPressed: () => Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return EditProfileScreen(
+                                email: profileViewMode.data![0].email ?? '',
+                                name: profileViewMode.data![0].name ?? '',
+                                phone: profileViewMode.data![0].phone ?? '',
+                              );
+                            })),
+                        icon: const Icon(Icons.edit)),
                   ),
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: GestureDetector(
+                    onTap: () {
+                      Share.share('check out my website https://example.com', subject: 'Look what I made!');
+                    },
+                    child: ListTile(
+                      tileColor: Colors.white,
+                      leading: Icon(
+                        Icons.format_list_numbered,
+                        color: Colors.pink.shade900,
+                      ),
+                      title: Text(
+                        'Company Code:ABCD88',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text('Share this code with staff'),
+                      trailing: Container(
+                        height: 30,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            border: Border.all(color: Colors.pink.shade900)),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Icon(
+                                Icons.share,
+                                color: Colors.pink.shade900,
+                                size: 15,
+                              ),
+                              Text(
+                                'Share',
+                                style: TextStyle(
+                                    color: Colors.pink.shade900, fontSize: 15),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                settingsTile(
+                    'VIP Membership',
+                    'Track daily staff attendance and more',
+                    Icons.workspace_premium),
+                settingsTile(
+                    'User & Permissions', 'Staff & Managers', Icons.person),
+                settingsTile('Attendance & Leaves',
+                    'Attendance Modes, Leaves ,Holidays', Icons.task),
+                settingsTile('Salary Settings', 'Salary Settings', Icons.money)
+              ],
+            )
+          : Center(
+              child: CircularProgressIndicator(
+                color: Colors.pink.shade900,
               ),
             ),
-          ),
-          settingsTile('VIP Membership',
-              'Track daily staff attendance and more', Icons.workspace_premium),
-          settingsTile(
-              'User & Permissions', 'Staff & Managers', Icons.person),
-          settingsTile('Attendance & Leaves',
-              'Attendance Modes, Leaves ,Holidays', Icons.task),
-          settingsTile('Salary Settings', 'Salary Settings', Icons.money)
-        ],
-      ):Center(
-        child: CircularProgressIndicator(
-          color: Colors.pink.shade900,
-        ),
-      ),
     );
   }
 

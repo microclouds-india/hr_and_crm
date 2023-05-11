@@ -11,7 +11,8 @@ import '../../../common/widgets/appbarTXT.dart';
 class ViewEmployee extends StatefulWidget {
   String username;
   String id;
-  ViewEmployee({required this.id, required this.username});
+  String jobrole;
+  ViewEmployee({required this.id, required this.username,required this.jobrole});
 
   @override
   State<ViewEmployee> createState() => _ViewEmployeeState();
@@ -53,7 +54,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
               padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
               child: SingleChildScrollView(
                 child: Column(children: [
-                  imageRow(employeesViewModel.data![0].photo ?? notImg),
+                  imageRow(employeesViewModel.data![0].photo ?? notImg,widget.username,widget.jobrole),
                   const Divider(
                     thickness: 0.2,
                     color: Colors.grey,
@@ -63,7 +64,8 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                       'Phone', employeesViewModel.data![0].phone ?? ''),
                   userDeatails(
                       'Email', employeesViewModel.data![0].email ?? ''),
-                  userDeatails('Birthday', '1995-12-19'),
+                  userDeatails(
+                      'Birthday', employeesViewModel.data![0].dob.toString()),
                   userDeatails(
                       'Gender', employeesViewModel.data![0].gender ?? ''),
                   const ListTile(
@@ -156,7 +158,7 @@ class _ViewEmployeeState extends State<ViewEmployee> {
     );
   }
 
-  Column imageRow(String img) {
+  Column imageRow(String img,String apbartxt,String jobrole) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -177,12 +179,12 @@ class _ViewEmployeeState extends State<ViewEmployee> {
             ),
           ],
         ),
-        apBarText(employeesViewModel.data![0].name ?? 'Name Not Available',
+        apBarText(apbartxt,
             Colors.black),
         const SizedBox(
           height: 20,
         ),
-        const Text('Web Developer')
+         Text(jobrole)
       ],
     );
   }

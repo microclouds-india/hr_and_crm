@@ -9,7 +9,7 @@ import flutter_secure_storage_macos
 import geolocator_apple
 import location
 import path_provider_foundation
-import share_plus
+import share_plus_macos
 import shared_preferences_foundation
 import sqflite
 import url_launcher_macos

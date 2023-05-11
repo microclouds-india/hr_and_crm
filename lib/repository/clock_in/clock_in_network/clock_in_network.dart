@@ -18,15 +18,15 @@ class ClockINNetWork {
       var response = await http.post(url,
           body: {'token': token, 'attend_date': date, 'clock_in': time});
       if (response.statusCode == 200) {
-        print(response.body);
         await EasyLoading.show(
-          status: 'Please Wait...',
-          maskType: EasyLoadingMaskType.black,
-        );
+                  status: 'loading...',
+                  maskType: EasyLoadingMaskType.black,
+                );
+        print(response.body);
         final json = jsonDecode(response.body);
-        final employeeId = json['employee_id'];
-        await prif.setString('emploee_id', employeeId);
-        await EasyLoading.dismiss();
+        await prif.setString('emploee_id', json['id']);
+        await prif.setString('clockin_time', json['clock_in']);
+        EasyLoading.dismiss();
         Ui.getSnackBar(title: 'Attendance Marked', context: context);
         print('ppppppppp');
       } else {
@@ -35,6 +35,7 @@ class ClockINNetWork {
       }
       await EasyLoading.dismiss();
     } catch (error) {
+      await EasyLoading.dismiss();
       return Future.error(error);
     }
   }
