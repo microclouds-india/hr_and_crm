@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:hr_and_crm/common/ui.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pdfLib;
@@ -212,8 +212,8 @@ class _AttendanceDetailedReportState extends State<AttendanceDetailedReport> {
                     print(response.body);
                     var json = jsonDecode(response.body);
                     model = AttendanceReportModel.fromJson(json);
-                    createPDF(model.data![0].name ?? 'No name',
-                        model.data!.toString(), context);
+                    createPDF(model.data![0].name ?? 'No name', model, context,
+                        model.data!.length);
                     EasyLoading.dismiss();
                   } else {
                     EasyLoading.dismiss();
@@ -227,7 +227,8 @@ class _AttendanceDetailedReportState extends State<AttendanceDetailedReport> {
     );
   }
 
-  createPDF(String pdfName, String body, BuildContext ctx) async {
+  createPDF(String pdfName, AttendanceReportModel model, BuildContext ctx,
+      int count) async {
     final pdf = pdfLib.Document();
 
     pdf.addPage(
@@ -245,9 +246,22 @@ class _AttendanceDetailedReportState extends State<AttendanceDetailedReport> {
                 ),
               ),
               pdfLib.SizedBox(height: 20),
-              pdfLib.Text(
-                body,
-                style: pdfLib.TextStyle(fontSize: 16),
+              pdfLib.Column(
+                children: [
+                  pdfLib.Table.fromTextArray(
+                    context: context,
+                    headerCount: 1,
+                    data: [
+                      ["Attend Date", "Clock in", "Cock out", "Work Time"],
+                      [
+                        model.data!.map((e) => [e.attendDate]),
+                        model.data!.map((e) => [e.clockIn]),
+                        model.data!.map((e) => e.clockOut),
+                        model.data!.map((e) => e.workTime)
+                      ]
+                    ],
+                  ),
+                ],
               ),
             ],
           );

@@ -52,16 +52,26 @@ class _CompanyReportScreenState extends State<CompanyReportScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          reports(),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [Text('No Downloads')],
-            ),
-          )
-        ],
+        children: [reports(), downloads()],
       ),
+    );
+  }
+
+  ListView downloads() {
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: const Text('Name'),
+          subtitle: const Text('Attend Report'),
+          trailing: Text(
+            '11/05/2023',
+            style: TextStyle(
+              color: Colors.pink.shade900,
+            ),
+          ),
+        );
+      },
+      itemCount: 4,
     );
   }
 
@@ -148,8 +158,7 @@ class _CompanyReportScreenState extends State<CompanyReportScreen>
                         .push(MaterialPageRoute(builder: (context) {
                       return const EmployeeReport();
                     })),
-                child:
-                    repostList('Employee', const Icon(Icons.person))),
+                child: repostList('Employee', const Icon(Icons.person))),
           ],
         ),
       ),
