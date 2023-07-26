@@ -22,11 +22,11 @@ import '../ui/login/loginScreen.dart';
 Map<String, Widget Function(BuildContext)> routes = {
   '/splashScreen': (context) => const SplashScreen(),
   '/loginPage': (context) => const LoginPage(),
-  '/signupPage': (context) => const SignupPage(),
+  // '/signupPage': (context) => const SignupPage(),
   '/leavePage': (context) => const LeavePage(),
   '/attendancePage': (context) => const AttendancePage(),
   '/jobPost': (context) => const JobPost(),
-  '/templatePage': (context) => const TemplatePage(),
+  // '/templatePage': (context) => const TemplatePage(),
   '/employeeDetailsPage': (context) => const EmployeeDetailsPage(),
   '/attendancePage': (context) => const AttendancePage(),
   '/leaveRequestPage': (context) =>  LeaveRequestScreen(),

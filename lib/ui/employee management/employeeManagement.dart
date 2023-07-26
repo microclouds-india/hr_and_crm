@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
+import 'package:hr_and_crm/ui/Employee%20expense/employeeExpenceScreen.dart';
 
 import '../Employees/Documents/documents.dart';
 import '../Employees/employees.dart';
@@ -29,6 +30,14 @@ class EmployeeManagement extends StatelessWidget {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
                   return EmployeeDocuments();
+                }));
+              }),
+          GestureDetector(
+              child: ateendanceTile('Employee Expense'),
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return EmployeeExpenseScreen();
                 }));
               }),
         ],

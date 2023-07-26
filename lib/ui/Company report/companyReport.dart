@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
+import 'package:hr_and_crm/ui/Company%20report/Absend%20Report/absend_report_screen.dart';
 import 'package:hr_and_crm/ui/Company%20report/Employee/employeeReport.dart';
+import 'package:hr_and_crm/ui/Company%20report/Expense%20report/expense_report_screen.dart';
 import 'package:hr_and_crm/ui/Company%20report/Late%20Arrival/lateArrivalScreen.dart';
 import 'package:hr_and_crm/ui/Company%20report/Leave%20Report/leaveReport.dart';
 import 'package:hr_and_crm/ui/Company%20report/Loan%20Report/loanReport.dart';
@@ -9,6 +11,7 @@ import 'package:hr_and_crm/ui/Company%20report/Over%20time%20report/overtimeRepo
 import 'package:hr_and_crm/ui/Company%20report/Salary%20Datails%20Report/salaryDetaildReport.dart';
 import 'package:hr_and_crm/ui/Company%20report/Salary%20summary%20report/salarySammaryReport.dart';
 
+import '../Download/downloads.dart';
 import 'Attendance Details Report/attendanceDetailsReportScreen.dart';
 import 'Attendance Report/attendanceSummaryReport.dart';
 import 'PF challan report/PFchallanReport.dart';
@@ -52,26 +55,13 @@ class _CompanyReportScreenState extends State<CompanyReportScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [reports(), downloads()],
+        children: [
+          reports(),
+          Downloads(
+            tabController: _tabController,
+          )
+        ],
       ),
-    );
-  }
-
-  ListView downloads() {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: const Text('Name'),
-          subtitle: const Text('Attend Report'),
-          trailing: Text(
-            '11/05/2023',
-            style: TextStyle(
-              color: Colors.pink.shade900,
-            ),
-          ),
-        );
-      },
-      itemCount: 4,
     );
   }
 
@@ -97,6 +87,12 @@ class _CompanyReportScreenState extends State<CompanyReportScreen>
                           return const AttendanceDetailedReport();
                         })),
                     child: subList('Attendance Detailed Report')),
+                GestureDetector(
+                    onTap: () => Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return AbsendReportScreen();
+                        })),
+                    child: subList('Absend Report')),
                 GestureDetector(
                     onTap: () => Navigator.of(context)
                             .push(MaterialPageRoute(builder: (context) {
@@ -145,6 +141,18 @@ class _CompanyReportScreenState extends State<CompanyReportScreen>
                           return LoanReport();
                         })),
                     child: subList('Loan Report'))
+              ],
+            ),
+            ExpansionTile(
+              title: const Text('Expense Report'),
+              leading: const Icon(Icons.payment),
+              children: <Widget>[
+                GestureDetector(
+                    onTap: () => Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return ExpenseReportScreen();
+                        })),
+                    child: subList('Expense Report')),
               ],
             ),
             GestureDetector(

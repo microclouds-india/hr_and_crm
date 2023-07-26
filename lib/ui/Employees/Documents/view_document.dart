@@ -1,40 +1,43 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-class ViewDocuments extends StatelessWidget {
-  String documentName;
-  ViewDocuments({required this.documentName});
+class FileViewer extends StatelessWidget {
+  final String file;
+
+  FileViewer({required this.file});
 
   @override
   Widget build(BuildContext context) {
+    if (file.endsWith('.pdf')) {
+      return SfPdfViewer.network(file);
+    } else if (file.endsWith('.jpg') ||
+        file.endsWith('.jpeg') ||
+        file.endsWith('.png')) {
+      return Image.network(
+        file,
+        fit: BoxFit.contain,
+      );
+    } else {
+      return Text('Unsupported file format');
+    }
+  }
+}
+
+class DocumentViewScreen extends StatelessWidget {
+  String file;
+  DocumentViewScreen({required this.file});
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.pink.shade900,
-        onPressed: () {},
-        child: const Center(
-          child: Icon(
-            Icons.upload,
-            color: Colors.white,
-          ),
-        ),
-      ),
       appBar: AppBar(
+        title: apBarText('Document', Colors.white),
         backgroundColor: Colors.pink.shade900,
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.edit,
-                color: Colors.white,
-              ))
-        ],
-        title: apBarText(documentName, Colors.white),
         centerTitle: true,
       ),
-      body: Column(
-        children: const [
-          // Image.network('')
-        ],
+      body: Center(
+        child: FileViewer(file: file),
       ),
     );
   }

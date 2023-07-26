@@ -1,190 +1,310 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:hr_and_crm/common/ui.dart';
-import 'package:hr_and_crm/repository/Leave%20Requests/notifier/leaveRequestsNotifier.dart';
+import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
 import 'package:hr_and_crm/ui/leave%20request/reqestScreen.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import '../../repository/leave request responde/model.dart';
-import 'leaveRequestAcceptAlert/leaveRequestAlert.dart';
+
+class LeaveRequest {
+  final String id;
+  final String employeeId;
+  final String leaveDate;
+  final String reason;
+  final String toDate;
+  final String toTime;
+  String status;
+  String comment;
+
+  LeaveRequest({
+    required this.id,
+    required this.employeeId,
+    required this.leaveDate,
+    required this.reason,
+    required this.toDate,
+    required this.toTime,
+    required this.status,
+    required this.comment,
+  });
+}
 
 class LeaveRequestScreen extends StatefulWidget {
   @override
-  State<LeaveRequestScreen> createState() => _LeaveRequestScreenState();
+  _LeaveRequestScreenState createState() => _LeaveRequestScreenState();
 }
 
 class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
-  TextEditingController fromDate = TextEditingController();
+  List<LeaveRequest> leaveRequests = [];
 
-  List status = [
-    'Approved',
-    'Not Approved',
-    'Approved',
-    'Not Approved',
-    'Approved',
-    'Not Approved',
-    'Approved',
-    'Not Approved',
-  ];
-  late LeaveRequestRespondModel leaveRequestRespondModel;
+  Future<void> fetchLeaveRequests() async {
+    final url = Uri.https('cashbes.com', '/attendance/apis/leave_requests');
+    final response = await http.get(url);
 
-  postResponde(String id, String status, String comment, int index) async {
-    String endpoint =
-        'https://cashbes.com/attendance/apis/leave_request_respond';
-    try {
-      var url = Uri.parse(endpoint);
-      var response = await http.post(url, body: {
-        'id': id,
-        'status': status,
-        'comment': comment,
-      });
-      if (response.statusCode == 200) {
-        var json = jsonDecode(response.body);
-        // ignore: use_build_context_synchronously
-        Ui.getSnackBar(title: json['data'][index]['status'], context: context);
-        Navigator.of(context).pop();
-      } else {
-        print(response.statusCode);
-        Ui.getSnackBar(title: "server down!", context: context);
-        Navigator.of(context).pop();
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      if (responseData['status'] == '200') {
+        final List<dynamic> data = responseData['data'];
+        leaveRequests = data
+            .map((item) => LeaveRequest(
+                  id: item['employee_id'],
+                  employeeId: item['employee_id'],
+                  leaveDate: item['ldate'],
+                  reason: item['reason'],
+                  toDate: item['tdate'],
+                  toTime: item['ttime'],
+                  status: 'pending', // Set initial status to 'pending'
+                  comment: '',
+                ))
+            .toList();
+
+        setState(() {});
       }
-    } catch (e) {
-      print('errorrrrrr$e');
+    }
+  }
+
+  Future<void> respondToLeaveRequest(
+      LeaveRequest leaveRequest, String status, String comment) async {
+    final url =
+        Uri.https('cashbes.com', '/attendance/apis/leave_request_respond');
+    final response = await http.post(url, body: {
+      'id': leaveRequest.id,
+      'status': status,
+      'comment': comment,
+    });
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      if (responseData['status'] == '200') {
+        setState(() {
+          leaveRequest.status = status;
+          leaveRequest.comment = comment;
+        });
+
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Success'),
+            content: Text(responseData['message']),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Error'),
+            content: Text(responseData['message']),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('Error'),
+          content: Text('An error occurred while submitting the response.'),
+          actions: [
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
     }
   }
 
   @override
+  void initState() {
+    super.initState();
+    fetchLeaveRequests();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final data = Provider.of<leaveRequestNotifier>(context, listen: false);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.pink.shade900,
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return const RequestScreen();
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+            return RequestScreen();
           }));
         },
-        child: const Center(
-          child: Icon(Icons.add),
+        child: Center(
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
         ),
       ),
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            )),
         backgroundColor: Colors.pink.shade900,
-        title: const Text(
-          'Request Leave',
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
+        title: apBarText('Leave Requests', Colors.white),
       ),
-      body: FutureBuilder(
-          future: data.getDatas(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: data.leaveRequestModel.data!.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () async {
-                      final prif = await SharedPreferences.getInstance();
-                      if (prif.getString('role')!.contains('hr') ||
-                          prif.getString('role')!.contains('manager') ||
-                          prif.getString('role')!.contains('Hr') ||
-                          prif.getString('role')!.contains('Manager')) {
-                        // ignore: use_build_context_synchronously
-                        showLeaveRequestAlert(
-                            context,
-                            'Leave Request',
-                            data.leaveRequestModel.data![index].reason ??
-                                'No reason', () {
-                          postResponde(
-                              data.leaveRequestModel.data![index].employeeId!,
-                              'accepted',
-                              data.leaveRequestModel.data![index].reason ??
-                                  'No reason',
-                              index);
-                        }, () {
-                          postResponde(
-                              data.leaveRequestModel.data![index].employeeId!,
-                              'rejected',
-                              data.leaveRequestModel.data![index].reason ??
-                                  'No reason',
-                              index);
-                        });
-                      }
-                    },
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.pink.shade900,
-                        child: const Center(
-                          child: Text(
-                            '08',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 10),
-                          ),
-                        ),
-                      ),
-                      title: Text(
-                        data.leaveRequestModel.data![index].reason ??
-                            'No Reason',
-                        style: const TextStyle(
-                            overflow: TextOverflow.ellipsis,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                        'date:${data.leaveRequestModel.data![index].ldate}',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      trailing: Container(
-                        height: 25,
-                        width: 60,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: status[index] == 'Approved'
-                                    ? Colors.green
-                                    : Colors.red),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5))),
-                        child: Center(
-                          child: Text(
-                            'Approved',
-                            style: TextStyle(
-                                fontSize: 10,
-                                color: status[index] == 'Approved'
-                                    ? Colors.green
-                                    : Colors.red),
-                          ),
-                        ),
+      body: leaveRequests.isEmpty
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : ListView.builder(
+              itemCount: leaveRequests.length,
+              itemBuilder: (ctx, index) {
+                final leaveRequest = leaveRequests[index];
+                return Card(
+                  elevation: 4,
+                  shadowColor: Colors.black12,
+                  child: ListTile(
+                    title: Text(
+                      leaveRequest.reason,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text('Leave Date: ${leaveRequest.leaveDate}'),
+                    trailing: Text(
+                      leaveRequest.status,
+                      style: TextStyle(
+                        color: leaveRequest.status == 'accepted'
+                            ? Colors.green
+                            : leaveRequest.status == 'rejected'
+                                ? Colors.red
+                                : Colors.orange,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  );
-                },
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(
-                  color: Colors.pink.shade900,
-                ),
-              );
-            }
-          }),
-    );
-  }
-
-  void showLeaveRequestAlert(BuildContext context, String tittle, String body,
-      VoidCallback onAccept, VoidCallback onReject) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return LeaveRequestAlert(
-            title: 'Leave Request',
-            message: body,
-            onAccept: onAccept,
-            onReject: onReject);
-      },
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          title: Text('Leave Request Details'),
+                          content: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Reason: ${leaveRequest.reason}'),
+                              Text('Leave Date: ${leaveRequest.leaveDate}'),
+                              Text('To Date: ${leaveRequest.toDate}'),
+                              Text('To Time: ${leaveRequest.toTime}'),
+                              SizedBox(height: 16.0),
+                              Text('Status: ${leaveRequest.status}'),
+                              if (leaveRequest.status != 'pending')
+                                Text('Comment: ${leaveRequest.comment}'),
+                              SizedBox(height: 16.0),
+                              if (leaveRequest.status == 'pending') ...[
+                                Text('Respond to Request:'),
+                                SizedBox(height: 8.0),
+                                ElevatedButton(
+                                  child: Text('Accept'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    showDialog(
+                                      context: context,
+                                      builder: (ctx) => AlertDialog(
+                                        title: Text('Respond to Leave Request'),
+                                        content: TextFormField(
+                                          decoration: InputDecoration(
+                                              labelText: 'Comment'),
+                                          onChanged: (value) {
+                                            leaveRequest.comment = value;
+                                          },
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            child: Text('Cancel'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          ElevatedButton(
+                                            child: Text('Accept'),
+                                            onPressed: () {
+                                              respondToLeaveRequest(
+                                                  leaveRequest,
+                                                  'accepted',
+                                                  leaveRequest.comment);
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                                SizedBox(height: 8.0),
+                                ElevatedButton(
+                                  child: Text('Reject'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    showDialog(
+                                      context: context,
+                                      builder: (ctx) => AlertDialog(
+                                        title: Text('Respond to Leave Request'),
+                                        content: TextFormField(
+                                          decoration: InputDecoration(
+                                              labelText: 'Comment'),
+                                          onChanged: (value) {
+                                            leaveRequest.comment = value;
+                                          },
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            child: Text('Cancel'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          ElevatedButton(
+                                            child: Text('Reject'),
+                                            onPressed: () {
+                                              respondToLeaveRequest(
+                                                  leaveRequest,
+                                                  'rejected',
+                                                  leaveRequest.comment);
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              child: Text('Close'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
     );
   }
 }

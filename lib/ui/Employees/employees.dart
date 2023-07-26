@@ -1,7 +1,11 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/repository/Employee%20List/employeeListModel.dart';
+import 'package:hr_and_crm/ui/Employees/searchEmployee.dart';
 import 'package:hr_and_crm/ui/add%20Absent/add_absent.dart';
 import 'package:http/http.dart' as http;
 import 'package:hr_and_crm/ui/Employees/Employee%20View/viewEmployee.dart';
@@ -38,6 +42,17 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
           title: apBarText('Employees', Colors.white),
           centerTitle: true,
           actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return EmployeeSearchScreen();
+                  }));
+                },
+                icon: Icon(
+                  Icons.search,
+                  color: Colors.white,
+                )),
             PopupMenuButton<int>(
               itemBuilder: (context) => [
                 PopupMenuItem(
@@ -94,47 +109,140 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                 return ListView.builder(
                   itemCount: employeesDetails.data!.length,
                   itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () => Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return ViewEmployee(
-                          jobrole: employeesDetails.data![index].jobrole ?? '',
-                          username: employeesDetails.data![index].name!,
-                          id: employeesDetails.data![index].id!,
-                        );
-                      })),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                            backgroundColor: Colors.pink.shade900,
-                            backgroundImage: NetworkImage(
-                                employeesDetails.data![index].photo ?? notImg)),
-                        title: Text(
-                          employeesDetails.data![index].name ??
-                              'Name Not Available',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(employeesDetails.data![index].jobrole ??
-                            'Jobrole Not Available'),
-                        trailing: PopupMenuButton<String>(
-                          itemBuilder: (BuildContext context) =>
-                              <PopupMenuEntry<String>>[
-                            const PopupMenuItem<String>(
-                              value: 'absent',
-                              child: Text('Absent'),
-                            ),
-                            const PopupMenuItem<String>(
-                              value: '2',
-                              child: Text('Delete'),
-                            ),
-                          ],
-                          onSelected: (String value) {
-                            if (value == 'absent') {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => AddAbsentScreen(name: employeesDetails.data![index].name!,
-                                    id: employeesDetails.data![index].id!),
-                              ));
+                    return Dismissible(
+                      key: Key(employeesDetails.data![index].id
+                          .toString()), // Set a unique key for each item
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        color: Colors.red,
+                        child: Icon(Icons.delete, color: Colors.white),
+                      ),
+                      onDismissed: (direction) {
+                        if (direction == DismissDirection.endToStart) {
+                          Ui.showAlertDialog(
+                              context, 'Remove Employee', 'content', () async {
+                            EasyLoading.show(status: 'Please Wait...');
+                            var url = Uri.parse(
+                                'https://cashbes.com/attendance/apis/employee_remove');
+                            var reponse = await http.post(url,
+                                body: {'id': employeesDetails.data![index].id});
+                            if (reponse.statusCode == 200) {
+                              print(reponse.body);
+                              EasyLoading.dismiss();
+                              Navigator.of(context).pop();
+                              Ui.getSnackBar(
+                                  title: 'Employee Removed', context: context);
+                            } else {
+                              EasyLoading.dismiss();
+                              Navigator.of(context).pop();
+                              Ui.getSnackBar(
+                                  title: 'Server Error', context: context);
                             }
-                          },
+                          }, () {
+                            Navigator.of(context).pop();
+                          });
+                        }
+                      },
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return ViewEmployee(
+                            image:
+                                employeesDetails.data![index].photo ?? notImg,
+                            jobrole:
+                                employeesDetails.data![index].jobrole ?? '',
+                            username: employeesDetails.data![index].name!,
+                            id: employeesDetails.data![index].id!,
+                          );
+                        })),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          elevation: 4,
+                          shadowColor: Colors.black87,
+                          child: ListTile(
+                            leading: CachedNetworkImage(
+                                imageUrl: employeesDetails.data![index].photo ??
+                                    notImg,
+                                imageBuilder: (context, imageProvider) =>
+                                    CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: imageProvider,
+                                    ),
+                                placeholder: (context, url) =>
+                                    CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    CircleAvatar(
+                                      radius: 30,
+                                      backgroundColor: Colors.grey,
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.person,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    )),
+                            title: Text(
+                              employeesDetails.data![index].name ??
+                                  'Name Not Available',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(
+                                employeesDetails.data![index].jobrole ??
+                                    'Jobrole Not Available'),
+                            trailing: PopupMenuButton<String>(
+                              itemBuilder: (BuildContext context) =>
+                                  <PopupMenuEntry<String>>[
+                                const PopupMenuItem<String>(
+                                  value: 'absent',
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Icon(Icons.leave_bags_at_home),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Text('Absent'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const PopupMenuItem<String>(
+                                  value: '2',
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Icon(Icons.delete,color: Colors.red,),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Text('Delete'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                              onSelected: (String value) {
+                                if (value == 'absent') {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => AddAbsentScreen(
+                                      name: employeesDetails.data![index].name!,
+                                      id: employeesDetails.data![index].id!,
+                                    ),
+                                  ));
+                                } else if (value == 'Delete') {
+                                  // Delete the item
+                                  // Add your logic here to remove the item from the list or perform any other actions
+                                }
+                              },
+                            ),
+                          ),
                         ),
                       ),
                     );

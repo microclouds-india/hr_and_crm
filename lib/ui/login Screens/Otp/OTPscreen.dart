@@ -39,61 +39,99 @@ class _OTPscreenState extends State<OTPscreen> {
     }
   }
 
-  existuserOtp(String otp) async {
-    EasyLoading.show(status: 'loading...');
-    var url = Uri.parse('https://cashbes.com/attendance/login/existuser_otp');
-    var response =
-        await http.post(url, body: {'phone': widget.number, 'otp': otp});
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = jsonDecode(response.body);
+existuserOtp(String otp) async {
+  EasyLoading.show(status: 'loading...');
+  var url = Uri.parse('https://cashbes.com/attendance/login/existuser_otp');
+  var response =
+      await http.post(url, body: {'phone': widget.number, 'otp': otp});
+  if (response.statusCode == 200) {
+    print(response.body);
+    Map<String, dynamic> data = jsonDecode(response.body);
+    final prif = await SharedPreferences.getInstance();
+    try {
       final prif = await SharedPreferences.getInstance();
-      prif.setString('token', data['token']);
-      print('newTikeeeeeeeen${data['token']}');
-      print('Roleeeeeeeeeeeeee${data['job_role']}');
-      prif.setString('role', data['job_role']);
-      if (prif.getString('role') == null ||
-          prif.getString('role')!.isEmpty ||
-          prif.getString('role') == '0') {
-        // ignore: use_build_context_synchronously
-        Ui.getSnackBar(title: 'no such user exists', context: context);
-      } else if (prif.getString('role')!.contains('manager') ||
-          prif.getString('role')!.contains('Manager') ||
-          prif.getString('role')!.contains('hr') ||
-          prif.getString('role')!.contains('Hr')) {
-        EasyLoading.dismiss();
-        // ignore: use_build_context_synchronously
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) {
-          return HomeScreen(
-            hr: true,
-          );
-        }), (route) => false);
-      } else if (prif.getString('role')!.contains('Employee') ||
-          prif.getString('role')!.contains('employee')) {
-        EasyLoading.dismiss();
-        // ignore: use_build_context_synchronously
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) {
-          return HomeScreen(
-            hr: false,
-          );
-        }), (route) => false);
-      } else {
-        EasyLoading.dismiss();
-        // ignore: use_build_context_synchronously
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) {
-          return HomeScreen(
-            hr: true,
-          );
-        }), (route) => false);
+      var url = Uri.parse('https://cashbes.com/attendance/apis/my_profile');
+      var response = await http.post(url, body: {
+        'token': data['token'].toString(),
+      });
+      if (response.statusCode == 200) {
+        print(response.body);
+        var json = jsonDecode(response.body);
+        print(json['data'][0]['id']);
+        prif.setString('MyId', json['data'][0]['id'].toString());
+        prif.setString('MyBranch', json['data'][0]['branch_name'].toString());
+        // Get the company list
+        var companyUrl = Uri.parse('https://cashbes.com/attendance/apis/companies');
+        var companyResponse = await http.get(companyUrl);
+
+        if (companyResponse.statusCode == 200) {
+          var companyJson = jsonDecode(companyResponse.body);
+          List<dynamic> companies = companyJson['data'];
+          String companyName = 'Microcloud'; // Replace with the desired company name
+          
+          // Find the company with the matching name
+          var matchingCompany = companies.firstWhere((company) => company['company_name'] == companyName, orElse: () => null);
+          if (matchingCompany != null) {
+            String companyId = matchingCompany['id'];
+            print('Company ID: $companyId');
+             prif.setString('MyCompanyId', companyId.toString());
+          } else {
+            print('No company found with the name: $companyName');
+          }
+        }
       }
-    } else if (response.statusCode == 404) {
+    } catch (e) {
+      print(e);
+    }
+    
+    prif.setString('token', data['token']);
+    print('newTikeeeeeeeen${data['token']}');
+    print('Roleeeeeeeeeeeeee${data['job_role']}');
+    prif.setString('role', data['job_role']);
+    if (prif.getString('role') == null ||
+        prif.getString('role')!.isEmpty ||
+        prif.getString('role') == '0') {
+      // ignore: use_build_context_synchronously
+      Ui.getSnackBar(title: 'no such user exists', context: context);
+    } else if (prif.getString('role')!.contains('manager') ||
+        prif.getString('role')!.contains('Manager') ||
+        prif.getString('role')!.contains('hr') ||
+        prif.getString('role')!.contains('Hr')) {
       EasyLoading.dismiss();
       // ignore: use_build_context_synchronously
-      Ui.getSnackBar(title: 'Please Enter Valid OTP!', context: context);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) {
+        return HomeScreen(
+          hr: true,
+        );
+      }), (route) => false);
+    } else if (prif.getString('role')!.contains('Employee') ||
+        prif.getString('role')!.contains('employee')) {
+      EasyLoading.dismiss();
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) {
+        return HomeScreen(
+          hr: false,
+        );
+      }), (route) => false);
+    } else {
+      EasyLoading.dismiss();
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) {
+        return HomeScreen(
+          hr: true,
+        );
+      }), (route) => false);
     }
+  } else if (response.statusCode == 404) {
+    EasyLoading.dismiss();
+    // ignore: use_build_context_synchronously
+    Ui.getSnackBar(title: 'Please Enter Valid OTP!', context: context);
   }
+}
+
 
   // void _listenForCode() async {
   //   SmsAutoFill().listenForCode;

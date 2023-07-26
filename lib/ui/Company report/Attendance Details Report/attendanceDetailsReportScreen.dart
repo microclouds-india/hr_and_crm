@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:hr_and_crm/repository/DataBase/db.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pdfLib;
@@ -204,9 +204,9 @@ class _AttendanceDetailedReportState extends State<AttendanceDetailedReport> {
                       Uri.parse(
                           'https://cashbes.com/attendance/apis/attend_report'),
                       body: {
-                        'employee_id': '31',
+                        'employee_id': '77',
                         'from_date': '2023-05-01',
-                        'to_date': '2023-05-08'
+                        'to_date': '2023-05-03'
                       });
                   if (response.statusCode == 200) {
                     print(response.body);
@@ -272,6 +272,11 @@ class _AttendanceDetailedReportState extends State<AttendanceDetailedReport> {
     final dir = await getExternalStorageDirectory();
     final file = File('${dir!.path}/$pdfName\'s Report.pdf');
     await file.writeAsBytes(await pdf.save());
+    addLocalDataBase(
+        'Attendance Detailed Report',
+        model.data![0].name ?? 'Name not available',
+        DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        file.path);
   }
 
   Row downloadType() {

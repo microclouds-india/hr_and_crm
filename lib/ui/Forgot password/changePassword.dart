@@ -50,6 +50,7 @@ class ChangePassword extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: BookingFormTextFields(
+                  iconData: Icons.password,
                   hint: 'New Password',
                   maxLines: 1,
                 ),
@@ -60,6 +61,7 @@ class ChangePassword extends StatelessWidget {
                   right: 20,
                 ),
                 child: BookingFormTextFields(
+                  iconData: Icons.password,
                   hint: 'Confirm Password',
                   maxLines: 1,
                 ),

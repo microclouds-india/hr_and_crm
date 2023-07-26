@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ViewAttendaceAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return const AlertDialog(
       title: Text('Date: 09/09/2000'),
       content: Column(
         mainAxisSize: MainAxisSize.min,

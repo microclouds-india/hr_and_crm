@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hr_and_crm/provider/providers.dart';
+import 'package:hr_and_crm/repository/DataBase/db.dart';
 import 'package:hr_and_crm/route/routes.dart';
 import 'package:hr_and_crm/ui/splashscreen/splashScreen.dart';
 import 'package:provider/provider.dart';
@@ -31,9 +32,10 @@ void configLoading() {
     ..dismissOnTap = false;
 }
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
+  await initDataBase();
   runApp(const MyApp());
   configLoading();
 }
@@ -51,7 +53,8 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(primarySwatch: Colors.pink),
           debugShowCheckedModeBanner: false,
           home: const MyHomePage(),
-          routes: routes),
+          routes: routes
+          ),
     );
   }
 }

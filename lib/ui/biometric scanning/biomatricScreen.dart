@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/repository/clock_out/notifier/clock_OUT_notifier.dart';
+import 'package:hr_and_crm/repository/clockin_view/notifier/notifier.dart';
 import 'package:intl/intl.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +59,7 @@ class _BiometricScreenState extends State<BiometricScreen> {
     });
   }
 
-  Future<void> _authenticate(ClockINNotifier notifier,ClockOUTNotifier clockOUTNotifier) async {
+  Future<void> _authenticate(ClockINNotifier notifier,ClockOUTNotifier clockOUTNotifier,bool authe,String id) async {
     final prif = await SharedPreferences.getInstance();
     bool authenticated = false;
     try {
@@ -94,20 +95,21 @@ class _BiometricScreenState extends State<BiometricScreen> {
       final dateFormate = DateFormat("dd-MM-yyyy").format(DateTime.now());
       String _currentTime = DateFormat.Hm().format(DateTime.now());
       print('uuuuuuuuuuuuuuuuuuuuuuu${prif.getString('token')}');
+
      
-     if (notifier.isAttended==true) {
+     if (authe==true) {
         notifier.clockIN(dateFormate.toString(), _currentTime.toString(),
               prif.getString('token')!, context);
           prif.setBool('auth', notifier.isAttended = true);
-     }else if (notifier.isAttended==false){
+     }else if (authe==false){
       clockOUTNotifier.clockOut(
+        token: prif.getString('token').toString(),
         clockin: prif.getString('clockin_time')??'9:00',
             context: context,
-              id: prif.getString('emploee_id')!,
-              clockOuttime: dateFormate,
-              attendDate: _currentTime);
-          notifier.isAttended = false;
-          prif.setBool('auth', notifier.isAttended = false);
+              id: id,
+              clockOuttime: '',
+              attendDate: '');
+          
      }
         
     }
@@ -159,6 +161,7 @@ class _BiometricScreenState extends State<BiometricScreen> {
   Widget build(BuildContext context) {
     final data = Provider.of<ClockINNotifier>(context, listen: false);
     final clockOut = Provider.of<ClockOUTNotifier>(context, listen: false);
+    final clockInView = Provider.of<ClockInViewNotifier>(context,listen:false);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -209,8 +212,17 @@ class _BiometricScreenState extends State<BiometricScreen> {
                 image: AssetImage('assets/icons/fingerprint-scan.gif')),
             const Spacer(),
             GestureDetector(
-              onTap: () {
-                _authenticate(data,clockOut);
+              onTap: ()async{
+                clockInView.fetchData(context);
+                late bool auth ;
+                if (clockInView.model.data.isEmpty) {
+                  auth = false;
+                  _authenticate(data,clockOut,auth,clockInView.model.data[0].id);
+                }else{
+                  auth=true;
+                  _authenticate(data,clockOut,auth,clockInView.model.data[0].id);
+                }
+                
               },
               child: Container(
                 height: 50,

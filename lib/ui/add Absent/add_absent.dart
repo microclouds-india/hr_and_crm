@@ -62,6 +62,7 @@ class _AddAbsentScreenState extends State<AddAbsentScreen> {
               onTap: () => _selectDate(context),
               child: AbsorbPointer(
                 child: BookingFormTextFields(
+                  iconData: Icons.calendar_month,
                   hint: 'Attent Date',
                   controller: TextEditingController(
                     text: _selectedDate != null
@@ -73,6 +74,7 @@ class _AddAbsentScreenState extends State<AddAbsentScreen> {
             ),
             SizedBox(height: 16.0),
             BookingFormTextFields(
+              iconData: Icons.person,
               hint: 'Employee Name',
               controller: _employeeNameController,
             ),

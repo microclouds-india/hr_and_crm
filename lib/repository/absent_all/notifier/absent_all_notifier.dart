@@ -9,7 +9,9 @@ class AbsentAllNotifier extends ChangeNotifier {
   Future<AbsentAllModel> getData() async {
     try {
       absentAllModel = await absentNetworking.absentAll();
-    } catch (a) {}
+    } catch (a) {
+      print(a);
+    }
     return absentAllModel;
   }
 }

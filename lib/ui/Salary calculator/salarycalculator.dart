@@ -44,18 +44,23 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               BookingFormTextFields(
+                iconData: Icons.price_change,
                 keyboardType: TextInputType.phone,
                 controller: hourlyRateController,
                 hint: 'Hourly rate!',
                 maxLines: 1,
               ),
+              SizedBox(height: 10,),
               BookingFormTextFields(
+                iconData: Icons.price_change,
                 keyboardType: TextInputType.phone,
                 controller: hoursPreWeek,
                 hint: 'Hours per week!',
                 maxLines: 1,
               ),
+              SizedBox(height: 10,),
               BookingFormTextFields(
+                iconData: Icons.price_change,
                 keyboardType: TextInputType.phone,
                 controller: weeksPreYear,
                 hint: 'Weeks per year',
@@ -64,12 +69,13 @@ class _SalaryCalculatorState extends State<SalaryCalculator> {
               const SizedBox(
                 height: 20,
               ),
-              ElevatedButton(
-                onPressed: _calculateSalary,
-                child: const Text('Calculate Salary'),
-              ),
+             Center(
+               child: ElevatedButton(onPressed: _calculateSalary,
+                 child: const Text("Calculate"),
+                 style: ElevatedButton.styleFrom(primary: Colors.pink.shade900),),
+             ),
               const SizedBox(height: 16.0),
-              Text('Salary: $_salary'),
+              Center(child: Text('Salary: $_salary')),
             ],
           ),
         ),

@@ -68,6 +68,7 @@ class _MultiloginState extends State<Multilogin> {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: BookingFormTextFields(
+                    iconData: Icons.person,
                     hint: 'Username',
                     controller: usernameController,
                     maxLines: 1,
@@ -77,6 +78,7 @@ class _MultiloginState extends State<Multilogin> {
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 10, bottom: 20),
                   child: BookingFormTextFields(
+                    iconData: Icons.password,
                     hint: 'Password',
                     controller: passwordController,
                     maxLines: 1,

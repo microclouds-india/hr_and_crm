@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hr_and_crm/ui/attendance%20kiosk/attendanceKiosk.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Punch Attendance/punch_attendance.dart';
 import '../Selfi attendance screen/selfiAttendance.dart';
 import '../biometric scanning/biomatricScreen.dart';
+import '../change owner/changeOwnerScreen.dart';
+import '../customLeaves/customLeaves.dart';
 import '../leave request/leaveRequest.dart';
 import '../qr code scan/qrcodeScreen.dart';
 
@@ -49,7 +53,7 @@ class AttendancePage extends StatelessWidget {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
                         return SelfieAttendanceScreen(
-                          attend: prif.getBool('auth') ?? false,
+                          // attend: prif.getBool('auth') ?? false,
                         );
                       }));
                     },
@@ -59,22 +63,22 @@ class AttendancePage extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  GestureDetector(
-                    onTap: () async {
-                      final prif = await SharedPreferences.getInstance();
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return PunchInAttendance(
-                          token: prif.getString('token')!,
-                        );
-                      }));
-                    },
-                    child: AttendanceChild(Icons.punch_clock,
-                        "Multiple Punch In", Icons.radio_button_checked),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  // GestureDetector(
+                  //   onTap: () async {
+                  //     final prif = await SharedPreferences.getInstance();
+                  //     Navigator.of(context)
+                  //         .push(MaterialPageRoute(builder: (context) {
+                  //       return PunchInAttendance(
+                  //         token: prif.getString('token')!,
+                  //       );
+                  //     }));
+                  //   },
+                  //   child: AttendanceChild(Icons.punch_clock,
+                  //       "Multiple Punch In", Icons.radio_button_checked),
+                  // ),
+                  // const SizedBox(
+                  //   height: 10,
+                  // ),
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context)
@@ -98,11 +102,18 @@ class AttendancePage extends StatelessWidget {
                     child: AttendanceChild(Icons.fingerprint,
                         "Biometric Devices", Icons.arrow_forward_ios),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  AttendanceChild(Icons.person_outline, "Attendance Kiosk",
-                      Icons.arrow_forward_ios),
+                  // const SizedBox(
+                  //   height: 10,
+                  // ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                  //       return AttendanceKiosk();
+                  //     }));
+                  //   },
+                  //   child: AttendanceChild(Icons.person_outline, "Attendance Kiosk",
+                  //       Icons.arrow_forward_ios),
+                  // ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -141,8 +152,13 @@ class AttendancePage extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  AttendanceChild(Icons.request_page_outlined, "Custom Leaves",
-                      Icons.arrow_forward_ios),
+                  GestureDetector(
+                    onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                      return CustomLeavesScreen();
+                    })),
+                    child: AttendanceChild(Icons.request_page_outlined, "Custom Leaves",
+                        Icons.arrow_forward_ios),
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -161,23 +177,39 @@ class AttendancePage extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  AttendanceChild(Icons.edit_calendar_outlined, "Auto-Present",
-                      Icons.arrow_forward_ios),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                 Padding(
+    padding: const EdgeInsets.all(10.0),
+    child: Row(
+      children: [
+        Icon(
+          Icons.calendar_today_outlined,
+          color: Colors.grey,
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        Text('Auto-Present'),
+        const Spacer(),
+        Switch(value: true, onChanged: (value) {
+        printDateAt420();
+        },)
+      ],
+    ),
+  ),
+                  
                   AttendanceChild(Icons.calendar_today_sharp, "Auto Half Day",
                       Icons.arrow_forward_ios),
                   const SizedBox(
                     height: 10,
                   ),
-                  AttendanceChild(Icons.phone_android_outlined,
-                      "Phone Device Ownership", Icons.arrow_forward_ios),
-                  const SizedBox(
-                    height: 10,
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                      return OwnershipChangeScreen();
+                    })),
+                    child: AttendanceChild(Icons.phone_android_outlined,
+                        "Phone Device Ownership", Icons.arrow_forward_ios),
                   ),
-                  AttendanceChild(Icons.phone_android_outlined,
-                      "Phone Device Ownership", Icons.arrow_forward_ios),
+                  
                 ],
               ),
             )
@@ -186,6 +218,23 @@ class AttendancePage extends StatelessWidget {
       ),
     );
   }
+}
+   void printDateAt420() {
+  DateTime now = DateTime.now();
+  DateTime targetTime = DateTime(now.year, now.month, now.day, 16, 20); // Set the target time to 4:20 PM
+
+  if (now.isAfter(targetTime)) {
+    targetTime = targetTime.add(Duration(seconds: 3)); // If the target time has already passed today, add one day
+  }
+
+  Duration timeDifference = targetTime.difference(now);
+
+  Future.delayed(timeDifference, () {
+    String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    print('Current Date: $currentDate');
+
+    printDateAt420();
+  });
 }
 
 Widget AttendanceChild(IconData icon, String text, IconData trailingIcon) {
@@ -210,3 +259,4 @@ Widget AttendanceChild(IconData icon, String text, IconData trailingIcon) {
     ),
   );
 }
+

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/repository/clock_out/model/clock_OUT_model.dart';
 import 'package:http/http.dart' as http;
@@ -18,6 +19,7 @@ class ClockOUTNetwork {
       required BuildContext context,
       required String attendDate}) async {
     try {
+      EasyLoading.show(status: 'Please Wait...');
       var url = Uri.parse(endpoint);
       var response = await http.post(url, body: {
         'token': token,
@@ -30,9 +32,11 @@ class ClockOUTNetwork {
         var json = jsonDecode(response.body);
         print('Clock out');
         print(response.body);
+        EasyLoading.dismiss();
         Ui.getSnackBar(title: 'Attendance Closed', context: context);
       }
     } catch (e) {
+      EasyLoading.dismiss();
       return Future.error(e);
     }
   }

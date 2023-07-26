@@ -16,14 +16,25 @@ class AbsentViewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink.shade900,
-        title: apBarText('Absent Employees', Colors.white),
+        title: apBarText('Absents', Colors.white),
         centerTitle: true,
       ),
       body: FutureBuilder(
           future: data.getData(),
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
+            if (snapshot.connectionState==ConnectionState.waiting) {
+             return Center(
+              child: 
+              CircularProgressIndicator(
+                color: Colors.pink.shade900,
+              ),
+             );
+            }else if(!snapshot.hasData){
+              return Center(
+                child: Text('Empty..'),
+              );
+            }else{
+               return ListView.builder(
                 itemCount: snapshot.data!.data.length,
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
@@ -40,10 +51,6 @@ class AbsentViewScreen extends StatelessWidget {
                     ),
                   );
                 },
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(color: Colors.pink.shade900),
               );
             }
           }),

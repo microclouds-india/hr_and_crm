@@ -8,54 +8,51 @@ class BookingFormTextFields extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final bool readOnly;
   final Widget? suffixIcon;
+  final bool labelView;
   final int? maxLength;
+  final IconData iconData;
   final TextEditingController? controller;
-  const BookingFormTextFields(
+  final Function(String)? onChanged ;
+   BookingFormTextFields(
       {Key? key,
+      required this.iconData,
         required this.hint,
         this.maxLines,
         this.keyboardType,
+        this.labelView= true,
         this.inputFormatters,
         this.suffixIcon,
         this.maxLength,
+        this.onChanged,
         this.readOnly = false,
         this.controller,})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(5),
-      padding: const EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        boxShadow: [
-          BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 10, offset: const Offset(0, 5)),
-        ],
-        border: Border.all(color: Colors.grey.withOpacity(0.05)),
-      ),
-      child: TextField(
-        controller: controller,
-        maxLength: maxLength,
-        readOnly: readOnly,
-        keyboardType: keyboardType,
-        inputFormatters: inputFormatters,
-        maxLines: maxLines,
-        style: const TextStyle(color: Colors.black, fontSize: 13),
-        cursorColor: Colors.black,
-        decoration: InputDecoration(
-          suffixIcon: suffixIcon,
-          isDense: true,
-          fillColor: Colors.white,
-          filled: true,
-          hintText: hint,
-          counterText: "",
-          hintStyle: const TextStyle(color: Colors.grey),
-          contentPadding: const EdgeInsets.all(12),
-          border: InputBorder.none,
+    return TextField(
+      keyboardType: keyboardType,
+      controller: controller,
+      cursorColor: Colors.pink.shade900,
+      decoration: new InputDecoration(
+        border: new OutlineInputBorder(
+          borderSide:
+              new BorderSide(color: Colors.pink.shade900),
+        ),
+        focusedBorder: new OutlineInputBorder(
+          borderSide:
+              new BorderSide(color: Colors.pink.shade900),
+        ),
+        labelText: hint,
+        labelStyle: TextStyle(
+          color: Colors.grey,
+        ),
+        prefixIcon:  Icon(
+       iconData ,
+          color: Colors.pink.shade900,
         ),
       ),
     );
+
   }
 }

@@ -1,18 +1,26 @@
+// ignore: file_names
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:hr_and_crm/repository/Employee%20View/employeeViewMode.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../common/widgets/appbarTXT.dart';
 
+// ignore: must_be_immutable
 class ViewEmployee extends StatefulWidget {
+  String image;
   String username;
   String id;
   String jobrole;
-  ViewEmployee({required this.id, required this.username,required this.jobrole});
+  // ignore: use_key_in_widget_constructors
+  ViewEmployee(
+      {required this.id,
+      required this.username,
+      required this.jobrole,
+      required this.image});
 
   @override
   State<ViewEmployee> createState() => _ViewEmployeeState();
@@ -21,14 +29,14 @@ class ViewEmployee extends StatefulWidget {
 class _ViewEmployeeState extends State<ViewEmployee> {
   String notImg =
       'https://us.123rf.com/450wm/pavelstasevich/pavelstasevich1811/pavelstasevich181101028/112815904-no-image-available-icon-flat-vector-illustration.jpg?ver=6';
-  EmployeesViewModel employeesViewModel = EmployeesViewModel();
+  late EmployeeViewModel employeeViewModel;
   bool _loading = false;
   getEmployeeDetails() async {
     var url = Uri.parse('https://cashbes.com/attendance/apis/employee_view');
     var response = await http.post(url, body: {'id': widget.id});
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
-      employeesViewModel = EmployeesViewModel.fromJson(json);
+      employeeViewModel = EmployeeViewModel.fromJson(json);
       setState(() {
         _loading = true;
       });
@@ -50,73 +58,99 @@ class _ViewEmployeeState extends State<ViewEmployee> {
         centerTitle: true,
       ),
       body: _loading
-          ? Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-              child: SingleChildScrollView(
-                child: Column(children: [
-                  imageRow(employeesViewModel.data![0].photo ?? notImg,widget.username,widget.jobrole),
-                  const Divider(
-                    thickness: 0.2,
-                    color: Colors.grey,
+          ? SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: CachedNetworkImage(
+  imageUrl: widget.image,
+  imageBuilder: (context, imageProvider) => ClipRRect(
+                      // ignore: sort_child_properties_last
+                      child: Image(
+                        image: imageProvider,
+                        height: 170,
+                        width: 170,
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    ),
+  placeholder: (context, url) => CircularProgressIndicator(),
+  errorWidget: (context, url, error) => Icon(Icons.error),
+),
                   ),
-                  userDeatails('Employee ID', widget.id),
-                  userDeatails(
-                      'Phone', employeesViewModel.data![0].phone ?? ''),
-                  userDeatails(
-                      'Email', employeesViewModel.data![0].email ?? ''),
-                  userDeatails(
-                      'Birthday', employeesViewModel.data![0].dob.toString()),
-                  userDeatails(
-                      'Gender', employeesViewModel.data![0].gender ?? ''),
-                  const ListTile(
-                    title: Text(
-                      'Address',
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
+                  const SizedBox(height: 16.0),
+                  Center(
+                    child: Text(
+                      employeeViewModel.data![0].name ?? widget.username,
+                      style: const TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: Text(employeesViewModel.data![0].address ?? ''),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GestureDetector(
-                            onTap: () async {
-                              await launchUrl(Uri.parse(
-                                  'https://wa.me/${employeesViewModel.data![0].phone}?text=Hello"'));
-                            },
-                            child: shareIMG('assets/icons/whatsapp.png')),
-                        GestureDetector(
-                            onTap: () {
-                              final Uri _emailLaunchUri = Uri(
-                                  scheme: 'mailto',
-                                  path: employeesViewModel.data![0].email,
-                                  queryParameters: {
-                                    'subject':
-                                        'Example Subject & Symbols are allowed!'
-                                  });
-                            },
-                            child: shareIMG('assets/icons/gmail (1).png')),
-                        GestureDetector(
-                            onTap: () async {
-                              var number = (employeesViewModel
-                                  .data![0].phone); //set the number here
-                              bool? res =
-                                  await FlutterPhoneDirectCaller.callNumber(
-                                      number!);
-                            },
-                            child: shareIMG('assets/icons/phone-call.png'))
-                      ],
+                  Center(
+                    child: Text(
+                      widget.jobrole,
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.grey,
+                      ),
                     ),
-                  )
-                ]),
+                  ),
+                  const SizedBox(height: 16.0),
+                  ListTile(
+                    leading: const Icon(Icons.phone),
+                    title: Text(employeeViewModel.data![0].phone ?? ''),
+                    onTap: () =>
+                        // ignore: deprecated_member_use
+                        launch('tel:${employeeViewModel.data![0].phone}'),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.email),
+                    title: Text(employeeViewModel.data![0].email ?? ''),
+                    onTap: () =>
+                        // ignore: deprecated_member_use
+                        launch('mailto:${employeeViewModel.data![0].email}'),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.cake),
+                    title: Text(employeeViewModel.data![0].dob ?? ''),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.person),
+                    title: Text(employeeViewModel.data![0].gender ?? ''),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.location_on),
+                    title: Text(employeeViewModel.data![0].address ?? ''),
+                  ),
+                  const SizedBox(height: 16.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.message),
+                        // ignore: deprecated_member_use
+                        onPressed: () => launch(
+                            'https://wa.me/${employeeViewModel.data![0].phone}'),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.mail),
+                        // ignore: deprecated_member_use
+                        onPressed: () => launch(
+                            'mailto:${employeeViewModel.data![0].email}'),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.phone),
+                        onPressed: () =>
+                            // ignore: deprecated_member_use
+                            launch('tel:${employeeViewModel.data![0].phone}'),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             )
           : Center(
@@ -124,68 +158,6 @@ class _ViewEmployeeState extends State<ViewEmployee> {
                 color: Colors.pink.shade900,
               ),
             ),
-    );
-  }
-
-  Image shareIMG(String img) {
-    return Image(
-      height: 20,
-      width: 20,
-      image: AssetImage(img),
-      fit: BoxFit.cover,
-    );
-  }
-
-  Column userDeatails(String tittle, String trailling) {
-    return Column(
-      children: [
-        ListTile(
-          title: Text(
-            tittle,
-            style: const TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          trailing: Text(
-            trailling,
-            style: const TextStyle(color: Colors.grey),
-          ),
-        ),
-        const Divider(
-          thickness: 0.1,
-          color: Colors.grey,
-        ),
-      ],
-    );
-  }
-
-  Column imageRow(String img,String apbartxt,String jobrole) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: Image.network(
-                  img,
-                  height: 150.0,
-                  width: 150.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ],
-        ),
-        apBarText(apbartxt,
-            Colors.black),
-        const SizedBox(
-          height: 20,
-        ),
-         Text(jobrole)
-      ],
     );
   }
 }

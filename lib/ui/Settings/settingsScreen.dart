@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/repository/Profile%20View%20Model/profileViewModel.dart';
 import 'package:http/http.dart' as http;
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
@@ -18,10 +19,10 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _load = false;
-  ProfileViewMode profileViewMode = ProfileViewMode();
-  getProfileData() async {
-    final prif = await SharedPreferences.getInstance();
+  late ProfileViewMode profileViewMode;
+ Future<ProfileViewMode> getProfileData() async {
+  try {
+      final prif = await SharedPreferences.getInstance();
     var url = Uri.parse('https://cashbes.com/attendance/apis/my_profile');
     var response = await http.post(url, body: {
       'token': prif.getString('token'),
@@ -29,18 +30,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       profileViewMode = ProfileViewMode.fromJson(json);
-      setState(() {
-        _load = true;
-      });
     }
+  } catch (e) {
+    Ui.getSnackBar(title: 'Server Error', context: context);
+  }
+  return profileViewMode;
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getProfileData();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -75,36 +72,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: Colors.pink.shade900,
         title: apBarText('Settings', Colors.white),
       ),
-      body: _load
-          ? Column(
+      body: Column(
               children: [
-                Container(
-                  color: Colors.white,
-                  child: ListTile(
-                    leading: CircleAvatar(
-                        backgroundImage: NetworkImage(profileViewMode
-                                    .data![0].photo ==
-                                ''
-                            ? 'https://t4.ftcdn.net/jpg/04/99/93/31/360_F_499933117_ZAUBfv3P1HEOsZDrnkbNCt4jc3AodArl.jpg'
-                            : profileViewMode.data![0].photo!)),
-                    title: Text(
-                      profileViewMode.data![0].name ?? '',
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(profileViewMode.data![0].email ?? ''),
-                    trailing: IconButton(
-                        onPressed: () => Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) {
-                              return EditProfileScreen(
-                                email: profileViewMode.data![0].email ?? '',
-                                name: profileViewMode.data![0].name ?? '',
-                                phone: profileViewMode.data![0].phone ?? '',
-                              );
-                            })),
-                        icon: const Icon(Icons.edit)),
-                  ),
-                ),
+               
                 SizedBox(
                   height: 20,
                 ),
@@ -112,7 +82,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   padding: const EdgeInsets.only(top: 10),
                   child: GestureDetector(
                     onTap: () {
-                      Share.share('check out my website https://example.com', subject: 'Look what I made!');
+                      Share.share('check out my website https://example.com', subject: 'Look what I made');
                     },
                     child: ListTile(
                       tileColor: Colors.white,
@@ -162,12 +132,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     'Attendance Modes, Leaves ,Holidays', Icons.task),
                 settingsTile('Salary Settings', 'Salary Settings', Icons.money)
               ],
-            )
-          : Center(
-              child: CircularProgressIndicator(
-                color: Colors.pink.shade900,
-              ),
             ),
+        
     );
   }
 
@@ -197,7 +163,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 Future<void> _showMyDialog(BuildContext context) async {
   return showDialog<void>(
     context: context,
-    barrierDismissible: false, // user must tap button!
+    barrierDismissible: false, // user must tap button
     builder: (BuildContext context) {
       return AlertDialog(
         title: const Text('Log Out'),

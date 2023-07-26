@@ -29,7 +29,7 @@ class ClockINNotifier extends ChangeNotifier {
       clockInModel =
           (await clockINNetWork.clockINnetwork(date, time, token, context))!;
       loading(false);
-      
+      notifyListeners();
       return clockInModel;
     } catch (e) {
       loading(true);

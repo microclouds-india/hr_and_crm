@@ -61,6 +61,7 @@ class _AddAccountState extends State<AddAccount> {
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: BookingFormTextFields(
+                iconData: Icons.person,
                 controller: usernameController,
                 hint: 'Username',
                 maxLines: 1,
@@ -72,6 +73,7 @@ class _AddAccountState extends State<AddAccount> {
                 right: 20,
               ),
               child: BookingFormTextFields(
+                iconData: Icons.password,
                 controller: passwordController,
                 hint: Strings().password,
                 maxLines: 1,

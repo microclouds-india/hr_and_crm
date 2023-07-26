@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:hr_and_crm/common/ui.dart';
 import 'package:hr_and_crm/common/widgets/appbarTXT.dart';
@@ -14,7 +16,25 @@ class NewHolidayScreen extends StatefulWidget {
 
 class _NewHolidayScreenState extends State<NewHolidayScreen> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
+  TextEditingController _textEditingController = TextEditingController();
+  String? year;
+  DateTime? _selectedDate;
+   Future<void> _selectDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+        _textEditingController.text = DateFormat('dd-MM-yyyy').format(picked);
+        year = DateFormat('yyyy').format(picked);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,37 +51,48 @@ class _NewHolidayScreenState extends State<NewHolidayScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             BookingFormTextFields(
+              iconData: Icons.title,
               controller: _nameController,
               hint: 'Holiday Tittle',
             ),
             SizedBox(height: 16.0),
-            BookingFormTextFields(
-              controller: _dateController,
-              hint: 'Date',
-              suffixIcon: IconButton(
-                icon: Icon(Icons.calendar_today),
-                onPressed: () {
-                  _selectDate(context, data);
-                },
+            GestureDetector(
+              onTap: (){
+                _selectDate();
+              },
+              child: AbsorbPointer(
+                child: BookingFormTextFields(
+                  iconData: Icons.calendar_month,
+                  controller: _textEditingController,
+                  hint: 'Date',
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.calendar_today),
+                    onPressed: () {
+                    _selectDate();
+                    },
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 32.0),
             ElevatedButton(
               onPressed: () {
-                if (data.year.isEmpty ||
-                    data.year == null && _nameController.text.isEmpty ||
-                    _nameController.text == '') {
+              
+                if (_textEditingController.text.isEmpty ||
+                    _nameController.text.isEmpty 
+                  ) {
                   Ui.getSnackBar(
                       title: 'Please Enter a Value', context: context);
                 } else {
                   data.addHolidays(
                       context: context,
-                      year: data.year,
-                      holidayDate: _dateController.text == ''
+                      year: year!,
+                      holidayDate: _textEditingController.text == ''
                           ? data.date
-                          : _dateController.text,
+                          : _textEditingController.text,
                       tittle: _nameController.text);
                 }
+                Navigator.of(context).pop();
               },
               child: Text('Save'),
               style: ElevatedButton.styleFrom(
@@ -73,25 +104,12 @@ class _NewHolidayScreenState extends State<NewHolidayScreen> {
     );
   }
 
-  Future<void> _selectDate(
-      BuildContext context, AddHolidayNotifier addHolidayNotifier) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now().subtract(Duration(days: 365)),
-      lastDate: DateTime.now().add(Duration(days: 365)),
-    );
-    if (pickedDate != null) {
-      final dateFormate = DateFormat("dd-MM-yyyy").format(pickedDate);
-      _dateController.text = DateFormat("dd-MM-yyyy").format(pickedDate);
-      addHolidayNotifier.addDate(pickedDate.year.toString(), dateFormate);
-    }
-  }
+
 
   @override
   void dispose() {
     _nameController.dispose();
-    _dateController.dispose();
+    _textEditingController.dispose();
     super.dispose();
   }
 }

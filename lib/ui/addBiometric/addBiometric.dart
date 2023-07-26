@@ -66,6 +66,7 @@ class _AddBiometricState extends State<AddBiometric> {
             child: Column(
               children: [
                 BookingFormTextFields(
+                  iconData: Icons.person,
                   keyboardType: TextInputType.phone,
                   controller: nameController,
                   hint: 'Name',
@@ -73,6 +74,7 @@ class _AddBiometricState extends State<AddBiometric> {
                 ),
                 const SizedBox(height: 20.0),
                 BookingFormTextFields(
+                  iconData: Icons.psychology_alt_sharp,
                   suffixIcon: Icon(
                     Icons.qr_code_2_outlined,
                     color: Colors.pink.shade900,
@@ -84,6 +86,7 @@ class _AddBiometricState extends State<AddBiometric> {
                 ),
                 const SizedBox(height: 20.0),
                 BookingFormTextFields(
+                  iconData: Icons.person,
                   suffixIcon: const Icon(Icons.arrow_drop_down),
                   keyboardType: TextInputType.phone,
                   controller: deviceBrandController,

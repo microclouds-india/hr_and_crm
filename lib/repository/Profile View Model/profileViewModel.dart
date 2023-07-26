@@ -6,16 +6,17 @@ import 'dart:convert';
 
 ProfileViewMode profileViewModeFromJson(String str) => ProfileViewMode.fromJson(json.decode(str));
 
+String profileViewModeToJson(ProfileViewMode data) => json.encode(data.toJson());
 
 class ProfileViewMode {
-    String? message;
-    List<Datum>? data;
-    String? status;
+    String message;
+    List<Datum> data;
+    String status;
 
     ProfileViewMode({
-        this.message,
-        this.data,
-        this.status,
+        required this.message,
+        required this.data,
+        required this.status,
     });
 
     factory ProfileViewMode.fromJson(Map<String, dynamic> json) => ProfileViewMode(
@@ -23,31 +24,37 @@ class ProfileViewMode {
         data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
         status: json["status"],
     );
+
+    Map<String, dynamic> toJson() => {
+        "message": message,
+        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "status": status,
+    };
 }
 
 class Datum {
-    String? id;
-    String? name;
-    String? dob;
-    String? phone;
-    String? city;
-    String? email;
-    String? address;
-    String? jobrole;
-    String? gender;
-    String? photo;
+    String id;
+    String name;
+    String dob;
+    String phone;
+    String city;
+    String email;
+    String address;
+    String jobrole;
+    String gender;
+    String photo;
 
     Datum({
-        this.id,
-        this.name,
-        this.dob,
-        this.phone,
-        this.city,
-        this.email,
-        this.address,
-        this.jobrole,
-        this.gender,
-        this.photo,
+        required this.id,
+        required this.name,
+        required this.dob,
+        required this.phone,
+        required this.city,
+        required this.email,
+        required this.address,
+        required this.jobrole,
+        required this.gender,
+        required this.photo,
     });
 
     factory Datum.fromJson(Map<String, dynamic> json) => Datum(

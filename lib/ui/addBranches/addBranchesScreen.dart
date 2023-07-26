@@ -89,12 +89,14 @@ class _AddBranchesState extends State<AddBranches> {
               child: Column(
                 children: [
                   BookingFormTextFields(
+                    iconData: Icons.reduce_capacity_sharp,
                     controller: branchNameController,
                     hint: 'Branch Name',
                     maxLines: 1,
                   ),
                   const SizedBox(height: 20.0),
                   BookingFormTextFields(
+                    iconData: Icons.location_on,
                     controller: addressController,
                     hint: 'Address',
                     maxLines: 1,

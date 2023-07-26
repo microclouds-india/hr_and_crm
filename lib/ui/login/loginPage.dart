@@ -77,6 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: BookingFormTextFields(
+                    iconData: Icons.email,
                     hint: Strings().email,
                     controller: emailController,
                     maxLines: 1,
@@ -88,6 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                     right: 20,
                   ),
                   child: BookingFormTextFields(
+                    iconData: Icons.password,
                     hint: Strings().password,
                     maxLines: 1,
                     controller: passwordController,

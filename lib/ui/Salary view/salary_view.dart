@@ -34,11 +34,17 @@ class _SalaryViewScreenState extends State<SalaryViewScreen> {
         itemCount: _salaryData.length,
         itemBuilder: (BuildContext context, int index) {
           final data = _salaryData[index];
-          return ListTile(
-            title: Text(data["month"].toString()),
-            subtitle: Text("\₹ ${data["amount"]}"),
-            trailing: Icon(Icons.arrow_forward_ios_outlined),
-            onTap: () {},
+          return Card(
+             elevation: 4, 
+  shadowColor: Colors.black12,
+            child: ListTile(
+              title: Text(data["month"].toString(),style: TextStyle(
+                fontWeight: FontWeight.bold
+              ),),
+              subtitle: Text("\₹ ${data["amount"]}"),
+              trailing: Icon(Icons.arrow_forward_ios_outlined),
+              onTap: () {},
+            ),
           );
         },
       ),

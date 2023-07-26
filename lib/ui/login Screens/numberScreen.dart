@@ -47,7 +47,7 @@ class _NumberLoginState extends State<NumberLogin> {
                 ),
               ),
               const Center(
-                child: Text('Recive a OTP Verification Code',
+                child: Text('Receive a OTP Verification Code',
                     style:
                         TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
               ),
@@ -96,9 +96,11 @@ class _NumberLoginState extends State<NumberLogin> {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: BookingFormTextFields(
+                  iconData: Icons.phone,
+                  
                   keyboardType: TextInputType.phone,
                   controller: mobileNumberController,
-                  hint: 'Emter your mobile number!',
+                  hint: 'Enter your mobile number!',
                   maxLines: 1,
                 ),
               ),
@@ -106,6 +108,7 @@ class _NumberLoginState extends State<NumberLogin> {
                 padding: const EdgeInsets.only(left: 30, right: 30),
                 child: GestureDetector(
                     onTap: () async {
+                      print(mobileNumberController.text);
                       if (mobileNumberController.text.isEmpty ||
                           mobileNumberController.text.length > 10 ||
                           mobileNumberController.text.length < 10) {
@@ -113,18 +116,23 @@ class _NumberLoginState extends State<NumberLogin> {
                             title: 'Please Enter Mobile Number',
                             context: context);
                       } else {
+                        
                         await EasyLoading.show(status: 'Please Wait...');
                         var url = Uri.parse(
-                            'https://cashbes.com/attendance/login/index');
+                            'https://cashbes.com/attendance/login/home_login');
                         var response = await http.post(url,
                             body: {'phone': mobileNumberController.text});
+                            print(response.body);
                         if (response.statusCode == 200) {
                           print(response.body);
                           var json = jsonDecode(response.body);
                           if (json['user'] == 'new user') {
                             await EasyLoading.dismiss();
-                            Ui.getSnackBar(
-                                title: 'no such user exists', context: context);
+                           Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                            return SignupPage(
+                              number: json['phone'].toString(),
+                            );
+                           }));
                           } else {
                             await EasyLoading.dismiss();
                             Navigator.of(context)
@@ -145,10 +153,18 @@ class _NumberLoginState extends State<NumberLogin> {
               ),
               const Spacer(),
               TextButton(
-                  onPressed: () => Navigator.of(context)
+                  onPressed: () {
+                    if (mobileNumberController.text.isEmpty) {
+                      Ui.getSnackBar(title: 'Please Enter Your Number', context: context);
+                    }else{
+                      Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
-                        return const SignupPage();
-                      })),
+                        return SignupPage(
+                          number: mobileNumberController.text,
+                        );
+                      }));
+                    }
+                  },
                   child: Text(
                     'Create new account!',
                     style: TextStyle(color: Colors.pink.shade900),

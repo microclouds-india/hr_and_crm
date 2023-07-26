@@ -95,6 +95,7 @@ class ForgotPasswordMail extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: BookingFormTextFields(
+                  iconData: Icons.email,
                   hint: 'Emter your email',
                   maxLines: 1,
                 ),
